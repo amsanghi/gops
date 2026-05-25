@@ -182,20 +182,20 @@ body.in-game .board {
 }
 body.in-game .zone { padding: 14px 16px; min-height: 0; overflow: hidden; }
 body.in-game .center-stack { gap: 10px; min-height: 0; height: 100%; }
-/* Prize zone: can shrink in tight conditions to give bids enough room. */
+/* Prize zone sizes to its content (prize card + chrome). Min covers the
+   smallest prize card variant; no max — let it grow on tall viewports. */
 body.in-game .center-stack > .zone:nth-child(1) {
-  flex: 0 1 auto;
-  min-height: 140px;
-  max-height: clamp(180px, 28vh, 280px);
+  flex: 0 0 auto;
+  min-height: 180px;
 }
-/* Bids zone: HARD min-height that guarantees the bid-col (~135px) + zone-head
-   (~25px) + padding (~28px) = ~190px always fits. */
+/* Bids zone gets a HARD min-height for the bid-col (~135px) + zone-head
+   (~25px) + padding (~28px) = ~190px. flex: 1 means it gets the remainder. */
 body.in-game .center-stack > .zone:nth-child(2) {
   flex: 1 1 200px;
   min-height: 200px;
   overflow: visible;
 }
-body.in-game .prize-area { min-height: 90px; flex: 1 1 auto; }
+body.in-game .prize-area { min-height: 110px; flex: 1 1 auto; display: grid; place-items: center; }
 body.in-game .bid-area { height: auto; min-height: 130px; }
 body.in-game .hand-zone {
   flex-shrink: 0;
@@ -211,7 +211,7 @@ body.in-game .chat { margin-top: 6px; flex-shrink: 0; }
 /* Cards grow to fill viewport — much larger on desktop, sensible on mobile */
 body.in-game .card { --w: clamp(48px, 7vh, 92px); --h: clamp(68px, 10vh, 132px); font-size: clamp(20px, 3.4vh, 38px); }
 body.in-game .hand .card { --w: clamp(52px, 7.5vh, 96px); --h: clamp(74px, 10.5vh, 138px); font-size: clamp(22px, 3.6vh, 40px); }
-body.in-game .card.prize { --w: clamp(88px, 14vh, 160px); --h: clamp(124px, 20vh, 224px); font-size: clamp(40px, 6.5vh, 72px); }
+body.in-game .card.prize { --w: clamp(80px, 11vh, 130px); --h: clamp(112px, 15.5vh, 180px); font-size: clamp(34px, 5.2vh, 58px); }
 body.in-game .card.mini { --w: clamp(28px, 4vh, 44px); --h: clamp(40px, 5.5vh, 62px); font-size: clamp(11px, 1.8vh, 16px); }
 body.in-game .mini-grid { gap: 4px; }
 body.in-game .vertical-cards .card { width: 100%; max-width: 44px; }
