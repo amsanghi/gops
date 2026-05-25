@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GOPS</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: #e8e8e8;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .container { max-width: 900px; width: 100%; text-align: center; }
+  h1 {
+    font-size: 3.5em;
+    font-weight: 200;
+    letter-spacing: 0.3em;
+    margin-bottom: 0.1em;
+    background: linear-gradient(135deg, #ff6b9d, #c44569);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle {
+    color: #888;
+    margin-bottom: 2em;
+    letter-spacing: 0.15em;
+    font-size: 0.9em;
+    text-transform: uppercase;
+  }
+  button {
+    background: linear-gradient(135deg, #ff6b9d, #c44569);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    font-size: 1em;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 8px;
+    font-weight: 500;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+    box-shadow: 0 4px 12px rgba(196, 69, 105, 0.3);
+  }
+  button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(196, 69, 105, 0.4);
+  }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  input {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: white;
+    padding: 12px 16px;
+    font-size: 1em;
+    border-radius: 8px;
+    margin: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    text-align: center;
+    width: 160px;
+    outline: none;
+  }
+  input:focus { border-color: #ff6b9d; }
+  input::placeholder { color: rgba(255,255,255,0.3); letter-spacing: 0.1em; }
+  .status { margin-top: 1em; color: #888; font-size: 0.9em; min-height: 1.2em; }
+  .err { color: #f44336; }
+  .divider { margin: 1.2em 0; color: #555; letter-spacing: 0.2em; font-size: 0.85em; }
+  .code-display {
+    background: rgba(255,255,255,0.08);
+    padding: 18px 28px;
+    border-radius: 10px;
+    font-size: 2em;
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    letter-spacing: 0.4em;
+    margin: 1em auto;
+    color: #ff6b9d;
+    cursor: pointer;
+    display: inline-block;
+    border: 1px solid rgba(255,107,157,0.2);
+  }
+  .code-display:hover { background: rgba(255,255,255,0.12); }
+  .hint {
+    color: #666;
+    font-size: 0.85em;
+    margin-top: 1em;
+    line-height: 1.5;
+  }
+
+  .info-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5em;
+    padding: 0 8px;
+  }
+  .round-info { font-size: 1em; color: #aaa; letter-spacing: 0.1em; }
+  .round-info span { color: #fff; font-weight: 600; }
+  .score { display: flex; gap: 2em; }
+  .score-item { display: flex; flex-direction: column; align-items: center; }
+  .score-label {
+    font-size: 0.7em;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+  }
+  .score-value { font-size: 1.6em; font-weight: 600; color: #fff; }
+
+  .play-area {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 1em;
+  }
+  .section-label {
+    font-size: 0.7em;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    margin-bottom: 12px;
+  }
+  .row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-height: 96px;
+    align-items: center;
+  }
+  .row.hand { min-height: 100px; }
+
+  .card {
+    width: 64px;
+    height: 90px;
+    border-radius: 8px;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    transition: transform 0.2s, opacity 0.3s;
+    user-select: none;
+    position: relative;
+  }
+  .card .suit { font-size: 0.55em; margin-top: 4px; opacity: 0.7; }
+  .card.in-hand {
+    background: linear-gradient(135deg, #ffffff, #e8e8e8);
+    color: #1a1a2e;
+    cursor: pointer;
+    border: 2px solid transparent;
+  }
+  .card.in-hand:hover:not(.used) {
+    transform: translateY(-12px);
+    border-color: #ff6b9d;
+  }
+  .card.in-hand.used { opacity: 0.15; cursor: default; }
+  .card.in-hand.locked { cursor: default; }
+  .card.in-hand.locked:hover { transform: none; border-color: transparent; }
+  .card.prize {
+    background: linear-gradient(135deg, #ffd700, #b8860b);
+    color: #4a3000;
+    width: 80px;
+    height: 112px;
+    font-size: 1.9em;
+  }
+  .card.played {
+    background: linear-gradient(135deg, #ff6b9d, #c44569);
+    color: white;
+  }
+  .card.opponent {
+    background: linear-gradient(135deg, #5dade2, #2874a6);
+    color: white;
+  }
+  .card.face-down {
+    background: repeating-linear-gradient(45deg, #2c3e80, #2c3e80 6px, #34418c 6px, #34418c 12px);
+    color: transparent;
+    border: 2px solid rgba(255,255,255,0.1);
+  }
+  .card.winner {
+    box-shadow: 0 0 0 3px #4caf50, 0 4px 10px rgba(0,0,0,0.4);
+  }
+  .card.tied {
+    box-shadow: 0 0 0 3px #ffd700, 0 4px 10px rgba(0,0,0,0.4);
+  }
+
+  .message {
+    margin-top: 1em;
+    font-size: 1.1em;
+    min-height: 1.6em;
+    color: #ddd;
+    font-weight: 500;
+  }
+  .pot-label { color: #ffd700; margin-left: 10px; font-size: 0.85em; }
+
+  .end-result { font-size: 2.8em; margin-bottom: 0.3em; }
+  .end-score { font-size: 1.5em; color: #aaa; margin-bottom: 2em; letter-spacing: 0.1em; }
+  .win { color: #4caf50; }
+  .lose { color: #ef5350; }
+  .tie { color: #ffd700; }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 2.5em; }
+    .card { width: 44px; height: 62px; font-size: 1.1em; }
+    .card .suit { font-size: 0.5em; }
+    .card.prize { width: 56px; height: 78px; font-size: 1.4em; }
+    .row { gap: 3px; min-height: 70px; }
+    .play-area { padding: 14px; }
+    .score { gap: 1.2em; }
+    .end-result { font-size: 2em; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div id="menu">
+  <h1>GOPS</h1>
+  <p class="subtitle">Game of Pure Strategy</p>
+
+  <div id="initialOptions">
+    <button id="createBtn">Create game</button>
+    <div class="divider">— or —</div>
+    <input id="joinCode" placeholder="CODE" maxlength="5" autocapitalize="characters" autocomplete="off">
+    <br>
+    <button id="joinBtn">Join game</button>
+    <p class="hint">Two players, 13 rounds. Highest bid wins each prize.<br>Ties carry the pot to the next round.</p>
+  </div>
+
+  <div id="hostInfo" class="hidden">
+    <p>Share this code with your partner:</p>
+    <div class="code-display" id="myCode" title="Click to copy"></div>
+    <p class="status" id="hostStatus">Waiting for them to join...</p>
+  </div>
+
+  <div id="joinInfo" class="hidden">
+    <p class="status" id="joinStatus">Connecting...</p>
+  </div>
+
+  <div class="status err" id="errorStatus"></div>
+</div>
+
+<div id="game" class="hidden">
+  <div class="info-bar">
+    <div class="round-info">Round <span id="round">1</span> / 13</div>
+    <div class="score">
+      <div class="score-item">
+        <span class="score-label">You</span>
+        <span class="score-value" id="myScore">0</span>
+      </div>
+      <div class="score-item">
+        <span class="score-label">Them</span>
+        <span class="score-value" id="theirScore">0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="play-area">
+    <div class="section-label">Prize<span class="pot-label" id="pot"></span></div>
+    <div class="row" id="prizeRow"></div>
+  </div>
+
+  <div class="play-area">
+    <div class="section-label">Their bid</div>
+    <div class="row" id="theirRow"></div>
+    <div class="section-label" style="margin-top: 14px;">Your bid</div>
+    <div class="row" id="myRow"></div>
+  </div>
+
+  <div class="play-area">
+    <div class="section-label">Your hand</div>
+    <div class="row hand" id="handRow"></div>
+  </div>
+
+  <div class="message" id="message"></div>
+</div>
+
+<div id="end" class="hidden">
+  <h1 id="endResult" class="end-result"></h1>
+  <p class="end-score" id="endScore"></p>
+  <button id="rematchBtn">Rematch</button>
+  <p class="status" id="rematchStatus"></p>
+</div>
+
+</div>
+
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+const PREFIX = 'gops-room-2026-';
+
+let peer = null;
+let conn = null;
+let isHost = false;
+
+let prizes = [];
+let myHand = [];
+let round = 0;
+let myScore = 0;
+let theirScore = 0;
+let pot = 0;
+let myPick = null;
+let theirPick = null;
+let myRematch = false;
+let theirRematch = false;
+let busy = false;
+
+const $ = id => document.getElementById(id);
+const show = id => $(id).classList.remove('hidden');
+const hide = id => $(id).classList.add('hidden');
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function genCode() {
+  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  let s = '';
+  for (let i = 0; i < 5; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return s;
+}
+
+function rankText(n) {
+  return ({ 1: 'A', 11: 'J', 12: 'Q', 13: 'K' })[n] || String(n);
+}
+
+function makeCard(n, className, suit) {
+  const div = document.createElement('div');
+  div.className = 'card ' + className;
+  if (className.includes('face-down')) {
+    div.textContent = '';
+  } else {
+    div.innerHTML = `${rankText(n)}${suit ? `<div class="suit">${suit}</div>` : ''}`;
+  }
+  return div;
+}
+
+function startHost() {
+  isHost = true;
+  hide('initialOptions');
+  show('hostInfo');
+  $('errorStatus').textContent = '';
+  const code = genCode();
+  $('myCode').textContent = code;
+  $('myCode').onclick = () => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(code).then(() => {
+        const orig = $('myCode').textContent;
+        $('myCode').textContent = 'COPIED';
+        setTimeout(() => { $('myCode').textContent = orig; }, 900);
+      });
+    }
+  };
+  peer = new Peer(PREFIX + code);
+  peer.on('open', () => {
+    $('hostStatus').textContent = 'Waiting for them to join...';
+  });
+  peer.on('connection', c => {
+    if (conn && conn.open) { c.close(); return; }
+    conn = c;
+    bindConn();
+    conn.on('open', () => { beginGame(); });
+  });
+  peer.on('error', err => {
+    if (err.type === 'unavailable-id') {
+      peer.destroy();
+      peer = null;
+      hide('hostInfo');
+      show('initialOptions');
+      $('errorStatus').textContent = 'Code already in use, try again.';
+    } else {
+      $('errorStatus').textContent = 'Connection error: ' + err.type;
+    }
+  });
+}
+
+function joinGame() {
+  const code = $('joinCode').value.trim().toUpperCase();
+  if (!code) return;
+  isHost = false;
+  hide('initialOptions');
+  show('joinInfo');
+  $('errorStatus').textContent = '';
+  $('joinStatus').textContent = 'Connecting...';
+  peer = new Peer();
+  peer.on('open', () => {
+    conn = peer.connect(PREFIX + code, { reliable: true });
+    bindConn();
+    conn.on('open', () => {
+      $('joinStatus').textContent = 'Connected! Waiting for game to start...';
+    });
+  });
+  peer.on('error', err => {
+    if (err.type === 'peer-unavailable') {
+      $('errorStatus').textContent = 'No game found with code "' + code + '".';
+    } else {
+      $('errorStatus').textContent = 'Connection error: ' + err.type;
+    }
+    hide('joinInfo');
+    show('initialOptions');
+  });
+}
+
+function bindConn() {
+  conn.on('data', handleMsg);
+  conn.on('close', () => {
+    $('message').textContent = 'Disconnected.';
+    $('errorStatus').textContent = 'Connection lost. Refresh to start over.';
+  });
+  conn.on('error', err => {
+    $('errorStatus').textContent = 'Error: ' + (err.type || err.message || 'unknown');
+  });
+}
+
+function beginGame() {
+  prizes = shuffle([1,2,3,4,5,6,7,8,9,10,11,12,13]);
+  conn.send({ type: 'start', prizes });
+  setupGame();
+}
+
+function setupGame() {
+  myHand = [1,2,3,4,5,6,7,8,9,10,11,12,13];
+  round = 0;
+  myScore = 0;
+  theirScore = 0;
+  pot = 0;
+  myPick = null;
+  theirPick = null;
+  myRematch = false;
+  theirRematch = false;
+  busy = false;
+  hide('menu');
+  hide('end');
+  show('game');
+  $('myScore').textContent = '0';
+  $('theirScore').textContent = '0';
+  nextRound();
+}
+
+function handleMsg(data) {
+  if (data.type === 'start') {
+    prizes = data.prizes;
+    setupGame();
+  } else if (data.type === 'pick') {
+    theirPick = data.card;
+    if (myPick !== null) {
+      resolveRound();
+    } else {
+      $('theirRow').innerHTML = '';
+      $('theirRow').appendChild(makeCard('', 'face-down'));
+      $('message').textContent = 'They locked in. Your turn.';
+    }
+  } else if (data.type === 'rematch') {
+    theirRematch = true;
+    checkRematch();
+  }
+}
+
+function nextRound() {
+  myPick = null;
+  theirPick = null;
+  busy = false;
+  $('round').textContent = round + 1;
+  $('pot').textContent = pot > 0 ? `(+${pot} carried)` : '';
+  $('prizeRow').innerHTML = '';
+  $('prizeRow').appendChild(makeCard(prizes[round], 'prize', '♦'));
+  $('theirRow').innerHTML = '';
+  $('myRow').innerHTML = '';
+  $('message').textContent = 'Pick a card to bid.';
+  renderHand();
+}
+
+function renderHand() {
+  const row = $('handRow');
+  row.innerHTML = '';
+  [1,2,3,4,5,6,7,8,9,10,11,12,13].forEach(n => {
+    const used = !myHand.includes(n);
+    const locked = myPick !== null;
+    const cls = 'in-hand' + (used ? ' used' : '') + (locked ? ' locked' : '');
+    const c = makeCard(n, cls, '♥');
+    if (!used && !locked) {
+      c.onclick = () => pickCard(n);
+    }
+    row.appendChild(c);
+  });
+}
+
+function pickCard(n) {
+  if (myPick !== null || busy) return;
+  if (!myHand.includes(n)) return;
+  myPick = n;
+  myHand = myHand.filter(x => x !== n);
+  renderHand();
+  $('myRow').innerHTML = '';
+  $('myRow').appendChild(makeCard(n, 'played', '♥'));
+  conn.send({ type: 'pick', card: n });
+  if (theirPick !== null) {
+    resolveRound();
+  } else {
+    $('message').textContent = 'Bid locked. Waiting for them...';
+  }
+}
+
+function resolveRound() {
+  busy = true;
+  $('theirRow').innerHTML = '';
+  const theirCard = makeCard(theirPick, 'opponent', '♠');
+  $('theirRow').appendChild(theirCard);
+  const myCard = $('myRow').firstChild;
+
+  const prizeValue = prizes[round] + pot;
+  let msg;
+  if (myPick > theirPick) {
+    myScore += prizeValue;
+    msg = `You win ${prizeValue}!`;
+    myCard.classList.add('winner');
+    pot = 0;
+  } else if (myPick < theirPick) {
+    theirScore += prizeValue;
+    msg = `They win ${prizeValue}.`;
+    theirCard.classList.add('winner');
+    pot = 0;
+  } else {
+    pot = prizeValue;
+    msg = `Tie! ${prizeValue} carries to next round.`;
+    myCard.classList.add('tied');
+    theirCard.classList.add('tied');
+  }
+  $('message').textContent = msg;
+  $('myScore').textContent = myScore;
+  $('theirScore').textContent = theirScore;
+
+  round++;
+  if (round >= 13) {
+    setTimeout(endGame, 3000);
+  } else {
+    setTimeout(nextRound, 2800);
+  }
+}
+
+function endGame() {
+  hide('game');
+  show('end');
+  let result, cls;
+  if (myScore > theirScore) {
+    result = 'You won';
+    cls = 'win';
+  } else if (myScore < theirScore) {
+    result = 'They won';
+    cls = 'lose';
+  } else {
+    result = 'Tied';
+    cls = 'tie';
+  }
+  $('endResult').textContent = result;
+  $('endResult').className = 'end-result ' + cls;
+  $('endScore').textContent = `${myScore} – ${theirScore}`;
+  $('rematchStatus').textContent = '';
+  $('rematchBtn').disabled = false;
+  $('rematchBtn').textContent = 'Rematch';
+  myRematch = false;
+  theirRematch = false;
+}
+
+function requestRematch() {
+  if (myRematch) return;
+  myRematch = true;
+  $('rematchBtn').disabled = true;
+  $('rematchBtn').textContent = 'Waiting...';
+  conn.send({ type: 'rematch' });
+  checkRematch();
+}
+
+function checkRematch() {
+  if (myRematch && theirRematch) {
+    if (isHost) {
+      beginGame();
+    } else {
+      $('rematchStatus').textContent = 'Starting...';
+    }
+  } else if (theirRematch && !myRematch) {
+    $('rematchStatus').textContent = 'They want a rematch!';
+  } else if (myRematch && !theirRematch) {
+    $('rematchStatus').textContent = 'Waiting for them to accept...';
+  }
+}
+
+$('createBtn').onclick = startHost;
+$('joinBtn').onclick = joinGame;
+$('joinCode').addEventListener('keypress', e => {
+  if (e.key === 'Enter') joinGame();
+});
+$('rematchBtn').onclick = requestRematch;
+</script>
+</body>
+</html>
