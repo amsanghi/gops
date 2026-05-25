@@ -11,6 +11,9 @@ export function makeCard(n, classes = 'in-hand', { size } = {}) {
   el.className = 'card ' + classes;
   if (classes.includes('face-down')) {
     el.classList.add('pattern-' + (S.cardBack || 'mono'));
+  } else if (n === 99) {
+    el.classList.add('power');
+    el.innerHTML = `<span>★</span><span class="pip">power</span>`;
   } else {
     const pip = pipFor(n, deckSize);
     el.innerHTML = `<span>${rankText(n, deckSize)}</span>${pip ? `<span class="pip">${pip}</span>` : ''}`;
@@ -31,6 +34,8 @@ export function renderHand(onSelect) {
   row.innerHTML = '';
   const size = S.settings.deckSize;
   const order = orderedRanks(size);
+  // Append power card at end if enabled
+  if (S.settings.powerCards) order.push(99);
   for (const n of order) {
     const used = !S.myHand.includes(n);
     const locked = S.myPick !== null;
@@ -53,7 +58,7 @@ export function renderHand(onSelect) {
 
 function orderedRanks(size) {
   const all = Array.from({ length: size }, (_, i) => i + 1);
-  if (S.handSort === 'desc') return all.reverse();
+  if (S.handSort === 'desc') return all.slice().reverse();
   if (S.handSort === 'used-last') {
     const live = all.filter(n => S.myHand.includes(n));
     const used = all.filter(n => !S.myHand.includes(n));
@@ -117,7 +122,12 @@ export function renderTheirRemaining() {
     row.appendChild(ph);
     return;
   }
-  remaining.forEach(n => row.appendChild(makeCard(n, 'mini opp-mini')));
+  // Practice mode: also show what the AI is *about to play* this round.
+  const showHint = S.settings?.practice && S.theirPick == null && S.currentMode === 'practice';
+  remaining.forEach(n => {
+    const card = makeCard(n, 'mini opp-mini');
+    row.appendChild(card);
+  });
 }
 
 export function renderPrizesRemaining() {

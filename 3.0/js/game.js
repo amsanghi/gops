@@ -20,7 +20,11 @@ import { aiBid } from './ai.js';
 import { checkAchOnBid, checkAchOnGameEnd, unlockAch } from './achievements.js';
 
 // Compare returns positive if "me" beats "them" under the current direction rule.
+// Special value 99 = Power card (wild). Power vs Power = tie. Power vs anything = wins.
 export function compareBid(my, their) {
+  if (my === 99 && their === 99) return 0;
+  if (my === 99) return 1;
+  if (their === 99) return -1;
   return S.settings.direction === 'low' ? their - my : my - their;
 }
 // Compare final scores.
@@ -40,6 +44,9 @@ export function setupGame() {
   S.totalRounds = size;
   S.myHand = Array.from({ length: size }, (_, i) => i + 1);
   S.theirHand = Array.from({ length: size }, (_, i) => i + 1);
+  if (S.settings.powerCards) {
+    S.myHand.push(99); S.theirHand.push(99);
+  }
   S.theirUsedCards = [];
   S.round = 0; S.myScore = 0; S.theirScore = 0; S.pot = 0;
   S.myPick = null; S.theirPick = null; S.pendingPick = null;
@@ -232,13 +239,13 @@ function resolveRound() {
   let msg, winner;
   if (cmp > 0) {
     S.myScore += prizeValue;
-    msg = `${S.myName} takes ${prizeValue}.`; winner = 'me';
+    msg = `+${prizeValue} to ${S.myName}`; winner = 'me';
     myCardEl?.classList.add('winner');
     S.pot = 0;
     sfx.win(); haptic([40]);
   } else if (cmp < 0) {
     S.theirScore += prizeValue;
-    msg = `${S.theirName} takes ${prizeValue}.`; winner = 'them';
+    msg = `+${prizeValue} to ${S.theirName}`; winner = 'them';
     theirCardEl?.classList.add('winner');
     S.pot = 0;
     sfx.lose(); haptic([60, 30, 60]);

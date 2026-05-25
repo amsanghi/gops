@@ -119,17 +119,29 @@
               <span class="tile-label">Daily archive</span>
               <span class="tile-sub" id="archive-sub">Past dailies</span>
             </button>
+            <button class="tile" id="bracket-tile">
+              <span class="tile-icon">▦</span>
+              <span class="tile-label">AI Bracket</span>
+              <span class="tile-sub">Sim 8 AIs</span>
+            </button>
           </div>
 
           <details class="expander" id="ai-settings">
             <summary>AI settings</summary>
             <div class="settings-grid">
-              <div class="field"><label class="field-label" for="ai-deck">Deck</label><select class="select" id="ai-deck"><option value="13">13 cards</option><option value="7">7 cards</option></select></div>
+              <div class="field"><label class="field-label" for="ai-deck">Deck</label><select class="select" id="ai-deck"><option value="5">5 cards</option><option value="7">7 cards</option><option value="9">9 cards</option><option value="11">11 cards</option><option value="13" selected>13 cards</option><option value="15">15 cards</option><option value="17">17 cards</option><option value="19">19 cards</option><option value="21">21 cards</option></select></div>
               <div class="field"><label class="field-label" for="ai-diff">Difficulty</label><select class="select" id="ai-diff"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option></select></div>
               <div class="field"><label class="field-label" for="ai-persona">Personality</label><select class="select" id="ai-persona"><option value="balanced">Balanced</option><option value="aggressive">Aggressive</option><option value="defensive">Defensive</option><option value="bluffer">Bluffer</option><option value="mirror">Mirror</option></select></div>
               <div class="field"><label class="field-label" for="ai-time">Time/bid (s)</label><input class="input" id="ai-time" type="number" min="0" max="600" value="0" inputmode="numeric"></div>
             </div>
-            <button class="btn btn-ghost btn-sm" id="ghost-tile" style="margin-top:10px;width:100%">▷ Play your ghost (best recorded game)</button>
+            <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--ink-dim);cursor:pointer">
+              <input type="checkbox" id="ai-power"> Enable Power card (★) — wild card that wins once
+            </label>
+            <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+              <button class="btn btn-ghost btn-sm" id="ghost-tile" style="flex:1">▷ Play your ghost</button>
+              <button class="btn btn-ghost btn-sm" id="practice-tile" style="flex:1">◐ Practice (see AI hand)</button>
+              <button class="btn btn-ghost btn-sm" id="weekly-tile" style="flex:1">◴ Weekly puzzle</button>
+            </div>
           </details>
         </div>
 
@@ -154,6 +166,9 @@
               <div class="field"><label class="field-label" for="host-time">Time/bid (s)</label><input class="input" id="host-time" type="number" min="0" max="600" value="0" inputmode="numeric"></div>
               <div class="field"><label class="field-label" for="host-stakes">Stakes</label><input class="input" id="host-stakes" type="text" placeholder="(optional)" maxlength="80"></div>
             </div>
+            <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--ink-dim);cursor:pointer">
+              <input type="checkbox" id="host-power"> Enable Power card (★)
+            </label>
             <button class="btn btn-ghost btn-sm" id="copy-challenge-btn" style="margin-top:10px;width:100%">Copy challenge link</button>
           </details>
         </div>
@@ -354,8 +369,32 @@
   <div class="scrim" id="modal-archive" hidden role="dialog" aria-modal="true" aria-labelledby="modal-archive-title">
     <div class="modal">
       <div class="modal-head"><h2 id="modal-archive-title">Daily archive</h2><button class="modal-close" data-close="modal-archive" aria-label="Close">×</button></div>
-      <p class="modal-desc">Past daily challenges. Click any day to view its grid.</p>
+      <p class="modal-desc">Past daily challenges. Click a done day to view, or enter a date to replay its seed.</p>
+      <div class="settings-grid" style="margin-bottom:14px">
+        <div class="field"><label class="field-label" for="seed-date">Replay a daily seed</label><input class="input" id="seed-date" type="date"></div>
+        <div class="field" style="align-self:flex-end"><button class="btn btn-primary btn-sm" id="seed-go-btn" type="button">Replay this date</button></div>
+      </div>
       <div id="archive-body"></div>
+    </div>
+  </div>
+
+  <div class="scrim" id="modal-bracket" hidden role="dialog" aria-modal="true" aria-labelledby="modal-bracket-title">
+    <div class="modal">
+      <div class="modal-head"><h2 id="modal-bracket-title">AI Bracket</h2><button class="modal-close" data-close="modal-bracket" aria-label="Close">×</button></div>
+      <p class="modal-desc">8 personalities, single-elimination. Click run to simulate.</p>
+      <div style="display:flex;justify-content:center;margin-bottom:14px"><button class="btn btn-primary btn-sm" id="bracket-run-btn">▷ Run bracket</button></div>
+      <div id="bracket-results"></div>
+    </div>
+  </div>
+
+  <div id="onboarding" class="onboarding" hidden>
+    <div class="onboarding-card">
+      <h3>Welcome to GOPS</h3>
+      <p>Bid cards <kbd>A</kbd>–<kbd>K</kbd> to win prizes. No luck — only nerve. Try the tutorial or jump straight into the daily challenge.</p>
+      <div class="onboarding-actions">
+        <button class="btn btn-ghost btn-sm" id="onb-dismiss">Skip</button>
+        <button class="btn btn-primary btn-sm" id="onb-tutorial">Tutorial</button>
+      </div>
     </div>
   </div>
 
