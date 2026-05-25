@@ -1,5 +1,5 @@
 /* ==========================================================================
-   GOPS 3.0 — Minimal, modern, content-first
+   GOPS — Minimal, modern, content-first
    ========================================================================== */
 
 /* ---------- Reset ---------- */
@@ -171,7 +171,7 @@ body.in-game #game {
   gap: 8px;
   min-height: 0;
 }
-body.in-game .game-head { margin-bottom: 0; padding: 8px 14px; flex-shrink: 0; }
+body.in-game .game-head { margin-bottom: 0; padding: 12px 18px; flex-shrink: 0; }
 body.in-game .series-bar { margin-bottom: 0; flex-shrink: 0; }
 body.in-game .game-actions { margin-bottom: 0; padding: 0 4px; flex-shrink: 0; }
 body.in-game .board {
@@ -180,72 +180,99 @@ body.in-game .board {
   margin-bottom: 0;
   overflow: hidden;
 }
-body.in-game .zone { padding: 10px 12px; min-height: 0; overflow: hidden; }
-body.in-game .center-stack { gap: 8px; min-height: 0; }
-body.in-game .center-stack > .zone { min-height: 0; }
-body.in-game .prize-area { min-height: 80px; flex-shrink: 0; }
-body.in-game .bid-area { min-height: 80px; }
+body.in-game .zone { padding: 14px 16px; min-height: 0; overflow: hidden; }
+body.in-game .center-stack { gap: 10px; min-height: 0; height: 100%; }
+/* Center stack zones grow to fill — the bid area should expand into the leftover space */
+body.in-game .center-stack > .zone:nth-child(1) { flex: 0 0 auto; min-height: clamp(140px, 28vh, 260px); }
+body.in-game .center-stack > .zone:nth-child(2) { flex: 1 1 0; min-height: 0; }
+body.in-game .prize-area { min-height: clamp(110px, 22vh, 220px); flex-shrink: 0; }
+body.in-game .bid-area { height: 100%; min-height: 110px; }
 body.in-game .hand-zone {
   flex-shrink: 0;
-  padding: 10px 14px;
+  padding: 14px 18px;
 }
-body.in-game .hand { min-height: 0; gap: 4px; flex-wrap: nowrap; overflow-x: auto; padding: 4px 0; }
+body.in-game .hand { min-height: 0; gap: 6px; flex-wrap: nowrap; overflow-x: auto; padding: 4px 0; align-items: center; justify-content: center; }
 body.in-game .hand .card { flex: 0 0 auto; }
-body.in-game .hand .card.in-hand:hover:not(.used):not(.locked) { transform: translateY(-6px) scale(1.03); }
-body.in-game .message { min-height: 20px; font-size: 13px; flex-shrink: 0; }
-body.in-game .reactions { margin-top: 4px; flex-shrink: 0; }
-body.in-game .chat { margin-top: 4px; flex-shrink: 0; }
+body.in-game .hand .card.in-hand:hover:not(.used):not(.locked) { transform: translateY(-8px) scale(1.04); }
+body.in-game .message { min-height: 22px; font-size: 14px; flex-shrink: 0; }
+body.in-game .reactions { margin-top: 6px; flex-shrink: 0; }
+body.in-game .chat { margin-top: 6px; flex-shrink: 0; }
 
-/* Smaller cards in compact mode */
-body.in-game .card { --w: clamp(36px, 5.5vh, 60px); --h: clamp(50px, 7.5vh, 86px); font-size: clamp(16px, 2.5vh, 26px); }
-body.in-game .card.prize { --w: clamp(56px, 8.5vh, 88px); --h: clamp(78px, 11.5vh, 124px); font-size: clamp(22px, 3.4vh, 36px); }
-body.in-game .card.mini { --w: clamp(24px, 3.4vh, 36px); --h: clamp(34px, 4.5vh, 50px); font-size: clamp(10px, 1.5vh, 14px); }
-body.in-game .mini-grid { gap: 3px; }
-body.in-game .vertical-cards .card { width: 100%; max-width: 38px; }
-body.in-game .bid-divider { font-size: clamp(18px, 2.4vh, 26px); }
-body.in-game .score-num { font-size: clamp(22px, 3.6vh, 36px); }
-body.in-game .game-head { padding: 6px 12px; }
-body.in-game .score-name .av { width: clamp(22px, 3vh, 28px); height: clamp(22px, 3vh, 28px); font-size: clamp(13px, 1.8vh, 16px); }
-body.in-game .pot-chip { font-size: 10px; }
-body.in-game .zone-head { font-size: 10px; letter-spacing: 0.14em; }
-body.in-game .confirm-row { margin-top: 0; min-height: 32px; }
+/* Cards grow to fill viewport — much larger on desktop, sensible on mobile */
+body.in-game .card { --w: clamp(48px, 7vh, 92px); --h: clamp(68px, 10vh, 132px); font-size: clamp(20px, 3.4vh, 38px); }
+body.in-game .hand .card { --w: clamp(52px, 7.5vh, 96px); --h: clamp(74px, 10.5vh, 138px); font-size: clamp(22px, 3.6vh, 40px); }
+body.in-game .card.prize { --w: clamp(88px, 14vh, 160px); --h: clamp(124px, 20vh, 224px); font-size: clamp(40px, 6.5vh, 72px); }
+body.in-game .card.mini { --w: clamp(28px, 4vh, 44px); --h: clamp(40px, 5.5vh, 62px); font-size: clamp(11px, 1.8vh, 16px); }
+body.in-game .mini-grid { gap: 4px; }
+body.in-game .vertical-cards .card { width: 100%; max-width: 44px; }
+body.in-game .bid-divider { font-size: clamp(22px, 3.4vh, 32px); }
+body.in-game .score-num { font-size: clamp(30px, 4.8vh, 52px); }
+body.in-game .score-name { font-size: clamp(13px, 1.8vh, 16px); }
+body.in-game .game-head { padding: 12px 18px; }
+body.in-game .score-name .av { width: clamp(28px, 3.4vh, 36px); height: clamp(28px, 3.4vh, 36px); font-size: clamp(15px, 2vh, 20px); }
+body.in-game .pot-chip { font-size: 11px; }
+body.in-game .zone-head { font-size: 11px; letter-spacing: 0.16em; }
+body.in-game .round-pill { font-size: clamp(12px, 1.6vh, 14px); }
+body.in-game .confirm-row { margin-top: 4px; min-height: 38px; }
 
 /* Even tighter on short viewports */
 @media (max-height: 720px) {
-  body.in-game .card.prize { --w: 60px; --h: 84px; font-size: 22px; }
-  body.in-game .game-head { padding: 4px 10px; }
-  body.in-game .zone { padding: 8px 10px; }
-  body.in-game .hand-zone { padding: 6px 10px; }
+  body.in-game .card.prize { --w: 80px; --h: 112px; font-size: 36px; }
+  body.in-game .game-head { padding: 8px 14px; }
+  body.in-game .zone { padding: 10px 12px; }
+  body.in-game .hand-zone { padding: 10px 14px; }
 }
 
-/* Mobile in-game: hide side panels, focus on prize + my hand + bids. */
+/* Mobile in-game: side panels still visible but live below the play area.
+   Above-fold: header, center-stack (prize+bids), hand. Below-fold (scroll): opponent + prizes. */
 @media (max-width: 760px) {
-  body.in-game .board {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-  body.in-game .board > .zone:nth-child(1),
-  body.in-game .board > .zone:nth-child(3) {
-    display: none;
-  }
-  body.in-game .center-stack { gap: 6px; }
-  body.in-game .game-head { padding: 6px 8px; gap: 8px; }
-  body.in-game .score-num { font-size: 22px; }
-  body.in-game .card { --w: 38px; --h: 54px; font-size: 17px; }
-  body.in-game .card.prize { --w: 64px; --h: 90px; font-size: 24px; }
-  body.in-game .hand-zone { padding: 6px 8px; }
-  body.in-game .hand .card { --w: 36px; --h: 52px; font-size: 14px; }
-  body.in-game .message { font-size: 12px; min-height: 16px; }
-  body.in-game .bid-area { min-height: 70px; gap: 12px; }
-  body.in-game .bid-slot { min-height: 60px; }
-  body.in-game .reactions { gap: 2px; margin-top: 2px; }
-  body.in-game .react-btn { width: 28px; height: 28px; font-size: 14px; }
+  body.in-game .app { overflow-y: auto; height: auto; min-height: 100dvh; }
+  body.in-game { overflow: auto; height: auto; min-height: 100dvh; }
+  body.in-game #game { flex: 0 1 auto; min-height: 0; gap: 8px; }
+  /* Dissolve the board so its children participate in #game's flex ordering. */
+  body.in-game .board { display: contents; }
+  /* Above-fold (visible without scroll): */
+  body.in-game .center-stack { order: 1; }
+  body.in-game .hand-zone { order: 2; }
+  body.in-game .message { order: 3; }
+  body.in-game .reactions { order: 4; }
+  /* Below-fold (scroll for reference): */
+  body.in-game .board > .zone:nth-child(3) { order: 5; }  /* opponent cards */
+  body.in-game .board > .zone:nth-child(1) { order: 6; }  /* prizes remaining */
+  body.in-game .chat { order: 7; }
+  body.in-game .center-stack { gap: 6px; height: auto; }
+  body.in-game .center-stack > .zone { flex: 0 0 auto; }
+  body.in-game .center-stack > .zone:nth-child(1) { min-height: 140px; }
+  body.in-game .center-stack > .zone:nth-child(2) { min-height: 110px; }
+  body.in-game .zone { overflow: visible; }
+  body.in-game .game-head { padding: 8px 10px; gap: 8px; }
+  body.in-game .score-num { font-size: 28px; }
+  body.in-game .card { --w: 44px; --h: 62px; font-size: 19px; }
+  body.in-game .hand .card { --w: 44px; --h: 62px; font-size: 19px; }
+  body.in-game .card.prize { --w: 84px; --h: 118px; font-size: 32px; }
+  body.in-game .card.mini { --w: 30px; --h: 42px; font-size: 12px; }
+  body.in-game .hand-zone { padding: 8px 10px; }
+  body.in-game .message { font-size: 13px; min-height: 18px; }
+  body.in-game .bid-area { min-height: 88px; gap: 14px; }
+  body.in-game .bid-slot { min-height: 70px; }
+  body.in-game .reactions { gap: 3px; margin-top: 3px; }
+  body.in-game .react-btn { width: 30px; height: 30px; font-size: 15px; }
+  /* Side panels show as a compact grid so a quick scroll reveals them */
+  body.in-game .mini-grid { grid-template-columns: repeat(7, 1fr); }
 }
 
-/* Bullet mode badge — even tighter, no zone-heads */
+/* Tablet — keep 3-col layout but allow slight overflow if needed */
+@media (min-width: 761px) and (max-width: 1024px) {
+  body.in-game .board { grid-template-columns: 180px 1fr 180px; }
+  body.in-game .card.prize { --w: 96px; --h: 134px; font-size: 38px; }
+}
+
+/* Bullet mode: tightest possible — every pixel matters at 3s/bid */
 body.in-game.bullet .zone-head .meta { display: none; }
 body.in-game.bullet .hand-zone .zone-head { display: none; }
 body.in-game.bullet .game-actions { display: none; }
+body.in-game.bullet .reactions { display: none; }
+body.in-game.bullet .chat { display: none; }
 
 /* ---------- Top bar (persistent header) ---------- */
 .topbar {

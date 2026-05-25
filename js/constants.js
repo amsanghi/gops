@@ -1,7 +1,7 @@
 // All static lookup data lives here.
 
-export const PROTO_VERSION = 5;
-export const PEER_PREFIX = 'gops-v3-room-';
+export const PROTO_VERSION = 6;
+export const PEER_PREFIX = 'gops-room-';
 
 export const STORAGE = {
   PREFS: 'gops3-prefs',
