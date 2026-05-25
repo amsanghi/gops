@@ -210,6 +210,7 @@ on('game-attached', () => {
 
 // ---- End screen ----
 export function renderEnd({ didIWin, seriesOver, cmp }) {
+  document.body.classList.remove('in-game', 'bullet');
   let resultEl = 'Tied', cls = 'tie';
   if (cmp > 0) { resultEl = 'You won'; cls = 'win'; }
   else if (cmp < 0) { resultEl = `${escapeHtml(S.theirName)} won`; cls = 'lose'; }

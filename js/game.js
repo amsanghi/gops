@@ -60,6 +60,8 @@ export function setupGame() {
 
 function attachGameUI() {
   hide('lobby'); hide('end'); show('game');
+  document.body.classList.add('in-game');
+  document.body.classList.toggle('bullet', S.currentMode === 'bullet');
   renderScoreboard();
   renderSeries();
   renderModePill();
