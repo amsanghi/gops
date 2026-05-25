@@ -12,21 +12,13 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='80' font-size='80'%3E%E2%99%A0%3C/text%3E%3C/svg%3E">
 <style>
   :root {
-    --primary: #ff5c8d;
-    --primary-soft: #ffb3c8;
-    --primary-end: #c4346d;
+    --primary: #ff5c8d; --primary-soft: #ffb3c8; --primary-end: #c4346d;
     --primary-glow: rgba(255, 92, 141, 0.35);
-    --opponent: #4ecdc4;
-    --opponent-end: #2da99f;
+    --opponent: #4ecdc4; --opponent-end: #2da99f;
     --opponent-glow: rgba(78, 205, 196, 0.3);
-    --gold: #ffd93d;
-    --gold-end: #d4a017;
-    --bg-1: #0a0a1f;
-    --bg-2: #1a1535;
-    --bg-3: #2a1845;
-    --text: #f5f0f8;
-    --text-dim: #9b91b3;
-    --text-faint: #5a527a;
+    --gold: #ffd93d; --gold-end: #d4a017;
+    --bg-1: #0a0a1f; --bg-2: #1a1535; --bg-3: #2a1845;
+    --text: #f5f0f8; --text-dim: #9b91b3; --text-faint: #5a527a;
     --panel: rgba(255, 255, 255, 0.035);
     --panel-strong: rgba(255, 255, 255, 0.06);
     --panel-border: rgba(255, 255, 255, 0.08);
@@ -37,806 +29,280 @@
     --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
     --ease: cubic-bezier(0.4, 0.0, 0.2, 1);
   }
-  [data-theme="ocean"] {
-    --primary: #00d9ff;
-    --primary-soft: #80ecff;
-    --primary-end: #0091a7;
-    --primary-glow: rgba(0, 217, 255, 0.3);
-    --opponent: #ff7e5f;
-    --opponent-end: #d95028;
-    --opponent-glow: rgba(255, 126, 95, 0.3);
-    --bg-1: #02152b;
-    --bg-2: #0a2540;
-    --bg-3: #103a5c;
-  }
-  [data-theme="cosmic"] {
-    --primary: #c77dff;
-    --primary-soft: #e0aaff;
-    --primary-end: #7209b7;
-    --primary-glow: rgba(199, 125, 255, 0.35);
-    --opponent: #ffc857;
-    --opponent-end: #f37335;
-    --opponent-glow: rgba(255, 200, 87, 0.3);
-    --bg-1: #100020;
-    --bg-2: #1f0a3a;
-    --bg-3: #2d1155;
-  }
-  [data-theme="forest"] {
-    --primary: #95d5b2;
-    --primary-soft: #b7e4c7;
-    --primary-end: #2d6a4f;
-    --primary-glow: rgba(149, 213, 178, 0.3);
-    --opponent: #ffafcc;
-    --opponent-end: #c9184a;
-    --opponent-glow: rgba(255, 175, 204, 0.3);
-    --bg-1: #0d1f15;
-    --bg-2: #143524;
-    --bg-3: #1c4a32;
-  }
-  [data-theme="ember"] {
-    --primary: #ff8a5b;
-    --primary-soft: #ffb088;
-    --primary-end: #ee4d40;
-    --primary-glow: rgba(255, 138, 91, 0.35);
-    --opponent: #ffd166;
-    --opponent-end: #c89200;
-    --opponent-glow: rgba(255, 209, 102, 0.3);
-    --bg-1: #1f0a0a;
-    --bg-2: #2e1416;
-    --bg-3: #401d24;
-  }
+  [data-theme="ocean"] { --primary: #00d9ff; --primary-soft: #80ecff; --primary-end: #0091a7; --primary-glow: rgba(0,217,255,0.3); --opponent: #ff7e5f; --opponent-end: #d95028; --opponent-glow: rgba(255,126,95,0.3); --bg-1: #02152b; --bg-2: #0a2540; --bg-3: #103a5c; }
+  [data-theme="cosmic"] { --primary: #c77dff; --primary-soft: #e0aaff; --primary-end: #7209b7; --primary-glow: rgba(199,125,255,0.35); --opponent: #ffc857; --opponent-end: #f37335; --opponent-glow: rgba(255,200,87,0.3); --bg-1: #100020; --bg-2: #1f0a3a; --bg-3: #2d1155; }
+  [data-theme="forest"] { --primary: #95d5b2; --primary-soft: #b7e4c7; --primary-end: #2d6a4f; --primary-glow: rgba(149,213,178,0.3); --opponent: #ffafcc; --opponent-end: #c9184a; --opponent-glow: rgba(255,175,204,0.3); --bg-1: #0d1f15; --bg-2: #143524; --bg-3: #1c4a32; }
+  [data-theme="ember"] { --primary: #ff8a5b; --primary-soft: #ffb088; --primary-end: #ee4d40; --primary-glow: rgba(255,138,91,0.35); --opponent: #ffd166; --opponent-end: #c89200; --opponent-glow: rgba(255,209,102,0.3); --bg-1: #1f0a0a; --bg-2: #2e1416; --bg-3: #401d24; }
+  [data-theme="light"] { --bg-1: #f5f2f8; --bg-2: #e8e3ee; --bg-3: #dfd7e8; --text: #1a1535; --text-dim: #4a4360; --text-faint: #8a849c; --panel: rgba(0,0,0,0.04); --panel-strong: rgba(0,0,0,0.06); --panel-border: rgba(0,0,0,0.08); --panel-border-bright: rgba(0,0,0,0.14); }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body {
-    overscroll-behavior: none;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+  html, body { overscroll-behavior: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: var(--bg-1);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    -webkit-tap-highlight-color: transparent;
-    overflow-x: hidden;
-    position: relative;
+    background: var(--bg-1); color: var(--text);
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 20px; -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden; position: relative;
   }
+  .orb { position: fixed; border-radius: 50%; filter: blur(90px); opacity: 0.5; z-index: -1; pointer-events: none; will-change: transform; }
+  .orb-1 { width: 550px; height: 550px; background: var(--primary); top: -15%; left: -10%; animation: drift-1 30s ease-in-out infinite; }
+  .orb-2 { width: 480px; height: 480px; background: var(--opponent); bottom: -15%; right: -10%; animation: drift-2 35s ease-in-out infinite; }
+  .orb-3 { width: 380px; height: 380px; background: var(--bg-3); top: 40%; left: 50%; transform: translate(-50%, -50%); opacity: 0.6; animation: drift-3 40s ease-in-out infinite; }
+  @keyframes drift-1 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(80px, 60px) scale(1.1); } }
+  @keyframes drift-2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-90px, -40px) scale(1.15); } }
+  @keyframes drift-3 { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-40%, -55%) scale(1.2); } }
+  @media (prefers-reduced-motion: reduce) { .orb { animation: none; } *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
 
-  /* Animated background orbs */
-  .orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(90px);
-    opacity: 0.5;
-    z-index: -1;
-    pointer-events: none;
-    will-change: transform;
-  }
-  .orb-1 {
-    width: 550px;
-    height: 550px;
-    background: var(--primary);
-    top: -15%;
-    left: -10%;
-    animation: drift-1 30s ease-in-out infinite;
-  }
-  .orb-2 {
-    width: 480px;
-    height: 480px;
-    background: var(--opponent);
-    bottom: -15%;
-    right: -10%;
-    animation: drift-2 35s ease-in-out infinite;
-  }
-  .orb-3 {
-    width: 380px;
-    height: 380px;
-    background: var(--bg-3);
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0.6;
-    animation: drift-3 40s ease-in-out infinite;
-  }
-  @keyframes drift-1 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(80px, 60px) scale(1.1); }
-  }
-  @keyframes drift-2 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(-90px, -40px) scale(1.15); }
-  }
-  @keyframes drift-3 {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); }
-    50% { transform: translate(-40%, -55%) scale(1.2); }
-  }
-
-  .container {
-    max-width: 1000px;
-    width: 100%;
-    text-align: center;
-    position: relative;
-    z-index: 1;
-  }
+  .container { max-width: 1000px; width: 100%; text-align: center; position: relative; z-index: 1; }
 
   h1 {
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 5em;
-    font-weight: 300;
-    letter-spacing: 0.18em;
-    margin-bottom: 0.0em;
+    font-size: 5em; font-weight: 300; letter-spacing: 0.18em; margin-bottom: 0;
     background: linear-gradient(135deg, var(--primary-soft), var(--primary), var(--primary-end));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: 0 0 80px var(--primary-glow);
-    line-height: 1;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    text-shadow: 0 0 80px var(--primary-glow); line-height: 1;
   }
-  .ver {
-    font-size: 0.22em;
-    vertical-align: super;
-    opacity: 0.55;
-    letter-spacing: 0.1em;
-    font-family: 'Inter', sans-serif;
-    font-weight: 400;
-  }
-  .subtitle {
-    color: var(--text-dim);
-    margin-bottom: 1.8em;
-    letter-spacing: 0.32em;
-    font-size: 0.78em;
-    text-transform: uppercase;
-    font-weight: 400;
-  }
+  .ver { font-size: 0.22em; vertical-align: super; opacity: 0.55; letter-spacing: 0.1em; font-family: 'Inter', sans-serif; font-weight: 400; }
+  .subtitle { color: var(--text-dim); margin-bottom: 1.6em; letter-spacing: 0.32em; font-size: 0.78em; text-transform: uppercase; font-weight: 400; }
 
   button {
     background: linear-gradient(135deg, var(--primary), var(--primary-end));
-    color: white;
-    border: none;
-    padding: 13px 28px;
-    font-size: 0.95em;
-    border-radius: 10px;
-    cursor: pointer;
-    margin: 6px;
-    font-weight: 500;
+    color: white; border: none; padding: 13px 28px; font-size: 0.95em;
+    border-radius: 10px; cursor: pointer; margin: 6px; font-weight: 500;
     transition: transform 0.25s var(--spring), box-shadow 0.25s var(--ease), opacity 0.15s, filter 0.15s;
     box-shadow: 0 6px 20px var(--primary-glow), 0 1px 0 rgba(255,255,255,0.15) inset;
-    font-family: inherit;
-    letter-spacing: 0.02em;
-    position: relative;
-    overflow: hidden;
+    font-family: inherit; letter-spacing: 0.02em; position: relative; overflow: hidden;
   }
-  button::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-  button:hover:not(:disabled) {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 10px 28px var(--primary-glow), 0 1px 0 rgba(255,255,255,0.2) inset;
-  }
+  button::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent); opacity: 0; transition: opacity 0.2s; }
+  button:hover:not(:disabled) { transform: translateY(-2px) scale(1.02); box-shadow: 0 10px 28px var(--primary-glow), 0 1px 0 rgba(255,255,255,0.2) inset; }
   button:hover:not(:disabled)::before { opacity: 1; }
   button:active:not(:disabled) { transform: translateY(0) scale(0.98); }
+  button:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
   button:disabled { opacity: 0.4; cursor: not-allowed; }
-  button.ghost {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--panel-border);
-    box-shadow: none;
-    color: var(--text-dim);
-  }
-  button.ghost:hover:not(:disabled) {
-    background: rgba(255,255,255,0.1);
-    color: var(--text);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  }
+  button.ghost { background: rgba(255,255,255,0.05); border: 1px solid var(--panel-border); box-shadow: none; color: var(--text-dim); }
+  button.ghost:hover:not(:disabled) { background: rgba(255,255,255,0.1); color: var(--text); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
   button.small { padding: 7px 14px; font-size: 0.85em; }
-  button.icon-btn {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--panel-border);
-    padding: 8px 11px;
-    box-shadow: none;
-    font-size: 1em;
-    color: var(--text-dim);
-  }
+  button.tiny { padding: 4px 9px; font-size: 0.75em; }
+  button.icon-btn { background: rgba(255,255,255,0.04); border: 1px solid var(--panel-border); padding: 8px 11px; box-shadow: none; font-size: 1em; color: var(--text-dim); }
   button.icon-btn:hover { background: rgba(255,255,255,0.1); color: var(--text); transform: none; }
+  button.mode-card { background: var(--panel-strong); border: 1px solid var(--panel-border); color: var(--text); padding: 16px 14px; display: flex; flex-direction: column; align-items: center; gap: 6px; box-shadow: none; min-width: 130px; min-height: 110px; }
+  button.mode-card:hover:not(:disabled) { background: var(--panel-border-bright); border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 8px 20px var(--primary-glow); }
+  button.mode-card .mc-icon { font-size: 2em; }
+  button.mode-card .mc-label { font-size: 0.9em; font-weight: 500; }
+  button.mode-card .mc-sub { font-size: 0.7em; color: var(--text-dim); }
+  .badge { display: inline-block; background: var(--gold); color: #3a2700; padding: 2px 7px; border-radius: 10px; font-size: 0.65em; font-weight: 600; margin-left: 4px; vertical-align: middle; }
 
-  input, select {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--panel-border);
-    color: var(--text);
-    padding: 11px 16px;
-    font-size: 0.95em;
-    border-radius: 10px;
-    margin: 4px;
-    outline: none;
-    font-family: inherit;
-    transition: border-color 0.2s, background 0.2s;
+  input, select, textarea {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--panel-border); color: var(--text);
+    padding: 11px 16px; font-size: 0.95em; border-radius: 10px; margin: 4px; outline: none;
+    font-family: inherit; transition: border-color 0.2s, background 0.2s;
   }
-  input:focus, select:focus {
-    border-color: var(--primary);
-    background: rgba(255,255,255,0.07);
-    box-shadow: 0 0 0 3px var(--primary-glow);
-  }
+  input:focus, select:focus, textarea:focus { border-color: var(--primary); background: rgba(255,255,255,0.07); box-shadow: 0 0 0 3px var(--primary-glow); }
   input::placeholder { color: var(--text-faint); }
-  input[type="text"].code-input {
-    text-transform: uppercase;
-    letter-spacing: 0.25em;
-    text-align: center;
-    width: 180px;
-    font-family: 'Inter', monospace;
-    font-weight: 500;
-  }
+  input[type="text"].code-input { text-transform: uppercase; letter-spacing: 0.25em; text-align: center; width: 180px; font-family: 'Inter', monospace; font-weight: 500; }
   input[type="number"] { width: 70px; }
   select { cursor: pointer; }
 
   .status { margin-top: 1em; color: var(--text-dim); font-size: 0.9em; min-height: 1.2em; }
   .err { color: #ff6b81; }
-  .divider {
-    margin: 1.2em 0;
-    color: var(--text-faint);
-    letter-spacing: 0.3em;
-    font-size: 0.75em;
-    text-transform: uppercase;
-  }
-  .code-display {
-    background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
-    padding: 18px 30px;
-    border-radius: 14px;
-    font-size: 2em;
-    font-family: 'Inter', monospace;
-    font-weight: 600;
-    letter-spacing: 0.5em;
-    margin: 1em auto;
-    color: var(--primary);
-    cursor: pointer;
-    display: inline-block;
-    border: 1px solid var(--panel-border-bright);
-    text-shadow: 0 0 30px var(--primary-glow);
-    transition: all 0.2s var(--ease);
-  }
-  .code-display:hover {
-    background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
-    transform: scale(1.02);
-  }
-  .hint {
-    color: var(--text-faint);
-    font-size: 0.8em;
-    margin-top: 1.4em;
-    line-height: 1.6;
-    max-width: 480px;
-    margin-left: auto;
-    margin-right: auto;
-  }
+  .divider { margin: 1.2em 0; color: var(--text-faint); letter-spacing: 0.3em; font-size: 0.75em; text-transform: uppercase; }
+  .code-display { background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03)); padding: 18px 30px; border-radius: 14px; font-size: 2em; font-family: 'Inter', monospace; font-weight: 600; letter-spacing: 0.5em; margin: 1em auto; color: var(--primary); cursor: pointer; display: inline-block; border: 1px solid var(--panel-border-bright); text-shadow: 0 0 30px var(--primary-glow); transition: all 0.2s var(--ease); }
+  .code-display:hover { background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06)); transform: scale(1.02); }
+  .hint { color: var(--text-faint); font-size: 0.8em; margin-top: 1.4em; line-height: 1.6; max-width: 480px; margin-left: auto; margin-right: auto; }
 
-  /* Lobby */
-  .lobby-section {
-    background: var(--panel);
-    backdrop-filter: blur(12px) saturate(140%);
-    -webkit-backdrop-filter: blur(12px) saturate(140%);
-    border: 1px solid var(--panel-border);
-    border-radius: 20px;
-    padding: 22px;
-    margin: 14px 0;
-    transition: border-color 0.3s;
-  }
+  .lobby-section { background: var(--panel); backdrop-filter: blur(12px) saturate(140%); -webkit-backdrop-filter: blur(12px) saturate(140%); border: 1px solid var(--panel-border); border-radius: 20px; padding: 20px; margin: 14px 0; transition: border-color 0.3s; }
   .lobby-section:hover { border-color: var(--panel-border-bright); }
-  .lobby-section h3 {
-    font-size: 0.7em;
-    text-transform: uppercase;
-    letter-spacing: 0.3em;
-    color: var(--text-faint);
-    font-weight: 500;
-    margin-bottom: 14px;
-  }
-  .resume-banner {
-    background: linear-gradient(135deg, var(--panel-strong), var(--panel));
-    border: 1px solid var(--primary);
-    box-shadow: 0 0 30px var(--primary-glow);
-    border-radius: 16px;
-    padding: 16px 20px;
-    margin: 14px 0;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .resume-banner-title {
-    font-weight: 600;
-    color: var(--primary);
-    font-size: 0.95em;
-  }
-  .resume-banner-text {
-    color: var(--text-dim);
-    font-size: 0.85em;
-  }
+  .lobby-section h3 { font-size: 0.7em; text-transform: uppercase; letter-spacing: 0.3em; color: var(--text-faint); font-weight: 500; margin-bottom: 14px; }
+  .modes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 8px; }
+  .resume-banner { background: linear-gradient(135deg, var(--panel-strong), var(--panel)); border: 1px solid var(--primary); box-shadow: 0 0 30px var(--primary-glow); border-radius: 16px; padding: 16px 20px; margin: 14px 0; text-align: left; display: flex; flex-direction: column; gap: 8px; }
+  .resume-banner-title { font-weight: 600; color: var(--primary); font-size: 0.95em; }
+  .resume-banner-text { color: var(--text-dim); font-size: 0.85em; }
   .resume-actions { display: flex; gap: 6px; justify-content: flex-end; }
   .name-row { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; align-items: center; }
-  .settings-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-    gap: 10px;
-    text-align: left;
-  }
-  .setting-item {
-    background: rgba(255,255,255,0.025);
-    padding: 11px 13px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-    border: 1px solid rgba(255,255,255,0.03);
-  }
+  .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; text-align: left; }
+  .setting-item { background: rgba(255,255,255,0.025); padding: 11px 13px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.03); }
   .setting-label { font-size: 0.85em; color: var(--text-dim); }
-  .setting-item select, .setting-item input {
-    padding: 5px 10px;
-    font-size: 0.85em;
-    margin: 0;
-    border-radius: 7px;
-  }
+  .setting-item select, .setting-item input { padding: 5px 10px; font-size: 0.85em; margin: 0; border-radius: 7px; }
   .setting-item input[type="number"] { width: 60px; text-align: center; }
   .stakes-input { width: 100%; }
+
   .theme-picker { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
-  .theme-swatch {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: transform 0.2s var(--spring), box-shadow 0.2s;
-    position: relative;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  }
+  .theme-swatch { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s var(--spring), box-shadow 0.2s; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
   .theme-swatch:hover { transform: scale(1.15); }
-  .theme-swatch.active {
-    border-color: white;
-    box-shadow: 0 0 0 3px rgba(255,255,255,0.15), 0 4px 12px rgba(0,0,0,0.4);
-  }
-  .head-to-head {
-    color: var(--text-dim);
-    font-size: 0.85em;
-    margin-top: 14px;
-  }
+  .theme-swatch.active { border-color: white; box-shadow: 0 0 0 3px rgba(255,255,255,0.15), 0 4px 12px rgba(0,0,0,0.4); }
+
+  .avatar-picker { display: flex; justify-content: center; gap: 4px; flex-wrap: wrap; max-width: 360px; margin: 0 auto; }
+  .avatar-opt { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s var(--spring); display: flex; align-items: center; justify-content: center; font-size: 1.3em; background: rgba(255,255,255,0.04); }
+  .avatar-opt:hover { transform: scale(1.15); background: rgba(255,255,255,0.1); }
+  .avatar-opt.active { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-glow); }
+
+  .head-to-head { color: var(--text-dim); font-size: 0.85em; margin-top: 14px; }
   .head-to-head .wins-mine { color: var(--primary); font-weight: 600; }
   .head-to-head .wins-theirs { color: var(--opponent); font-weight: 600; }
 
-  /* Game */
-  .info-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1em;
-    padding: 0 8px;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .round-info {
-    font-size: 0.9em;
-    color: var(--text-dim);
-    letter-spacing: 0.08em;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+  .info-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1em; padding: 0 8px; gap: 10px; flex-wrap: wrap; }
+  .round-info { font-size: 0.9em; color: var(--text-dim); letter-spacing: 0.08em; display: flex; align-items: center; gap: 10px; }
   .round-info b { color: var(--text); font-weight: 600; }
-  .series-pill {
-    background: var(--panel-strong);
-    border: 1px solid var(--panel-border);
-    padding: 5px 12px;
-    border-radius: 12px;
-    font-size: 0.78em;
-    color: var(--text-dim);
-  }
-  .score { display: flex; gap: 1.8em; }
+  .series-pill { background: var(--panel-strong); border: 1px solid var(--panel-border); padding: 5px 12px; border-radius: 12px; font-size: 0.78em; color: var(--text-dim); }
+  .score { display: flex; gap: 1.6em; }
   .score-item { display: flex; flex-direction: column; align-items: center; }
-  .score-label {
-    font-size: 0.62em;
-    color: var(--text-faint);
-    text-transform: uppercase;
-    letter-spacing: 0.28em;
-    max-width: 110px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-weight: 500;
-  }
+  .score-label { font-size: 0.62em; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.28em; max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
   .score-label.me { color: var(--primary); }
   .score-label.them { color: var(--opponent); }
+  .score-name { display: flex; align-items: center; gap: 4px; }
   .score-value { font-size: 1.6em; font-weight: 600; color: var(--text); margin-top: 2px; }
   .toolbar { display: flex; gap: 6px; }
 
-  .play-area {
-    background: var(--panel);
-    backdrop-filter: blur(12px) saturate(140%);
-    -webkit-backdrop-filter: blur(12px) saturate(140%);
-    border: 1px solid var(--panel-border);
-    border-radius: 18px;
-    padding: 16px;
-    margin-bottom: 0.8em;
-    box-shadow: var(--shadow-sm);
-  }
-  .section-label {
-    font-size: 0.62em;
-    color: var(--text-faint);
-    text-transform: uppercase;
-    letter-spacing: 0.3em;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 500;
-  }
-  .row {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 5px;
-    min-height: 92px;
-    align-items: center;
-  }
+  .play-area { background: var(--panel); backdrop-filter: blur(12px) saturate(140%); -webkit-backdrop-filter: blur(12px) saturate(140%); border: 1px solid var(--panel-border); border-radius: 18px; padding: 16px; margin-bottom: 0.8em; box-shadow: var(--shadow-sm); }
+  .section-label { font-size: 0.62em; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.3em; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-weight: 500; }
+  .row { display: flex; justify-content: center; flex-wrap: wrap; gap: 5px; min-height: 92px; align-items: center; }
   .row.hand { min-height: 96px; }
   .row.mini { min-height: 52px; }
   .row.bids { gap: 18px; min-height: 100px; }
 
-  /* Timer */
-  .timer-wrap {
-    background: rgba(0,0,0,0.2);
-    border: 1px solid var(--panel-border);
-    border-radius: 8px;
-    height: 6px;
-    overflow: hidden;
-    margin-top: 8px;
-    position: relative;
-  }
-  .timer-bar {
-    height: 100%;
-    background: linear-gradient(90deg, var(--primary), var(--primary-soft));
-    width: 100%;
-    transition: width 0.1s linear, background 0.3s;
-    border-radius: 8px;
-  }
+  .timer-wrap { background: rgba(0,0,0,0.2); border: 1px solid var(--panel-border); border-radius: 8px; height: 6px; overflow: hidden; margin-top: 8px; position: relative; }
+  .timer-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-soft)); width: 100%; transition: width 0.1s linear, background 0.3s; border-radius: 8px; }
   .timer-bar.warn { background: linear-gradient(90deg, var(--gold), #ffba00); }
-  .timer-bar.urgent {
-    background: linear-gradient(90deg, #ff4757, #ff6b81);
-    animation: pulse 0.4s ease-in-out infinite alternate;
-  }
-  @keyframes pulse {
-    from { opacity: 0.85; }
-    to { opacity: 1; }
-  }
-  .timer-text {
-    font-size: 0.85em;
-    color: var(--text-dim);
-    margin-left: 8px;
-    font-variant-numeric: tabular-nums;
-  }
+  .timer-bar.urgent { background: linear-gradient(90deg, #ff4757, #ff6b81); animation: pulse 0.4s ease-in-out infinite alternate; }
+  @keyframes pulse { from { opacity: 0.85; } to { opacity: 1; } }
+  .timer-text { font-size: 0.85em; color: var(--text-dim); margin-left: 8px; font-variant-numeric: tabular-nums; }
   .timer-text.urgent { color: #ff6b81; font-weight: 600; }
 
-  /* Cards */
-  .card {
-    width: 62px;
-    height: 88px;
-    border-radius: 10px;
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4em;
-    font-weight: 700;
-    box-shadow: var(--shadow-md);
-    transition: transform 0.3s var(--spring), opacity 0.4s var(--ease), box-shadow 0.25s;
-    user-select: none;
-    position: relative;
-    font-family: 'Cormorant Garamond', serif;
-  }
-  .card .suit {
-    font-size: 0.5em;
-    margin-top: 4px;
-    opacity: 0.65;
-    font-family: 'Inter', sans-serif;
-  }
-  .card.in-hand {
-    background:
-      linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0)) padding-box,
-      linear-gradient(135deg, #fefefe, #e8e6f0) padding-box;
-    color: var(--bg-1);
-    cursor: pointer;
-    border: 2px solid rgba(255,255,255,0.3);
-    box-shadow:
-      0 1px 0 rgba(255,255,255,0.5) inset,
-      0 -1px 0 rgba(0,0,0,0.06) inset,
-      0 6px 16px rgba(0,0,0,0.35);
-  }
-  .card.in-hand:hover:not(.used):not(.locked) {
-    transform: translateY(-12px) scale(1.04);
-    box-shadow:
-      0 1px 0 rgba(255,255,255,0.6) inset,
-      0 -1px 0 rgba(0,0,0,0.06) inset,
-      0 12px 28px var(--primary-glow);
-    border-color: var(--primary);
-  }
-  .card.in-hand.pending {
-    border-color: var(--primary);
-    transform: translateY(-12px) scale(1.04);
-    box-shadow:
-      0 0 0 3px var(--primary),
-      0 0 30px var(--primary-glow),
-      0 8px 16px rgba(0,0,0,0.4);
-  }
+  .card { width: 62px; height: 88px; border-radius: 10px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; font-size: 1.4em; font-weight: 700; box-shadow: var(--shadow-md); transition: transform 0.3s var(--spring), opacity 0.4s var(--ease), box-shadow 0.25s; user-select: none; position: relative; font-family: 'Cormorant Garamond', serif; }
+  .card .suit { font-size: 0.5em; margin-top: 4px; opacity: 0.65; font-family: 'Inter', sans-serif; }
+  .card.in-hand { background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0)) padding-box, linear-gradient(135deg, #fefefe, #e8e6f0) padding-box; color: #1a1535; cursor: pointer; border: 2px solid rgba(255,255,255,0.3); box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset, 0 -1px 0 rgba(0,0,0,0.06) inset, 0 6px 16px rgba(0,0,0,0.35); }
+  .card.in-hand:hover:not(.used):not(.locked) { transform: translateY(-12px) scale(1.04); box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 -1px 0 rgba(0,0,0,0.06) inset, 0 12px 28px var(--primary-glow); border-color: var(--primary); }
+  .card.in-hand.pending { border-color: var(--primary); transform: translateY(-12px) scale(1.04); box-shadow: 0 0 0 3px var(--primary), 0 0 30px var(--primary-glow), 0 8px 16px rgba(0,0,0,0.4); }
   .card.in-hand.used { opacity: 0.12; cursor: default; }
   .card.in-hand.locked { cursor: default; }
   .card.in-hand.locked:hover { transform: none; }
-  .card.prize {
-    background:
-      linear-gradient(135deg, rgba(255,255,255,0.15), transparent) padding-box,
-      linear-gradient(135deg, var(--gold), var(--gold-end)) padding-box;
-    color: #3a2700;
-    width: 80px;
-    height: 110px;
-    font-size: 1.7em;
-    border: 1px solid rgba(255,255,255,0.3);
-    box-shadow: 0 0 30px rgba(255,217,61,0.3), var(--shadow-md);
-    animation: prize-in 0.5s var(--spring);
-  }
-  .card.played {
-    background: linear-gradient(135deg, var(--primary-soft), var(--primary), var(--primary-end));
-    color: white;
-    border: 1px solid rgba(255,255,255,0.2);
-    box-shadow: 0 0 25px var(--primary-glow), var(--shadow-md);
-    animation: slide-in-up 0.35s var(--spring);
-  }
-  .card.opponent {
-    background: linear-gradient(135deg, var(--opponent), var(--opponent-end));
-    color: white;
-    border: 1px solid rgba(255,255,255,0.2);
-    box-shadow: 0 0 25px var(--opponent-glow), var(--shadow-md);
-    animation: flip-in 0.5s var(--spring);
-  }
-  .card.face-down {
-    background:
-      repeating-linear-gradient(45deg, var(--opponent-end) 0, var(--opponent-end) 7px, var(--opponent) 7px, var(--opponent) 14px);
-    color: transparent;
-    border: 1px solid rgba(255,255,255,0.15);
-    box-shadow: 0 0 15px var(--opponent-glow), var(--shadow-sm);
-    animation: slide-in-up 0.3s var(--spring);
-  }
-  .card.winner {
-    box-shadow: 0 0 0 3px #4ade80, 0 0 30px rgba(74,222,128,0.5), var(--shadow-md);
-    animation: win-pulse 0.8s var(--spring);
-  }
-  .card.tied {
-    box-shadow: 0 0 0 3px var(--gold), 0 0 25px rgba(255,217,61,0.4), var(--shadow-md);
-  }
-  .card.mini {
-    width: 38px;
-    height: 52px;
-    font-size: 0.9em;
-    border-radius: 6px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-  }
+  .card.prize { background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent) padding-box, linear-gradient(135deg, var(--gold), var(--gold-end)) padding-box; color: #3a2700; width: 80px; height: 110px; font-size: 1.7em; border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 0 30px rgba(255,217,61,0.3), var(--shadow-md); animation: prize-in 0.5s var(--spring); }
+  .card.played { background: linear-gradient(135deg, var(--primary-soft), var(--primary), var(--primary-end)); color: white; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 0 25px var(--primary-glow), var(--shadow-md); animation: slide-in-up 0.35s var(--spring); }
+  .card.opponent { background: linear-gradient(135deg, var(--opponent), var(--opponent-end)); color: white; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 0 25px var(--opponent-glow), var(--shadow-md); animation: flip-in 0.5s var(--spring); }
+  .card.face-down { color: transparent; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 0 15px var(--opponent-glow), var(--shadow-sm); animation: slide-in-up 0.3s var(--spring); }
+  .card-back-stripes { background: repeating-linear-gradient(45deg, var(--opponent-end) 0, var(--opponent-end) 7px, var(--opponent) 7px, var(--opponent) 14px); }
+  .card-back-dots { background: radial-gradient(circle at 25% 25%, var(--opponent) 2px, transparent 3px), radial-gradient(circle at 75% 75%, var(--opponent) 2px, transparent 3px), var(--opponent-end); background-size: 14px 14px; }
+  .card-back-grid { background: linear-gradient(var(--opponent-end), var(--opponent-end)), repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(255,255,255,0.15) 8px, rgba(255,255,255,0.15) 9px), repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255,255,255,0.15) 8px, rgba(255,255,255,0.15) 9px); }
+  .card-back-waves { background: linear-gradient(135deg, var(--opponent) 0%, var(--opponent-end) 50%, var(--opponent) 100%); background-size: 200% 200%; animation: wave-shift 4s ease-in-out infinite; }
+  @keyframes wave-shift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+  .card-back-hearts::before { content: '♥ ♥ ♥'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.8em; color: rgba(255,255,255,0.25); letter-spacing: 0.1em; }
+  .card-back-hearts { background: linear-gradient(135deg, var(--opponent-end), var(--opponent)); }
+  .card-back-gradient { background: linear-gradient(135deg, var(--opponent), var(--opponent-end), var(--bg-3)); }
+  .card.winner { box-shadow: 0 0 0 3px #4ade80, 0 0 30px rgba(74,222,128,0.5), var(--shadow-md); animation: win-pulse 0.8s var(--spring); }
+  .card.tied { box-shadow: 0 0 0 3px var(--gold), 0 0 25px rgba(255,217,61,0.4), var(--shadow-md); }
+  .card.mini { width: 38px; height: 52px; font-size: 0.9em; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.4); }
   .card.mini .suit { font-size: 0.5em; margin-top: 2px; }
-  .card.prize-played {
-    width: 38px;
-    height: 52px;
-    font-size: 0.9em;
-    border-radius: 6px;
-    background: linear-gradient(135deg, var(--gold), var(--gold-end));
-    color: #3a2700;
-    border: 1px solid rgba(255,255,255,0.2);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-    position: relative;
-  }
-  .card.prize-played.won-mine::after,
-  .card.prize-played.won-theirs::after,
-  .card.prize-played.won-tie::after {
-    content: '';
-    position: absolute;
-    bottom: -3px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 70%;
-    height: 3px;
-    border-radius: 2px;
-  }
+  .card.prize-played { width: 38px; height: 52px; font-size: 0.9em; border-radius: 6px; background: linear-gradient(135deg, var(--gold), var(--gold-end)); color: #3a2700; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 2px 6px rgba(0,0,0,0.4); position: relative; }
+  .card.prize-played.won-mine::after, .card.prize-played.won-theirs::after, .card.prize-played.won-tie::after { content: ''; position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 70%; height: 3px; border-radius: 2px; }
   .card.prize-played.won-mine::after { background: var(--primary); box-shadow: 0 0 8px var(--primary-glow); }
   .card.prize-played.won-theirs::after { background: var(--opponent); box-shadow: 0 0 8px var(--opponent-glow); }
   .card.prize-played.won-tie::after { background: var(--text-dim); }
 
-  @keyframes slide-in-up {
-    from { opacity: 0; transform: translateY(24px) scale(0.92); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
-  @keyframes flip-in {
-    0% { transform: rotateY(180deg) scale(0.8); opacity: 0; }
-    100% { transform: rotateY(0deg) scale(1); opacity: 1; }
-  }
-  @keyframes prize-in {
-    0% { transform: scale(0.4) rotate(-15deg); opacity: 0; }
-    60% { transform: scale(1.12) rotate(3deg); opacity: 1; }
-    100% { transform: scale(1) rotate(0); opacity: 1; }
-  }
-  @keyframes win-pulse {
-    0%, 100% { transform: scale(1); }
-    40% { transform: scale(1.12); }
-  }
-  @keyframes float-up {
-    0% { opacity: 0; transform: translate(-50%, 0) scale(0.5); }
-    20% { opacity: 1; transform: translate(-50%, -20px) scale(1.3); }
-    100% { opacity: 0; transform: translate(-50%, -140px) scale(1); }
-  }
-  @keyframes fade-in {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes slide-in-up { from { opacity: 0; transform: translateY(24px) scale(0.92); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  @keyframes flip-in { 0% { transform: rotateY(180deg) scale(0.8); opacity: 0; } 100% { transform: rotateY(0deg) scale(1); opacity: 1; } }
+  @keyframes prize-in { 0% { transform: scale(0.4) rotate(-15deg); opacity: 0; } 60% { transform: scale(1.12) rotate(3deg); opacity: 1; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+  @keyframes win-pulse { 0%, 100% { transform: scale(1); } 40% { transform: scale(1.12); } }
+  @keyframes float-up { 0% { opacity: 0; transform: translate(-50%, 0) scale(0.5); } 20% { opacity: 1; transform: translate(-50%, -20px) scale(1.3); } 100% { opacity: 0; transform: translate(-50%, -140px) scale(1); } }
+  @keyframes fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slide-in-right { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
 
-  .message {
-    margin-top: 0.8em;
-    font-size: 1.05em;
-    min-height: 1.6em;
-    color: var(--text);
-    font-weight: 500;
-    animation: fade-in 0.3s;
-  }
+  .message { margin-top: 0.8em; font-size: 1.05em; min-height: 1.6em; color: var(--text); font-weight: 500; animation: fade-in 0.3s; }
   .pot-label { color: var(--gold); margin-left: 10px; font-size: 0.85em; font-weight: 500; }
-  .confirm-row {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 10px;
-    min-height: 38px;
-    align-items: center;
-  }
+  .confirm-row { display: flex; justify-content: center; gap: 8px; margin-top: 10px; min-height: 38px; align-items: center; }
 
-  /* Reactions */
-  .reactions-bar {
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-    flex-wrap: wrap;
-    margin-top: 0.8em;
-  }
-  .reaction-btn {
-    background: var(--panel-strong);
-    border: 1px solid var(--panel-border);
-    padding: 7px 13px;
-    border-radius: 22px;
-    cursor: pointer;
-    font-size: 1.3em;
-    transition: transform 0.2s var(--spring), background 0.15s, border-color 0.15s;
-    line-height: 1;
-  }
-  .reaction-btn:hover {
-    background: var(--panel-border-bright);
-    transform: scale(1.15);
-    border-color: var(--primary);
-  }
+  .reactions-bar { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; margin-top: 0.8em; }
+  .reaction-btn { background: var(--panel-strong); border: 1px solid var(--panel-border); padding: 7px 13px; border-radius: 22px; cursor: pointer; font-size: 1.3em; transition: transform 0.2s var(--spring), background 0.15s, border-color 0.15s; line-height: 1; }
+  .reaction-btn:hover { background: var(--panel-border-bright); transform: scale(1.15); border-color: var(--primary); }
   .reaction-btn:active { transform: scale(0.95); }
-  .reaction-float {
-    position: fixed;
-    font-size: 4em;
-    z-index: 100;
-    pointer-events: none;
-    animation: float-up 2.4s var(--ease) forwards;
-    top: 50%;
-    left: 50%;
-  }
+  .reaction-float { position: fixed; font-size: 4em; z-index: 100; pointer-events: none; animation: float-up 2.4s var(--ease) forwards; top: 50%; left: 50%; }
 
-  /* Confetti canvas */
-  #confettiCanvas {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 50;
-  }
+  /* Chat */
+  .chat-panel { background: var(--panel); border: 1px solid var(--panel-border); border-radius: 14px; padding: 10px; margin-top: 0.8em; backdrop-filter: blur(12px); }
+  .chat-msgs { max-height: 120px; overflow-y: auto; text-align: left; padding: 4px 8px; }
+  .chat-msg { font-size: 0.85em; margin: 3px 0; animation: fade-in 0.2s; }
+  .chat-msg .from { font-weight: 600; margin-right: 5px; }
+  .chat-msg.me .from { color: var(--primary); }
+  .chat-msg.them .from { color: var(--opponent); }
+  .chat-input-row { display: flex; gap: 6px; margin-top: 6px; }
+  .chat-input { flex: 1; margin: 0; padding: 8px 12px; font-size: 0.9em; }
+  .chat-send { padding: 8px 14px; font-size: 0.85em; margin: 0; }
 
-  /* Modal */
-  .modal-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    backdrop-filter: blur(8px);
-    animation: fade-in 0.2s;
-  }
-  .modal {
-    background: linear-gradient(135deg, var(--bg-2), var(--bg-1));
-    border: 1px solid var(--panel-border-bright);
-    border-radius: 18px;
-    padding: 28px;
-    max-width: 580px;
-    width: 100%;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: var(--shadow-lg);
-  }
-  .modal h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 400;
-    letter-spacing: 0.1em;
-    margin-bottom: 1em;
-    font-size: 1.6em;
-    color: var(--text);
-  }
-  .history-row {
-    display: grid;
-    grid-template-columns: 50px 1fr 1fr 1fr;
-    gap: 10px;
-    align-items: center;
-    padding: 10px 6px;
-    border-bottom: 1px solid var(--panel-border);
-    font-size: 0.95em;
-  }
-  .history-row.header {
-    color: var(--text-faint);
-    font-size: 0.7em;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-  }
+  #confettiCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
+
+  .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); animation: fade-in 0.2s; }
+  .modal { background: linear-gradient(135deg, var(--bg-2), var(--bg-1)); border: 1px solid var(--panel-border-bright); border-radius: 18px; padding: 28px; max-width: 620px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: var(--shadow-lg); }
+  .modal h2 { font-family: 'Cormorant Garamond', serif; font-weight: 400; letter-spacing: 0.1em; margin-bottom: 0.8em; font-size: 1.7em; color: var(--text); }
+  .modal-close { float: right; }
+
+  .history-row { display: grid; grid-template-columns: 50px 1fr 1fr 1fr; gap: 10px; align-items: center; padding: 10px 6px; border-bottom: 1px solid var(--panel-border); font-size: 0.95em; }
+  .history-row.header { color: var(--text-faint); font-size: 0.7em; text-transform: uppercase; letter-spacing: 0.2em; }
   .history-row .h-prize { color: var(--gold); font-weight: 600; }
   .history-row .h-mine { color: var(--primary); font-weight: 600; }
   .history-row .h-theirs { color: var(--opponent); font-weight: 600; }
   .history-row .h-winner.you { color: #4ade80; }
   .history-row .h-winner.them { color: #ff6b81; }
   .history-row .h-winner.tie { color: var(--gold); }
-  .modal-close { float: right; }
+
+  /* Achievement */
+  .ach-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+  .ach-item { background: var(--panel-strong); border: 1px solid var(--panel-border); border-radius: 12px; padding: 12px; text-align: left; transition: border-color 0.2s; }
+  .ach-item.unlocked { border-color: var(--gold); background: linear-gradient(135deg, rgba(255,217,61,0.08), var(--panel-strong)); }
+  .ach-item.locked { opacity: 0.55; }
+  .ach-title { font-weight: 600; font-size: 0.9em; display: flex; align-items: center; gap: 6px; }
+  .ach-icon { font-size: 1.2em; }
+  .ach-item.locked .ach-icon { filter: grayscale(1); }
+  .ach-desc { font-size: 0.78em; color: var(--text-dim); margin-top: 4px; line-height: 1.4; }
+  .ach-toast { position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, var(--gold), var(--gold-end)); color: #3a2700; padding: 14px 20px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 30px rgba(255,217,61,0.4); z-index: 300; display: flex; align-items: center; gap: 10px; animation: slide-in-right 0.5s var(--spring); font-weight: 600; max-width: 300px; }
+  .ach-toast .ach-toast-label { font-size: 0.7em; text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.7; }
+  .ach-toast .ach-toast-title { font-size: 0.95em; }
+
+  /* Stats */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .stat-card { background: var(--panel-strong); border: 1px solid var(--panel-border); border-radius: 12px; padding: 14px; text-align: center; }
+  .stat-value { font-family: 'Cormorant Garamond', serif; font-size: 2.2em; font-weight: 400; color: var(--primary); line-height: 1; }
+  .stat-label { font-size: 0.7em; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.15em; margin-top: 6px; }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin: 8px 0; font-size: 0.85em; }
+  .bar-name { min-width: 80px; color: var(--text-dim); text-align: left; }
+  .bar-wrap { flex: 1; background: var(--panel-strong); height: 16px; border-radius: 8px; overflow: hidden; position: relative; }
+  .bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-soft)); border-radius: 8px; transition: width 0.5s var(--ease); }
+  .bar-text { font-size: 0.78em; color: var(--text-dim); min-width: 60px; text-align: right; }
+
+  /* Tutorial overlay */
+  .tutorial-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 250; display: flex; align-items: flex-end; justify-content: center; padding: 20px; pointer-events: none; backdrop-filter: blur(2px); }
+  .tutorial-box { background: linear-gradient(135deg, var(--bg-2), var(--bg-1)); border: 1px solid var(--primary); box-shadow: 0 0 40px var(--primary-glow); border-radius: 16px; padding: 18px 22px; max-width: 440px; pointer-events: auto; animation: slide-in-up 0.3s var(--spring); }
+  .tutorial-title { font-weight: 600; color: var(--primary); font-size: 1em; margin-bottom: 6px; }
+  .tutorial-text { font-size: 0.9em; color: var(--text-dim); line-height: 1.5; }
+  .tutorial-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 12px; }
+  .tutorial-step { font-size: 0.7em; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.2em; }
+  .tutorial-progress { display: flex; gap: 4px; margin-top: 8px; }
+  .tutorial-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--panel-border); }
+  .tutorial-dot.active { background: var(--primary); }
+
+  /* Daily wordle */
+  .daily-grid { font-family: 'SF Mono', Menlo, monospace; font-size: 1.6em; letter-spacing: 0.1em; line-height: 1.4; margin: 1em 0; }
+  .daily-streak { display: flex; justify-content: center; gap: 16px; margin: 1em 0; font-size: 1em; color: var(--text-dim); }
+  .daily-streak b { color: var(--gold); font-size: 1.4em; font-family: 'Cormorant Garamond', serif; }
 
   /* End */
-  .end-result {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 4em;
-    margin-bottom: 0.2em;
-    font-weight: 300;
-    letter-spacing: 0.05em;
-  }
-  .end-score {
-    font-size: 1.5em;
-    color: var(--text-dim);
-    margin-bottom: 1.4em;
-    letter-spacing: 0.15em;
-    font-family: 'Cormorant Garamond', serif;
-  }
-  .end-stakes {
-    background: var(--panel-strong);
-    border: 1px dashed var(--panel-border-bright);
-    padding: 16px 22px;
-    border-radius: 14px;
-    margin: 1em auto;
-    max-width: 480px;
-    font-style: italic;
-    color: var(--text-dim);
-  }
-  .end-stakes-label {
-    font-size: 0.68em;
-    text-transform: uppercase;
-    letter-spacing: 0.25em;
-    color: var(--text-faint);
-    margin-bottom: 6px;
-    font-style: normal;
-  }
+  .end-result { font-family: 'Cormorant Garamond', serif; font-size: 4em; margin-bottom: 0.2em; font-weight: 300; letter-spacing: 0.05em; }
+  .end-score { font-size: 1.5em; color: var(--text-dim); margin-bottom: 1.4em; letter-spacing: 0.15em; font-family: 'Cormorant Garamond', serif; }
+  .end-stakes { background: var(--panel-strong); border: 1px dashed var(--panel-border-bright); padding: 16px 22px; border-radius: 14px; margin: 1em auto; max-width: 480px; font-style: italic; color: var(--text-dim); }
+  .end-stakes-label { font-size: 0.68em; text-transform: uppercase; letter-spacing: 0.25em; color: var(--text-faint); margin-bottom: 6px; font-style: normal; }
   .win { color: #4ade80; }
   .lose { color: #ff6b81; }
   .tie { color: var(--gold); }
   .series-display { margin: 1em 0; font-size: 1em; color: var(--text-dim); }
   .series-display b { color: var(--text); font-weight: 600; }
+  .analysis-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; max-width: 600px; margin: 1.4em auto; }
+  .analysis-item { background: var(--panel-strong); border: 1px solid var(--panel-border); border-radius: 10px; padding: 10px 14px; text-align: left; font-size: 0.85em; }
+  .analysis-label { color: var(--text-faint); font-size: 0.7em; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 4px; }
+  .analysis-value { color: var(--text); font-weight: 500; }
 
   .hidden { display: none !important; }
 
   @media (max-width: 600px) {
     body { padding: 12px; }
-    h1 { font-size: 3.2em; letter-spacing: 0.14em; }
+    h1 { font-size: 3em; letter-spacing: 0.14em; }
     .card { width: 42px; height: 60px; font-size: 1em; }
     .card .suit { font-size: 0.5em; margin-top: 2px; }
     .card.prize { width: 56px; height: 78px; font-size: 1.3em; }
@@ -849,7 +315,10 @@
     .end-result { font-size: 2.5em; }
     .reaction-btn { padding: 6px 11px; font-size: 1.2em; }
     .info-bar { font-size: 0.9em; }
-    .lobby-section { padding: 16px; }
+    .lobby-section { padding: 14px; }
+    button.mode-card { min-width: 100px; min-height: 95px; padding: 12px 8px; }
+    .tutorial-box { max-width: 100%; }
+    .ach-toast { right: 12px; left: 12px; bottom: 12px; max-width: none; }
   }
 </style>
 </head>
@@ -876,35 +345,53 @@
   </div>
 
   <div class="lobby-section">
-    <h3>Your name &middot; Theme</h3>
+    <h3>Profile</h3>
     <div class="name-row">
-      <input id="nameInput" type="text" placeholder="Name" maxlength="14">
-      <div class="theme-picker" id="themePicker"></div>
+      <input id="nameInput" type="text" placeholder="Name" maxlength="14" aria-label="Your name">
+      <div class="theme-picker" id="themePicker" role="group" aria-label="Theme"></div>
+    </div>
+    <div style="margin-top: 12px;">
+      <div style="font-size: 0.7em; text-transform: uppercase; letter-spacing: 0.25em; color: var(--text-faint); margin-bottom: 8px;">Avatar</div>
+      <div class="avatar-picker" id="avatarPicker" role="group" aria-label="Avatar"></div>
     </div>
     <div class="head-to-head" id="headToHead"></div>
   </div>
 
   <div id="initialOptions">
     <div class="lobby-section">
-      <h3>Solo</h3>
-      <button id="soloBtn">🤖 Play vs AI</button>
-      <div class="settings-grid" id="soloSettings" style="margin-top: 14px;">
-        <div class="setting-item">
-          <span class="setting-label">Deck</span>
-          <select id="soloDeck"><option value="13">13 cards</option><option value="7">7 cards (quick)</option></select>
-        </div>
-        <div class="setting-item">
-          <span class="setting-label">Difficulty</span>
-          <select id="soloDifficulty"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option></select>
-        </div>
+      <h3>Play solo</h3>
+      <div class="modes-grid">
+        <button class="mode-card" id="dailyBtn"><span class="mc-icon">📅</span><span class="mc-label">Daily</span><span class="mc-sub" id="dailySubtitle">Today's challenge</span></button>
+        <button class="mode-card" id="puzzleBtn"><span class="mc-icon">🧩</span><span class="mc-label">Puzzles</span><span class="mc-sub" id="puzzleSubtitle">Solve scenarios</span></button>
+        <button class="mode-card" id="endlessBtn"><span class="mc-icon">♾️</span><span class="mc-label">Endless</span><span class="mc-sub" id="endlessSubtitle">Survival mode</span></button>
+        <button class="mode-card" id="tournamentBtn"><span class="mc-icon">🏆</span><span class="mc-label">Tournament</span><span class="mc-sub" id="tournamentSubtitle">Ladder of 8</span></button>
+        <button class="mode-card" id="soloBtn"><span class="mc-icon">🤖</span><span class="mc-label">vs AI</span><span class="mc-sub">Practice</span></button>
+        <button class="mode-card" id="tutorialBtn"><span class="mc-icon">🎓</span><span class="mc-label">Tutorial</span><span class="mc-sub">How to play</span></button>
       </div>
+      <details style="margin-top: 14px;">
+        <summary style="cursor: pointer; color: var(--text-dim); font-size: 0.82em; letter-spacing: 0.1em;">⚙ AI settings</summary>
+        <div class="settings-grid" style="margin-top: 12px;">
+          <div class="setting-item">
+            <span class="setting-label">Deck</span>
+            <select id="soloDeck"><option value="13">13 cards</option><option value="7">7 cards (quick)</option></select>
+          </div>
+          <div class="setting-item">
+            <span class="setting-label">Difficulty</span>
+            <select id="soloDifficulty"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option></select>
+          </div>
+          <div class="setting-item">
+            <span class="setting-label">Personality</span>
+            <select id="soloPersonality"><option value="balanced">Balanced</option><option value="aggressive">Aggressive</option><option value="defensive">Defensive</option><option value="bluffer">Bluffer</option><option value="mirror">Mirror</option></select>
+          </div>
+        </div>
+      </details>
     </div>
 
     <div class="lobby-section">
       <h3>Multiplayer</h3>
       <button id="createBtn">Create game</button>
       <div class="divider">or</div>
-      <input id="joinCode" class="code-input" type="text" placeholder="CODE" maxlength="12" autocapitalize="characters" autocomplete="off">
+      <input id="joinCode" class="code-input" type="text" placeholder="CODE" maxlength="12" autocapitalize="characters" autocomplete="off" aria-label="Room code">
       <br>
       <button id="joinBtn">Join game</button>
     </div>
@@ -913,40 +400,30 @@
       <summary style="cursor: pointer; color: var(--text-dim); font-size: 0.85em; letter-spacing: 0.15em; font-weight: 500;">⚙ Host settings (when creating)</summary>
       <div style="margin-top: 14px;">
         <div class="settings-grid">
-          <div class="setting-item">
-            <span class="setting-label">Custom code</span>
-            <input id="customCode" type="text" placeholder="random" maxlength="10" style="width: 110px;">
-          </div>
-          <div class="setting-item">
-            <span class="setting-label">Deck</span>
-            <select id="hostDeck"><option value="13">13 cards</option><option value="7">7 cards (quick)</option></select>
-          </div>
-          <div class="setting-item">
-            <span class="setting-label">Best of</span>
-            <input id="hostBestOf" type="number" min="1" max="99" value="1">
-          </div>
-          <div class="setting-item">
-            <span class="setting-label">Round winner</span>
-            <select id="hostDirection"><option value="high">High bid</option><option value="low">Low bid</option></select>
-          </div>
-          <div class="setting-item">
-            <span class="setting-label">Win goal</span>
-            <select id="hostWinCondition"><option value="most">Most points</option><option value="fewest">Fewest points</option></select>
-          </div>
-          <div class="setting-item">
-            <span class="setting-label">Tie rule</span>
-            <select id="hostTieRule"><option value="carry">Carry pot</option><option value="burn">Burn prize</option></select>
-          </div>
-          <div class="setting-item">
-            <span class="setting-label">Time per bid</span>
-            <select id="hostTimeLimit"><option value="0">No limit</option><option value="15">15s</option><option value="30">30s</option><option value="60">60s</option></select>
-          </div>
+          <div class="setting-item"><span class="setting-label">Custom code</span><input id="customCode" type="text" placeholder="random" maxlength="10" style="width: 110px;"></div>
+          <div class="setting-item"><span class="setting-label">Deck</span><select id="hostDeck"><option value="13">13 cards</option><option value="7">7 cards (quick)</option></select></div>
+          <div class="setting-item"><span class="setting-label">Best of</span><input id="hostBestOf" type="number" min="1" max="99" value="1"></div>
+          <div class="setting-item"><span class="setting-label">Round winner</span><select id="hostDirection"><option value="high">High bid</option><option value="low">Low bid</option></select></div>
+          <div class="setting-item"><span class="setting-label">Win goal</span><select id="hostWinCondition"><option value="most">Most points</option><option value="fewest">Fewest points</option></select></div>
+          <div class="setting-item"><span class="setting-label">Tie rule</span><select id="hostTieRule"><option value="carry">Carry pot</option><option value="burn">Burn prize</option></select></div>
+          <div class="setting-item"><span class="setting-label">Time per bid</span><select id="hostTimeLimit"><option value="0">No limit</option><option value="15">15s</option><option value="30">30s</option><option value="60">60s</option></select></div>
         </div>
         <input id="hostStakes" class="stakes-input" type="text" placeholder="Stakes (optional, e.g. 'loser picks next movie')" maxlength="80" style="margin-top: 12px;">
+        <button class="ghost small" id="copyChallengeBtn" style="margin-top: 8px;">Copy challenge link</button>
       </div>
     </details>
 
-    <p class="hint">Open this link on both devices. Highest (or lowest) total score wins after all rounds.</p>
+    <div class="lobby-section">
+      <h3>Progress</h3>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+        <button class="ghost small" id="achievementsBtn">🏅 Achievements <span id="achCount"></span></button>
+        <button class="ghost small" id="statsBtn">📊 Stats</button>
+        <button class="ghost small" id="settingsBtn">⚙ Settings</button>
+        <button class="ghost small" id="exportBtn">⬇ Export data</button>
+      </div>
+    </div>
+
+    <p class="hint">Highest (or lowest) total score wins after all rounds. Open this link on both devices to play together.</p>
   </div>
 
   <div id="hostInfo" class="hidden">
@@ -970,29 +447,28 @@
     <div class="round-info">
       <span>Round <b id="round">1</b>/<b id="totalRounds">13</b></span>
       <span class="series-pill hidden" id="seriesPill"></span>
+      <span class="series-pill hidden" id="modePill"></span>
     </div>
     <div class="score">
       <div class="score-item">
-        <span class="score-label me" id="myNameLabel">You</span>
+        <span class="score-label me"><span class="score-name"><span id="myAvatarLabel"></span><span id="myNameLabel">You</span></span></span>
         <span class="score-value" id="myScore">0</span>
       </div>
       <div class="score-item">
-        <span class="score-label them" id="theirNameLabel">Them</span>
+        <span class="score-label them"><span class="score-name"><span id="theirAvatarLabel"></span><span id="theirNameLabel">Them</span></span></span>
         <span class="score-value" id="theirScore">0</span>
       </div>
     </div>
     <div class="toolbar">
-      <button class="icon-btn" id="historyBtn" title="Round history">📜</button>
-      <button class="icon-btn" id="soundBtn" title="Sound">🔊</button>
-      <button class="icon-btn" id="quitBtn" title="Quit">✕</button>
+      <button class="icon-btn" id="chatBtn" title="Chat" aria-label="Chat">💬</button>
+      <button class="icon-btn" id="historyBtn" title="History" aria-label="Round history">📜</button>
+      <button class="icon-btn" id="soundBtn" title="Sound" aria-label="Toggle sound">🔊</button>
+      <button class="icon-btn" id="quitBtn" title="Quit" aria-label="Quit game">✕</button>
     </div>
   </div>
 
   <div class="play-area">
-    <div class="section-label">
-      <span>Prizes played</span>
-      <span style="text-transform: none; letter-spacing: 0; color: var(--text-faint);" id="prizesLeft"></span>
-    </div>
+    <div class="section-label"><span>Prizes played</span><span style="text-transform: none; letter-spacing: 0; color: var(--text-faint);" id="prizesLeft"></span></div>
     <div class="row mini" id="prizeHistoryRow"></div>
   </div>
 
@@ -1007,10 +483,7 @@
   </div>
 
   <div class="play-area">
-    <div class="section-label">
-      <span>Bids</span>
-      <span class="timer-text" id="timerText"></span>
-    </div>
+    <div class="section-label"><span>Bids</span><span class="timer-text" id="timerText"></span></div>
     <div class="row bids">
       <div style="text-align: center;">
         <div style="font-size: 0.65em; color: var(--opponent); text-transform: uppercase; letter-spacing: 0.25em; margin-bottom: 6px; font-weight: 500;" id="theirBidLabel">Them</div>
@@ -1033,6 +506,14 @@
   <div class="message" id="message"></div>
 
   <div class="reactions-bar" id="reactionsBar"></div>
+
+  <div class="chat-panel hidden" id="chatPanel">
+    <div class="chat-msgs" id="chatMsgs"></div>
+    <div class="chat-input-row">
+      <input class="chat-input" id="chatInput" type="text" placeholder="Type a message..." maxlength="200" aria-label="Chat message">
+      <button class="chat-send" id="chatSendBtn">Send</button>
+    </div>
+  </div>
 </div>
 
 <!-- END -->
@@ -1044,13 +525,21 @@
     <div class="end-stakes-label">Stakes</div>
     <div id="endStakesText"></div>
   </div>
-  <button id="rematchBtn">Rematch</button>
-  <button id="historyBtn2" class="ghost">View round-by-round</button>
-  <button id="exitBtn" class="ghost">Back to lobby</button>
+  <div id="dailyShareSection" class="hidden">
+    <div class="daily-grid" id="dailyGrid"></div>
+    <button id="dailyShareBtn">📋 Copy result</button>
+  </div>
+  <div class="analysis-grid hidden" id="analysisGrid"></div>
+  <div style="margin-top: 1em;">
+    <button id="rematchBtn">Rematch</button>
+    <button id="shareImgBtn" class="ghost">📷 Save image</button>
+    <button id="historyBtn2" class="ghost">📜 Rounds</button>
+    <button id="exitBtn" class="ghost">← Lobby</button>
+  </div>
   <p class="status" id="rematchStatus"></p>
 </div>
 
-<!-- HISTORY MODAL -->
+<!-- MODALS -->
 <div id="historyModal" class="modal-overlay hidden">
   <div class="modal">
     <button class="ghost small modal-close" id="historyCloseBtn">Close</button>
@@ -1059,24 +548,180 @@
   </div>
 </div>
 
+<div id="achievementsModal" class="modal-overlay hidden">
+  <div class="modal">
+    <button class="ghost small modal-close" id="achievementsCloseBtn">Close</button>
+    <h2>Achievements</h2>
+    <p style="color: var(--text-dim); font-size: 0.9em; margin-bottom: 1em;"><span id="achProgress"></span></p>
+    <div id="achievementsContent" class="ach-grid"></div>
+  </div>
+</div>
+
+<div id="statsModal" class="modal-overlay hidden">
+  <div class="modal">
+    <button class="ghost small modal-close" id="statsCloseBtn">Close</button>
+    <h2>Statistics</h2>
+    <div id="statsContent"></div>
+  </div>
+</div>
+
+<div id="puzzleModal" class="modal-overlay hidden">
+  <div class="modal">
+    <button class="ghost small modal-close" id="puzzleCloseBtn">Close</button>
+    <h2>Puzzles</h2>
+    <p style="color: var(--text-dim); font-size: 0.9em; margin-bottom: 1em;">Solve unique GOPS scenarios. Solved: <span id="puzzlesSolved">0</span>/<span id="puzzlesTotal">0</span></p>
+    <div id="puzzleList"></div>
+  </div>
+</div>
+
+<div id="tournamentModal" class="modal-overlay hidden">
+  <div class="modal">
+    <button class="ghost small modal-close" id="tournamentCloseBtn">Close</button>
+    <h2>Tournament Ladder</h2>
+    <p style="color: var(--text-dim); font-size: 0.9em; margin-bottom: 1em;">Defeat all 8 opponents to become champion.</p>
+    <div id="tournamentList"></div>
+  </div>
+</div>
+
+<div id="settingsModal" class="modal-overlay hidden">
+  <div class="modal">
+    <button class="ghost small modal-close" id="settingsCloseBtn">Close</button>
+    <h2>Settings</h2>
+    <div style="margin: 1em 0;">
+      <div style="font-size: 0.7em; text-transform: uppercase; letter-spacing: 0.25em; color: var(--text-faint); margin-bottom: 8px;">Card back</div>
+      <div id="cardBackPicker" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;"></div>
+    </div>
+    <div class="settings-grid" style="margin-top: 1.5em;">
+      <div class="setting-item">
+        <span class="setting-label">Sound</span>
+        <select id="soundToggleSetting"><option value="1">On</option><option value="0">Off</option></select>
+      </div>
+      <div class="setting-item">
+        <span class="setting-label">Haptics</span>
+        <select id="hapticsToggleSetting"><option value="1">On</option><option value="0">Off</option></select>
+      </div>
+    </div>
+    <div style="margin-top: 1.5em; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+      <button class="ghost small" id="importBtn">⬆ Import data</button>
+      <input type="file" id="importFile" accept=".json" class="hidden">
+      <button class="ghost small" id="exportBtn2">⬇ Export data</button>
+      <button class="ghost small" id="resetDataBtn">🗑 Reset all data</button>
+    </div>
+    <div id="installPromptArea" class="hidden" style="margin-top: 1.5em; padding: 14px; background: var(--panel-strong); border-radius: 12px;">
+      <p style="font-size: 0.9em; margin-bottom: 8px;">📲 Install GOPS as an app</p>
+      <button id="installBtn" class="small">Install</button>
+    </div>
+  </div>
+</div>
+
+<!-- TUTORIAL OVERLAY -->
+<div id="tutorialOverlay" class="tutorial-overlay hidden">
+  <div class="tutorial-box">
+    <div class="tutorial-step" id="tutStep">Step 1 of 6</div>
+    <div class="tutorial-title" id="tutTitle">Welcome to GOPS</div>
+    <div class="tutorial-text" id="tutText">...</div>
+    <div class="tutorial-progress" id="tutProgress"></div>
+    <div class="tutorial-actions">
+      <button class="ghost small" id="tutSkipBtn">Skip</button>
+      <button class="small" id="tutNextBtn">Next</button>
+    </div>
+  </div>
+</div>
+
 </div>
 
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script>
-const PROTO_VERSION = 3;
+'use strict';
+
+const PROTO_VERSION = 4;
 const PREFIX = 'gops-v2-room-';
 const SAVE_KEY = 'gops2-savedGame';
-const SAVE_MAX_AGE = 24 * 60 * 60 * 1000; // 24 hours
+const SAVE_MAX_AGE = 24 * 60 * 60 * 1000;
+const STATS_KEY = 'gops2-stats';
+const ACH_KEY = 'gops2-achievements';
+const DAILY_KEY = 'gops2-daily';
+const PUZZLE_KEY = 'gops2-puzzles';
+const TOURNEY_KEY = 'gops2-tournament';
+
+const AVATARS = ['😎','🎭','👑','🐱','🦊','🐉','🌹','⭐','🌙','🔥','💎','🎲','🦋','🌸','🍀','⚡','🦄','🎸'];
+const CARD_BACKS = [
+  { id: 'stripes', label: 'Stripes' },
+  { id: 'dots', label: 'Dots' },
+  { id: 'grid', label: 'Grid' },
+  { id: 'waves', label: 'Waves' },
+  { id: 'hearts', label: 'Hearts' },
+  { id: 'gradient', label: 'Gradient' }
+];
+const REACTIONS = ['😘', '😤', '🔥', '😂', '💀', '❤️', '🤔', '😎'];
+
+const TOURNAMENT_AIS = [
+  { name: 'Rookie Ron', avatar: '🤓', personality: 'easy', difficulty: 'easy', description: 'Plays randomly. Warm-up.' },
+  { name: 'Mirror Mira', avatar: '🪞', personality: 'mirror', difficulty: 'medium', description: 'Copies your last bid.' },
+  { name: 'Defender Donna', avatar: '🛡️', personality: 'defensive', difficulty: 'medium', description: 'Hoards her high cards.' },
+  { name: 'Aggressor Andy', avatar: '⚔️', personality: 'aggressive', difficulty: 'medium', description: 'Dumps high cards early.' },
+  { name: 'Bluffer Bob', avatar: '🎭', personality: 'bluffer', difficulty: 'hard', description: 'Unpredictable plays.' },
+  { name: 'Calculator Cal', avatar: '🧮', personality: 'balanced', difficulty: 'hard', description: 'Optimal medium play.' },
+  { name: 'Sphinx Sam', avatar: '🦁', personality: 'balanced', difficulty: 'hard', description: 'Subtle and patient.' },
+  { name: 'Grandmaster Gabe', avatar: '👑', personality: 'balanced', difficulty: 'hard', description: 'The final boss.' }
+];
+
+const PUZZLES = [
+  { id: 1, title: 'Last Round Showdown', desc: 'You and the AI each have one card. Win the final prize.', deckSize: 13, scripted: [{ai: 13, prize: 1}, {ai: 12, prize: 2}, {ai: 11, prize: 3}, {ai: 10, prize: 4}, {ai: 9, prize: 5}, {ai: 8, prize: 6}, {ai: 7, prize: 7}, {ai: 6, prize: 8}, {ai: 5, prize: 9}, {ai: 4, prize: 10}, {ai: 3, prize: 11}, {ai: 2, prize: 12}, {ai: 1, prize: 13}], goal: 'Win the K (13) on the last round.' },
+  { id: 2, title: 'Carryover Crisis', desc: 'Big pot has built up. Don\'t let the AI take it.', deckSize: 7, scripted: [{ai: 4, prize: 1}, {ai: 4, prize: 2}, {ai: 5, prize: 3}, {ai: 6, prize: 7}, {ai: 7, prize: 4}, {ai: 3, prize: 5}, {ai: 2, prize: 6}], goal: 'Beat the AI by 5+ points.' },
+  { id: 3, title: 'High Stakes Opener', desc: 'AI dumps her K early. What\'s your move?', deckSize: 7, scripted: [{ai: 7, prize: 1}, {ai: 6, prize: 2}, {ai: 5, prize: 3}, {ai: 4, prize: 7}, {ai: 3, prize: 6}, {ai: 2, prize: 5}, {ai: 1, prize: 4}], goal: 'Save your high cards for the prizes that matter.' },
+  { id: 4, title: 'The Bluff', desc: 'AI plays low on big prizes. Don\'t fall for it.', deckSize: 7, scripted: [{ai: 1, prize: 7}, {ai: 7, prize: 1}, {ai: 2, prize: 6}, {ai: 6, prize: 2}, {ai: 3, prize: 5}, {ai: 5, prize: 3}, {ai: 4, prize: 4}], goal: 'Beat the AI.' },
+  { id: 5, title: 'Reverse', desc: 'LOW bid wins this round. Adjust your strategy.', deckSize: 7, direction: 'low', scripted: [{ai: 4, prize: 7}, {ai: 5, prize: 6}, {ai: 6, prize: 5}, {ai: 7, prize: 4}, {ai: 1, prize: 3}, {ai: 2, prize: 2}, {ai: 3, prize: 1}], goal: 'Win in low-bid-wins mode.' },
+  { id: 6, title: 'Burn Mode', desc: 'Ties burn the prize. Avoid duplicating the AI.', deckSize: 7, tieRule: 'burn', scripted: [{ai: 4, prize: 7}, {ai: 4, prize: 6}, {ai: 4, prize: 1}, {ai: 4, prize: 2}, {ai: 7, prize: 3}, {ai: 1, prize: 4}, {ai: 2, prize: 5}], goal: 'Win with the burn rule.' },
+  { id: 7, title: 'Hoard the King', desc: 'AI saves her K for last. Can you bait it out?', deckSize: 7, scripted: [{ai: 1, prize: 7}, {ai: 2, prize: 6}, {ai: 3, prize: 5}, {ai: 4, prize: 4}, {ai: 5, prize: 3}, {ai: 6, prize: 2}, {ai: 7, prize: 1}], goal: 'Win at least 4 prize values.' },
+  { id: 8, title: 'Mind Games', desc: 'Hard AI. Use deduction.', deckSize: 13, scripted: null, difficulty: 'hard', goal: 'Beat the hard AI on the full deck.' },
+  { id: 9, title: 'Quick Reflex', desc: '15-second timer per bid. Don\'t hesitate.', deckSize: 7, timeLimit: 15, scripted: null, difficulty: 'medium', goal: 'Win against the clock.' },
+  { id: 10, title: 'Fewest Wins', desc: 'LOWEST total wins. Bait the AI into taking prizes.', deckSize: 7, winCondition: 'fewest', scripted: null, difficulty: 'medium', goal: 'Lose fewer points than the AI.' }
+];
+
+const ACHIEVEMENTS = [
+  { id: 'first_game', icon: '🎮', title: 'First Steps', desc: 'Finish your first game.' },
+  { id: 'first_win', icon: '🏆', title: 'Victory!', desc: 'Win your first game.' },
+  { id: 'tutorial', icon: '🎓', title: 'Tutorial Graduate', desc: 'Complete the tutorial.' },
+  { id: 'daily_1', icon: '📅', title: 'Daily Devotee', desc: 'Complete one daily challenge.' },
+  { id: 'daily_7', icon: '🔥', title: 'Week of Wins', desc: 'Complete 7 daily challenges.' },
+  { id: 'daily_30', icon: '💎', title: 'Monthly Master', desc: 'Complete 30 daily challenges.' },
+  { id: 'perfect', icon: '✨', title: 'Perfect Game', desc: 'Win every round in a game.' },
+  { id: 'comeback', icon: '🚀', title: 'Comeback King', desc: 'Win after being behind 30+ points.' },
+  { id: 'bluff_win', icon: '🎭', title: 'The Bluffer', desc: 'Win a round bidding A or 2.' },
+  { id: 'hoarder', icon: '🦅', title: 'Patient Hunter', desc: 'Save your K until round 10+.' },
+  { id: 'speed', icon: '⚡', title: 'Lightning Bid', desc: 'Confirm in under 2 seconds.' },
+  { id: 'marathon', icon: '🏃', title: 'Marathon', desc: 'Win a Best-of-7 series.' },
+  { id: 'ai_hard', icon: '🤖', title: 'Machine Slayer', desc: 'Beat the hard AI.' },
+  { id: 'tournament', icon: '👑', title: 'Champion', desc: 'Win the tournament.' },
+  { id: 'endless_10', icon: '♾️', title: 'Endless 10', desc: 'Reach round 10 in endless mode.' },
+  { id: 'endless_25', icon: '🌟', title: 'Endless 25', desc: 'Reach round 25 in endless mode.' },
+  { id: 'puzzle_5', icon: '🧩', title: 'Puzzle Solver', desc: 'Solve 5 puzzles.' },
+  { id: 'puzzle_all', icon: '🎯', title: 'Puzzle Master', desc: 'Solve all puzzles.' },
+  { id: 'stakes', icon: '🎰', title: 'High Stakes', desc: 'Win a game with stakes set.' },
+  { id: 'multi_10', icon: '🤝', title: 'Social Player', desc: 'Play 10 multiplayer games.' },
+  { id: 'reverse', icon: '🔄', title: 'Reverse Master', desc: 'Win in lowest-wins or low-bid mode.' },
+  { id: 'burn', icon: '🔥', title: 'Burnout', desc: 'Win with burn-on-tie rule.' },
+  { id: 'high_score', icon: '💯', title: 'Big Spender', desc: 'Score 60+ points in one game.' },
+  { id: 'theme', icon: '🎨', title: 'Theme Explorer', desc: 'Try all 6 themes.' },
+  { id: 'underdog', icon: '🐕', title: 'Underdog', desc: 'Win as the joiner in multiplayer.' }
+];
+
+const TUTORIAL_STEPS = [
+  { title: 'Welcome to GOPS', text: 'GOPS (Game of Pure Strategy) is a card game with no luck — just bidding wisely.' },
+  { title: 'The Setup', text: 'You and your opponent each have cards Ace to King. A separate prize deck is shuffled face-down.' },
+  { title: 'Each Round', text: 'A prize card is revealed. You both secretly pick a card from your hand to bid.' },
+  { title: 'Who Wins', text: 'The highest bid wins the prize, adding its value to your score. The played card is gone forever.' },
+  { title: 'Ties', text: 'If both bid the same card, the prize CARRIES to the next round — making it more valuable!' },
+  { title: 'The Goal', text: 'After all 13 rounds, whoever has the highest total score wins. Pick your battles. Good luck!' }
+];
 
 const S = {
-  peer: null, conn: null, isHost: false, vsAI: false, mode: null, // 'solo'|'host'|'joiner'
+  peer: null, conn: null, isHost: false, vsAI: false, mode: null,
   roomCode: '',
   myName: 'You', theirName: 'Them',
-  settings: {
-    deckSize: 13, bestOf: 1, tieRule: 'carry',
-    direction: 'high', winCondition: 'most',
-    timeLimit: 0, stakes: ''
-  },
+  myAvatar: '😎', theirAvatar: '🎭',
+  settings: { deckSize: 13, bestOf: 1, tieRule: 'carry', direction: 'high', winCondition: 'most', timeLimit: 0, stakes: '' },
   prizes: [], myHand: [], theirHand: [], theirUsedCards: [],
   round: 0, myScore: 0, theirScore: 0, pot: 0,
   myPick: null, theirPick: null, pendingPick: null,
@@ -1084,9 +729,15 @@ const S = {
   myGames: 0, theirGames: 0,
   myStakes: '', theirStakes: '',
   myRematch: false, theirRematch: false,
-  busy: false, sound: true, theme: 'rose',
+  busy: false, sound: true, haptics: true, theme: 'rose', cardBack: 'stripes',
   totalRounds: 13,
-  timerId: null, timerStart: 0, timerDuration: 0
+  timerId: null, timerStart: 0, timerDuration: 0, lastTickSec: null,
+  pickTime: 0,
+  scriptedAI: null, currentMode: null,
+  tournamentLevel: 0, endlessLevel: 0, endlessScore: 0,
+  currentPuzzle: null, currentTournamentAI: null,
+  chatMsgs: [],
+  themesTried: new Set()
 };
 
 const $ = id => document.getElementById(id);
@@ -1094,115 +745,124 @@ const show = id => $(id).classList.remove('hidden');
 const hide = id => $(id).classList.add('hidden');
 const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-// ============ PERSISTENCE ============
-function saveGameState() {
-  if (!S.mode || $('game').classList.contains('hidden')) return;
-  try {
-    const data = {
-      timestamp: Date.now(),
-      mode: S.mode,
-      roomCode: S.roomCode,
-      isHost: S.isHost,
-      myName: S.myName,
-      theirName: S.theirName,
-      settings: S.settings,
-      prizes: S.prizes,
-      myHand: S.myHand,
-      theirHand: S.theirHand,
-      theirUsedCards: S.theirUsedCards,
-      round: S.round,
-      myScore: S.myScore,
-      theirScore: S.theirScore,
-      pot: S.pot,
-      history: S.history,
-      myGames: S.myGames,
-      theirGames: S.theirGames,
-      totalRounds: S.totalRounds
-    };
-    localStorage.setItem(SAVE_KEY, JSON.stringify(data));
-  } catch (e) {}
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
-function loadGameState() {
-  try {
-    const raw = localStorage.getItem(SAVE_KEY);
-    if (!raw) return null;
-    const d = JSON.parse(raw);
-    if (Date.now() - d.timestamp > SAVE_MAX_AGE) {
-      localStorage.removeItem(SAVE_KEY);
-      return null;
-    }
-    return d;
-  } catch (e) { return null; }
+function seededShuffle(arr, seed) {
+  const a = arr.slice();
+  let s = seed;
+  const rand = () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
-function clearGameState() {
-  try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+function genCode() {
+  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  let s = ''; for (let i = 0; i < 5; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return s;
 }
-function applyLoadedState(d) {
-  S.mode = d.mode;
-  S.roomCode = d.roomCode;
-  S.isHost = d.isHost;
-  S.myName = d.myName;
-  S.theirName = d.theirName;
-  S.settings = d.settings;
-  S.prizes = d.prizes;
-  S.myHand = d.myHand;
-  S.theirHand = d.theirHand;
-  S.theirUsedCards = d.theirUsedCards;
-  S.round = d.round;
-  S.myScore = d.myScore;
-  S.theirScore = d.theirScore;
-  S.pot = d.pot;
-  S.history = d.history;
-  S.myGames = d.myGames;
-  S.theirGames = d.theirGames;
-  S.totalRounds = d.totalRounds;
-  S.vsAI = (d.mode === 'solo');
+function rankText(n, size = 13) {
+  if (size === 13) return ({1:'A',11:'J',12:'Q',13:'K'})[n] || String(n);
+  return String(n);
 }
+function makeCard(n, className, suit, size = 13) {
+  const div = document.createElement('div');
+  div.className = 'card ' + className;
+  if (className.includes('face-down')) {
+    div.className += ' card-back-' + S.cardBack;
+    div.textContent = '';
+  } else {
+    div.innerHTML = `${rankText(n, size)}${suit ? `<div class="suit">${suit}</div>` : ''}`;
+  }
+  return div;
+}
+function compareBid(my, their) { return S.settings.direction === 'low' ? their - my : my - their; }
+function compareScores(my, their) { return S.settings.winCondition === 'fewest' ? their - my : my - their; }
 
-// ============ PREFS ============
+// === STORAGE ===
+function getJSON(key, def) { try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(def)); } catch (e) { return def; } }
+function setJSON(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
 function loadPrefs() {
   try {
-    const p = JSON.parse(localStorage.getItem('gops2-prefs') || '{}');
+    const p = getJSON('gops2-prefs', {});
     if (p.name) { S.myName = p.name; $('nameInput').value = p.name; }
     if (p.theme) setTheme(p.theme); else setTheme('rose');
     if (p.sound !== undefined) S.sound = p.sound;
+    if (p.haptics !== undefined) S.haptics = p.haptics;
+    if (p.avatar) S.myAvatar = p.avatar;
+    if (p.cardBack) S.cardBack = p.cardBack;
+    if (p.themesTried) S.themesTried = new Set(p.themesTried);
     if (p.lastSettings) {
       const ls = p.lastSettings;
-      if (ls.deck) $('hostDeck').value = ls.deck;
-      if (ls.bestOf) $('hostBestOf').value = ls.bestOf;
-      if (ls.tieRule) $('hostTieRule').value = ls.tieRule;
-      if (ls.direction) $('hostDirection').value = ls.direction;
-      if (ls.winCondition) $('hostWinCondition').value = ls.winCondition;
-      if (ls.timeLimit) $('hostTimeLimit').value = ls.timeLimit;
+      ['deck','bestOf','tieRule','direction','winCondition','timeLimit'].forEach(k => {
+        const el = $('host' + k.charAt(0).toUpperCase() + k.slice(1));
+        if (el && ls[k] !== undefined) el.value = ls[k];
+      });
     }
     updateSoundBtn();
   } catch (e) { setTheme('rose'); }
 }
 function savePrefs(extras = {}) {
   try {
-    const existing = JSON.parse(localStorage.getItem('gops2-prefs') || '{}');
-    const merged = { ...existing, name: S.myName, theme: S.theme, sound: S.sound, ...extras };
-    localStorage.setItem('gops2-prefs', JSON.stringify(merged));
+    const existing = getJSON('gops2-prefs', {});
+    const merged = { ...existing, name: S.myName, theme: S.theme, sound: S.sound, haptics: S.haptics, avatar: S.myAvatar, cardBack: S.cardBack, themesTried: Array.from(S.themesTried), ...extras };
+    setJSON('gops2-prefs', merged);
   } catch (e) {}
 }
 function saveHostSettings() {
   savePrefs({ lastSettings: {
-    deck: $('hostDeck').value,
-    bestOf: $('hostBestOf').value,
-    tieRule: $('hostTieRule').value,
-    direction: $('hostDirection').value,
-    winCondition: $('hostWinCondition').value,
-    timeLimit: $('hostTimeLimit').value
+    deck: $('hostDeck').value, bestOf: $('hostBestOf').value, tieRule: $('hostTieRule').value,
+    direction: $('hostDirection').value, winCondition: $('hostWinCondition').value, timeLimit: $('hostTimeLimit').value
   }});
 }
+
+// Game state persistence
+function saveGameState() {
+  if (!S.mode || $('game').classList.contains('hidden')) return;
+  if (['daily','puzzle','endless','tournament','tutorial'].includes(S.currentMode)) return; // these aren't typically resumed
+  try {
+    setJSON(SAVE_KEY, {
+      timestamp: Date.now(), mode: S.mode, currentMode: S.currentMode,
+      roomCode: S.roomCode, isHost: S.isHost, myName: S.myName, theirName: S.theirName,
+      myAvatar: S.myAvatar, theirAvatar: S.theirAvatar,
+      settings: S.settings, prizes: S.prizes, myHand: S.myHand, theirHand: S.theirHand,
+      theirUsedCards: S.theirUsedCards, round: S.round, myScore: S.myScore, theirScore: S.theirScore,
+      pot: S.pot, history: S.history, myGames: S.myGames, theirGames: S.theirGames,
+      totalRounds: S.totalRounds
+    });
+  } catch (e) {}
+}
+function loadGameState() {
+  try {
+    const d = getJSON(SAVE_KEY, null);
+    if (!d || Date.now() - d.timestamp > SAVE_MAX_AGE) { clearGameState(); return null; }
+    return d;
+  } catch (e) { return null; }
+}
+function clearGameState() { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} }
+function applyLoadedState(d) {
+  Object.assign(S, {
+    mode: d.mode, currentMode: d.currentMode, roomCode: d.roomCode, isHost: d.isHost,
+    myName: d.myName, theirName: d.theirName,
+    myAvatar: d.myAvatar || '😎', theirAvatar: d.theirAvatar || '🎭',
+    settings: d.settings, prizes: d.prizes, myHand: d.myHand, theirHand: d.theirHand,
+    theirUsedCards: d.theirUsedCards, round: d.round, myScore: d.myScore, theirScore: d.theirScore,
+    pot: d.pot, history: d.history, myGames: d.myGames, theirGames: d.theirGames,
+    totalRounds: d.totalRounds, vsAI: d.mode === 'solo'
+  });
+}
+
+// === H2H record ===
 function recordKeyFor(otherName) { return 'gops2-h2h-' + (otherName || '').toLowerCase().trim(); }
-function getRecord(otherName) {
-  try { return JSON.parse(localStorage.getItem(recordKeyFor(otherName)) || '{"mine":0,"theirs":0,"ties":0}'); }
-  catch (e) { return { mine: 0, theirs: 0, ties: 0 }; }
-}
-function saveRecord(otherName, rec) {
-  try { localStorage.setItem(recordKeyFor(otherName), JSON.stringify(rec)); } catch (e) {}
-}
+function getRecord(other) { return getJSON(recordKeyFor(other), {mine:0,theirs:0,ties:0}); }
+function saveRecord(other, rec) { setJSON(recordKeyFor(other), rec); }
 function updateHeadToHead() {
   const name = $('nameInput').value.trim();
   if (!name) { $('headToHead').textContent = ''; return; }
@@ -1211,63 +871,95 @@ function updateHeadToHead() {
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key && key.startsWith('gops2-h2h-')) {
-        const r = JSON.parse(localStorage.getItem(key) || '{}');
-        mine += r.mine || 0;
-        theirs += r.theirs || 0;
-        ties += r.ties || 0;
+        const r = getJSON(key, {});
+        mine += r.mine || 0; theirs += r.theirs || 0; ties += r.ties || 0;
       }
     }
     if (mine + theirs + ties > 0) {
       $('headToHead').innerHTML = `All-time: <span class="wins-mine">${mine}W</span> · <span class="wins-theirs">${theirs}L</span> · ${ties}T`;
-    } else {
-      $('headToHead').textContent = '';
-    }
+    } else $('headToHead').textContent = '';
   } catch (e) {}
 }
 
-// ============ THEMES ============
-const THEMES = [
-  { name: 'rose', color: '#ff5c8d' },
-  { name: 'ocean', color: '#00d9ff' },
-  { name: 'cosmic', color: '#c77dff' },
-  { name: 'forest', color: '#95d5b2' },
-  { name: 'ember', color: '#ff8a5b' }
-];
-function setTheme(name) {
-  S.theme = name;
-  document.documentElement.setAttribute('data-theme', name === 'rose' ? '' : name);
-  document.querySelectorAll('.theme-swatch').forEach(s => s.classList.toggle('active', s.dataset.theme === name));
-  savePrefs();
-}
-function buildThemePicker() {
-  const picker = $('themePicker');
-  THEMES.forEach(t => {
-    const s = document.createElement('div');
-    s.className = 'theme-swatch';
-    s.dataset.theme = t.name;
-    s.style.background = `linear-gradient(135deg, ${t.color}, rgba(255,255,255,0.2))`;
-    s.title = t.name;
-    s.onclick = () => setTheme(t.name);
-    picker.appendChild(s);
-  });
+// === Stats ===
+function getStats() { return getJSON(STATS_KEY, { gamesPlayed: 0, gamesWon: 0, multiGames: 0, multiWon: 0, soloGames: 0, soloWon: 0, totalScore: 0, highScore: 0, perfectGames: 0, comebackWins: 0, rounds: 0 }); }
+function updateStats(update) {
+  const s = getStats();
+  Object.keys(update).forEach(k => { if (typeof update[k] === 'function') s[k] = update[k](s[k] || 0); else s[k] = update[k]; });
+  setJSON(STATS_KEY, s);
 }
 
-// ============ AUDIO ============
+// === Achievements ===
+function getAchievements() { return getJSON(ACH_KEY, []); }
+function hasAch(id) { return getAchievements().includes(id); }
+function unlockAch(id) {
+  const list = getAchievements();
+  if (list.includes(id)) return false;
+  list.push(id);
+  setJSON(ACH_KEY, list);
+  const ach = ACHIEVEMENTS.find(a => a.id === id);
+  if (ach) showAchToast(ach);
+  return true;
+}
+function showAchToast(ach) {
+  const toast = document.createElement('div');
+  toast.className = 'ach-toast';
+  toast.innerHTML = `<span style="font-size:1.6em;">${ach.icon}</span><div><div class="ach-toast-label">Achievement</div><div class="ach-toast-title">${escapeHtml(ach.title)}</div></div>`;
+  document.body.appendChild(toast);
+  haptic([60, 30, 60]);
+  setTimeout(() => { toast.style.transition = 'opacity 0.5s'; toast.style.opacity = '0'; }, 3000);
+  setTimeout(() => toast.remove(), 3600);
+}
+function checkAchievements(ctx) {
+  if (ctx.gameEnded) {
+    unlockAch('first_game');
+    if (ctx.didIWin) unlockAch('first_win');
+    if (ctx.didIWin && ctx.allRoundsWon) unlockAch('perfect');
+    if (ctx.didIWin && ctx.maxDeficit >= 30) unlockAch('comeback');
+    if (ctx.didIWin && S.settings.tieRule === 'burn') unlockAch('burn');
+    if (ctx.didIWin && (S.settings.direction === 'low' || S.settings.winCondition === 'fewest')) unlockAch('reverse');
+    if (ctx.didIWin && S.settings.stakes) unlockAch('stakes');
+    if (ctx.didIWin && S.myScore >= 60) unlockAch('high_score');
+    if (S.currentMode === 'tournament' && ctx.didIWin) {
+      // tournament progression handled separately
+    }
+    if (!S.vsAI && ctx.didIWin && !S.isHost) unlockAch('underdog');
+    if (ctx.didIWin && S.vsAI && $('soloDifficulty').value === 'hard') unlockAch('ai_hard');
+    if (S.settings.bestOf >= 7 && (S.myGames > S.theirGames || S.theirGames > S.myGames)) unlockAch('marathon');
+  }
+  if (ctx.bidMade) {
+    if ((S.myPick === 1 || S.myPick === 2) && ctx.bidWonRound) unlockAch('bluff_win');
+    if (ctx.bidConfirmTimeMs && ctx.bidConfirmTimeMs < 2000) unlockAch('speed');
+    if (S.myPick === 13 && S.round >= 10) unlockAch('hoarder');
+  }
+  if (S.themesTried.size >= 6) unlockAch('theme');
+}
+
+// === Daily ===
+function getDailyState() { return getJSON(DAILY_KEY, { lastCompleted: null, streak: 0, totalCompleted: 0, history: {} }); }
+function todayKey() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function getDailySeed() {
+  const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth()+1) * 100 + d.getDate();
+}
+function updateDailySubtitle() {
+  const st = getDailyState();
+  const done = st.history[todayKey()];
+  $('dailySubtitle').textContent = done ? `✓ Today: ${done.myScore}-${done.theirScore}` : `Today's challenge${st.streak ? ' · 🔥' + st.streak : ''}`;
+}
+
+// === Audio + Haptics ===
 let audioCtx = null;
 function beep(freq, dur, type = 'sine', vol = 0.08) {
   if (!S.sound) return;
   try {
     audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') audioCtx.resume();
-    const o = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    o.type = type;
-    o.frequency.value = freq;
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = type; o.frequency.value = freq;
     g.gain.setValueAtTime(vol, audioCtx.currentTime);
     g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
     o.connect(g); g.connect(audioCtx.destination);
-    o.start();
-    o.stop(audioCtx.currentTime + dur);
+    o.start(); o.stop(audioCtx.currentTime + dur);
   } catch (e) {}
 }
 const sfx = {
@@ -1280,22 +972,23 @@ const sfx = {
   endWin: () => { beep(523, 0.12); setTimeout(() => beep(659, 0.12), 100); setTimeout(() => beep(784, 0.12), 200); setTimeout(() => beep(1047, 0.3), 300); },
   endLose: () => { beep(440, 0.15, 'sawtooth'); setTimeout(() => beep(330, 0.2, 'sawtooth'), 150); setTimeout(() => beep(220, 0.3, 'sawtooth'), 350); },
   reaction: () => beep(880, 0.06, 'triangle', 0.04),
-  tick: () => beep(660, 0.04, 'square', 0.03)
+  tick: () => beep(660, 0.04, 'square', 0.03),
+  achievement: () => { beep(880, 0.08); setTimeout(() => beep(1175, 0.15), 80); }
 };
-function updateSoundBtn() {
-  if ($('soundBtn')) $('soundBtn').textContent = S.sound ? '🔊' : '🔇';
+function haptic(pattern) {
+  if (!S.haptics) return;
+  if ('vibrate' in navigator) navigator.vibrate(pattern);
 }
+function updateSoundBtn() { if ($('soundBtn')) $('soundBtn').textContent = S.sound ? '🔊' : '🔇'; }
 
-// ============ CONFETTI ============
+// === Confetti ===
 function fireConfetti(opts = {}) {
   const canvas = $('confettiCanvas');
   canvas.classList.remove('hidden');
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio || 1;
-  canvas.width = innerWidth * dpr;
-  canvas.height = innerHeight * dpr;
-  canvas.style.width = innerWidth + 'px';
-  canvas.style.height = innerHeight + 'px';
+  canvas.width = innerWidth * dpr; canvas.height = innerHeight * dpr;
+  canvas.style.width = innerWidth + 'px'; canvas.style.height = innerHeight + 'px';
   ctx.scale(dpr, dpr);
   const root = getComputedStyle(document.documentElement);
   const colors = [
@@ -1309,16 +1002,10 @@ function fireConfetti(opts = {}) {
   const count = opts.count || 140;
   for (let i = 0; i < count; i++) {
     particles.push({
-      x: innerWidth * (0.3 + Math.random() * 0.4),
-      y: innerHeight * 0.4,
-      vx: (Math.random() - 0.5) * 18,
-      vy: -Math.random() * 18 - 8,
-      g: 0.55,
-      size: Math.random() * 9 + 4,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      rot: Math.random() * Math.PI * 2,
-      vr: (Math.random() - 0.5) * 0.35,
-      life: 1,
+      x: innerWidth * (0.3 + Math.random() * 0.4), y: innerHeight * 0.4,
+      vx: (Math.random() - 0.5) * 18, vy: -Math.random() * 18 - 8, g: 0.55,
+      size: Math.random() * 9 + 4, color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * Math.PI * 2, vr: (Math.random() - 0.5) * 0.35, life: 1,
       shape: Math.random() > 0.5 ? 'rect' : 'circle'
     });
   }
@@ -1326,76 +1013,87 @@ function fireConfetti(opts = {}) {
     ctx.clearRect(0, 0, innerWidth, innerHeight);
     let alive = false;
     particles.forEach(p => {
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vy += p.g;
-      p.vx *= 0.99;
-      p.rot += p.vr;
-      p.life -= 0.0065;
+      p.x += p.vx; p.y += p.vy; p.vy += p.g; p.vx *= 0.99; p.rot += p.vr; p.life -= 0.0065;
       if (p.life > 0 && p.y < innerHeight + 50) alive = true;
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rot);
-      ctx.globalAlpha = Math.max(0, p.life);
-      ctx.fillStyle = p.color;
-      if (p.shape === 'rect') {
-        ctx.fillRect(-p.size/2, -p.size/4, p.size, p.size/2);
-      } else {
-        ctx.beginPath();
-        ctx.arc(0, 0, p.size/2, 0, Math.PI * 2);
-        ctx.fill();
-      }
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+      ctx.globalAlpha = Math.max(0, p.life); ctx.fillStyle = p.color;
+      if (p.shape === 'rect') ctx.fillRect(-p.size/2, -p.size/4, p.size, p.size/2);
+      else { ctx.beginPath(); ctx.arc(0, 0, p.size/2, 0, Math.PI * 2); ctx.fill(); }
       ctx.restore();
     });
-    if (alive) requestAnimationFrame(frame);
-    else canvas.classList.add('hidden');
+    if (alive) requestAnimationFrame(frame); else canvas.classList.add('hidden');
   }
   requestAnimationFrame(frame);
 }
 
-// ============ HELPERS ============
-function shuffle(arr) {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+// === Themes ===
+const THEMES = [
+  { name: 'rose', color: '#ff5c8d' },
+  { name: 'ocean', color: '#00d9ff' },
+  { name: 'cosmic', color: '#c77dff' },
+  { name: 'forest', color: '#95d5b2' },
+  { name: 'ember', color: '#ff8a5b' },
+  { name: 'light', color: '#e8e3ee' }
+];
+function setTheme(name) {
+  S.theme = name;
+  document.documentElement.setAttribute('data-theme', name === 'rose' ? '' : name);
+  document.querySelectorAll('.theme-swatch').forEach(s => s.classList.toggle('active', s.dataset.theme === name));
+  S.themesTried.add(name);
+  savePrefs();
+  checkAchievements({});
 }
-function genCode() {
-  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
-  let s = '';
-  for (let i = 0; i < 5; i++) s += chars[Math.floor(Math.random() * chars.length)];
-  return s;
+function buildThemePicker() {
+  const picker = $('themePicker');
+  THEMES.forEach(t => {
+    const s = document.createElement('div');
+    s.className = 'theme-swatch'; s.dataset.theme = t.name;
+    s.style.background = `linear-gradient(135deg, ${t.color}, rgba(255,255,255,0.2))`;
+    s.title = t.name; s.setAttribute('role','button'); s.setAttribute('aria-label', 'Theme ' + t.name);
+    s.tabIndex = 0;
+    s.onclick = () => setTheme(t.name);
+    s.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setTheme(t.name); } };
+    picker.appendChild(s);
+  });
 }
-function rankText(n, size = 13) {
-  if (size === 13) return ({1:'A',11:'J',12:'Q',13:'K'})[n] || String(n);
-  return String(n);
+function buildAvatarPicker() {
+  const picker = $('avatarPicker');
+  AVATARS.forEach(a => {
+    const s = document.createElement('div');
+    s.className = 'avatar-opt' + (a === S.myAvatar ? ' active' : '');
+    s.textContent = a; s.tabIndex = 0;
+    s.setAttribute('role','button'); s.setAttribute('aria-label','Avatar ' + a);
+    s.onclick = () => {
+      S.myAvatar = a; savePrefs();
+      document.querySelectorAll('.avatar-opt').forEach(x => x.classList.toggle('active', x.textContent === a));
+    };
+    s.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); s.click(); } };
+    picker.appendChild(s);
+  });
 }
-function makeCard(n, className, suit, size = 13) {
-  const div = document.createElement('div');
-  div.className = 'card ' + className;
-  if (className.includes('face-down')) div.textContent = '';
-  else div.innerHTML = `${rankText(n, size)}${suit ? `<div class="suit">${suit}</div>` : ''}`;
-  return div;
-}
-function compareBid(myCard, theirCard) {
-  if (S.settings.direction === 'low') return theirCard - myCard;
-  return myCard - theirCard;
-}
-function compareScores(my, their) {
-  if (S.settings.winCondition === 'fewest') return their - my;
-  return my - their;
+function buildCardBackPicker() {
+  const picker = $('cardBackPicker');
+  picker.innerHTML = '';
+  CARD_BACKS.forEach(cb => {
+    const wrapper = document.createElement('div');
+    wrapper.style.textAlign = 'center'; wrapper.style.cursor = 'pointer';
+    const card = document.createElement('div');
+    card.className = 'card face-down card-back-' + cb.id;
+    card.style.width = '50px'; card.style.height = '70px';
+    if (cb.id === S.cardBack) card.style.boxShadow = '0 0 0 3px var(--primary), 0 4px 10px rgba(0,0,0,0.4)';
+    const label = document.createElement('div');
+    label.style.fontSize = '0.7em'; label.style.color = 'var(--text-dim)'; label.style.marginTop = '4px';
+    label.textContent = cb.label;
+    wrapper.appendChild(card); wrapper.appendChild(label);
+    wrapper.onclick = () => { S.cardBack = cb.id; savePrefs(); buildCardBackPicker(); };
+    picker.appendChild(wrapper);
+  });
 }
 
-// ============ TIMER ============
+// === Timer ===
 function startTimer() {
   clearTimer();
-  if (!S.settings.timeLimit || S.settings.timeLimit <= 0) {
-    hide('timerWrap');
-    $('timerText').textContent = '';
-    return;
-  }
+  if (!S.settings.timeLimit || S.settings.timeLimit <= 0) { hide('timerWrap'); $('timerText').textContent = ''; return; }
   S.timerDuration = S.settings.timeLimit * 1000;
   S.timerStart = Date.now();
   show('timerWrap');
@@ -1410,25 +1108,14 @@ function updateTimer() {
   $('timerBar').style.width = pct + '%';
   $('timerText').textContent = sec + 's';
   const bar = $('timerBar'), txt = $('timerText');
-  bar.classList.remove('warn', 'urgent');
-  txt.classList.remove('urgent');
+  bar.classList.remove('warn', 'urgent'); txt.classList.remove('urgent');
   if (remaining < 5000) {
-    bar.classList.add('urgent');
-    txt.classList.add('urgent');
+    bar.classList.add('urgent'); txt.classList.add('urgent');
     if (sec !== S.lastTickSec) { sfx.tick(); S.lastTickSec = sec; }
-  } else if (remaining < 10000) {
-    bar.classList.add('warn');
-  }
-  if (remaining <= 0) {
-    clearTimer();
-    if (S.myPick === null) autoBidOnTimeout();
-  }
+  } else if (remaining < 10000) bar.classList.add('warn');
+  if (remaining <= 0) { clearTimer(); if (S.myPick === null) autoBidOnTimeout(); }
 }
-function clearTimer() {
-  if (S.timerId) clearInterval(S.timerId);
-  S.timerId = null;
-  S.lastTickSec = null;
-}
+function clearTimer() { if (S.timerId) clearInterval(S.timerId); S.timerId = null; S.lastTickSec = null; }
 function autoBidOnTimeout() {
   if (S.myPick !== null || S.myHand.length === 0) return;
   const n = S.myHand[Math.floor(Math.random() * S.myHand.length)];
@@ -1437,11 +1124,9 @@ function autoBidOnTimeout() {
   setTimeout(confirmPick, 200);
 }
 
-// ============ NETWORK ============
-function startHost() {
-  S.isHost = true;
-  S.vsAI = false;
-  S.mode = 'host';
+// === NETWORK ===
+function startHost(prefilled) {
+  S.isHost = true; S.vsAI = false; S.mode = 'host'; S.currentMode = 'multi';
   S.myName = $('nameInput').value.trim() || 'Player 1';
   S.settings.deckSize = parseInt($('hostDeck').value);
   S.settings.bestOf = Math.max(1, Math.min(99, parseInt($('hostBestOf').value) || 1));
@@ -1451,56 +1136,42 @@ function startHost() {
   S.settings.timeLimit = parseInt($('hostTimeLimit').value);
   S.settings.stakes = $('hostStakes').value.trim();
   S.totalRounds = S.settings.deckSize;
-  saveHostSettings();
-  savePrefs();
+  saveHostSettings(); savePrefs();
 
-  hide('initialOptions'); show('hostInfo');
-  $('errorStatus').textContent = '';
+  hide('initialOptions'); show('hostInfo'); $('errorStatus').textContent = '';
   const customCode = $('customCode').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
   const code = customCode || genCode();
   S.roomCode = code;
   $('myCode').textContent = code;
   $('myCode').onclick = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(code).then(() => {
-        $('myCode').textContent = 'COPIED';
-        setTimeout(() => { $('myCode').textContent = code; }, 900);
-      });
-    }
+    if (navigator.clipboard) navigator.clipboard.writeText(code).then(() => {
+      $('myCode').textContent = 'COPIED'; setTimeout(() => $('myCode').textContent = code, 900);
+    });
   };
   S.peer = new Peer(PREFIX + code);
   S.peer.on('open', () => { $('hostStatus').textContent = 'Waiting for them to join...'; });
   S.peer.on('connection', c => {
     if (S.conn && S.conn.open) { c.close(); return; }
-    S.conn = c;
-    bindConn();
-    S.conn.on('open', () => {
-      S.conn.send({ type: 'hello', version: PROTO_VERSION, name: S.myName });
-    });
+    S.conn = c; bindConn();
+    S.conn.on('open', () => S.conn.send({ type: 'hello', version: PROTO_VERSION, name: S.myName, avatar: S.myAvatar }));
   });
   S.peer.on('error', err => {
     if (err.type === 'unavailable-id') {
       S.peer.destroy(); S.peer = null;
       hide('hostInfo'); show('initialOptions');
       $('errorStatus').textContent = 'Code already in use, try another.';
-    } else {
-      $('errorStatus').textContent = 'Connection error: ' + err.type;
-    }
+    } else $('errorStatus').textContent = 'Connection error: ' + err.type;
   });
 }
 
 function joinGame() {
   const code = $('joinCode').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
   if (!code) return;
-  S.isHost = false;
-  S.vsAI = false;
-  S.mode = 'joiner';
+  S.isHost = false; S.vsAI = false; S.mode = 'joiner'; S.currentMode = 'multi';
   S.roomCode = code;
   S.myName = $('nameInput').value.trim() || 'Player 2';
   savePrefs();
-
-  hide('initialOptions'); show('joinInfo');
-  $('errorStatus').textContent = '';
+  hide('initialOptions'); show('joinInfo'); $('errorStatus').textContent = '';
   $('joinStatus').textContent = 'Connecting...';
   S.peer = new Peer();
   S.peer.on('open', () => {
@@ -1508,15 +1179,11 @@ function joinGame() {
     bindConn();
     S.conn.on('open', () => {
       $('joinStatus').textContent = 'Connected. Saying hello...';
-      S.conn.send({ type: 'hello', version: PROTO_VERSION, name: S.myName });
+      S.conn.send({ type: 'hello', version: PROTO_VERSION, name: S.myName, avatar: S.myAvatar });
     });
   });
   S.peer.on('error', err => {
-    if (err.type === 'peer-unavailable') {
-      $('errorStatus').textContent = 'No game found with code "' + code + '".';
-    } else {
-      $('errorStatus').textContent = 'Connection error: ' + err.type;
-    }
+    $('errorStatus').textContent = err.type === 'peer-unavailable' ? `No game found with code "${code}".` : 'Connection error: ' + err.type;
     hide('joinInfo'); show('initialOptions');
   });
 }
@@ -1524,9 +1191,7 @@ function joinGame() {
 function bindConn() {
   S.conn.on('data', handleMsg);
   S.conn.on('close', () => {
-    if (!$('game').classList.contains('hidden')) {
-      $('message').textContent = 'Disconnected.';
-    }
+    if (!$('game').classList.contains('hidden')) $('message').textContent = 'Disconnected.';
     $('errorStatus').textContent = 'Connection lost.';
   });
   S.conn.on('error', err => { $('errorStatus').textContent = 'Error: ' + (err.type || err.message || 'unknown'); });
@@ -1535,55 +1200,39 @@ function bindConn() {
 function handleMsg(data) {
   if (data.type === 'hello') {
     S.theirName = data.name || 'Opponent';
-    if (S.isHost) {
-      if (S.resumingMultiplayer) {
-        S.resumingMultiplayer = false;
-        S.conn.send({ type: 'resumeState', state: collectStateForResume() });
-        attachGameUI();
-      } else {
-        beginGame();
-      }
-    }
+    S.theirAvatar = data.avatar || '🎭';
+    if (S.isHost) beginGame();
   } else if (data.type === 'start') {
-    S.prizes = data.prizes;
-    S.settings = data.settings;
+    S.prizes = data.prizes; S.settings = data.settings;
     S.totalRounds = S.settings.deckSize;
     S.theirStakes = data.stakes || '';
     setupGame();
   } else if (data.type === 'pick') {
     S.theirPick = data.card;
-    if (S.myPick !== null) {
-      resolveRound();
-    } else {
+    if (S.myPick !== null) resolveRound();
+    else {
       $('theirRow').innerHTML = '';
       $('theirRow').appendChild(makeCard('', 'face-down'));
       $('message').textContent = S.theirName + ' locked in. Your turn.';
       sfx.reveal();
     }
-  } else if (data.type === 'rematch') {
-    S.theirRematch = true;
-    checkRematch();
-  } else if (data.type === 'reaction') {
-    showReaction(data.emoji, true);
+  } else if (data.type === 'rematch') { S.theirRematch = true; checkRematch(); }
+  else if (data.type === 'reaction') { showReaction(data.emoji, true); }
+  else if (data.type === 'chat') {
+    S.chatMsgs.push({ from: 'them', text: data.text, t: Date.now() });
+    renderChat();
+    if ($('chatPanel').classList.contains('hidden')) {
+      $('chatBtn').textContent = '💬•';
+    }
+    haptic([20]);
   } else if (data.type === 'quit') {
     $('errorStatus').textContent = S.theirName + ' left the game.';
-    clearGameState();
-    cleanup();
-    showLobby();
-  } else if (data.type === 'resumeState') {
-    // Joiner receives state to resume
-    applyLoadedState(data.state);
-    S.conn.send({ type: 'resumeAck' });
-    attachGameUI();
-  } else if (data.type === 'resumeAck') {
-    // Host knows joiner has state
-    $('message').textContent = 'Both reconnected. Continue!';
+    clearGameState(); cleanup(); showLobby();
   }
 }
-
 function sendMsg(msg) { if (S.conn && S.conn.open) S.conn.send(msg); }
 
-// ============ GAME FLOW ============
+// === GAME FLOW ===
 function beginGame() {
   const size = S.settings.deckSize;
   S.prizes = shuffle(Array.from({length: size}, (_, i) => i + 1));
@@ -1597,17 +1246,11 @@ function setupGame() {
   S.myHand = Array.from({length: size}, (_, i) => i + 1);
   S.theirHand = Array.from({length: size}, (_, i) => i + 1);
   S.theirUsedCards = [];
-  S.round = 0;
-  S.myScore = 0;
-  S.theirScore = 0;
-  S.pot = 0;
-  S.myPick = null;
-  S.theirPick = null;
-  S.pendingPick = null;
-  S.history = [];
-  S.myRematch = false;
-  S.theirRematch = false;
+  S.round = 0; S.myScore = 0; S.theirScore = 0; S.pot = 0;
+  S.myPick = null; S.theirPick = null; S.pendingPick = null;
+  S.history = []; S.myRematch = false; S.theirRematch = false;
   S.busy = false;
+  S.chatMsgs = [];
   attachGameUI();
   nextRound();
 }
@@ -1616,6 +1259,8 @@ function attachGameUI() {
   hide('lobby'); hide('end'); show('game');
   $('myNameLabel').textContent = S.myName;
   $('theirNameLabel').textContent = S.theirName;
+  $('myAvatarLabel').textContent = S.myAvatar;
+  $('theirAvatarLabel').textContent = S.theirAvatar;
   $('myBidLabel').textContent = S.myName;
   $('theirBidLabel').textContent = S.theirName;
   $('theirUsedLabel').textContent = S.theirName + "'s used cards";
@@ -1623,45 +1268,43 @@ function attachGameUI() {
   $('theirScore').textContent = S.theirScore;
   $('totalRounds').textContent = S.totalRounds;
   if (S.settings.bestOf > 1) {
-    $('seriesPill').classList.remove('hidden');
+    show('seriesPill');
     const goal = Math.ceil(S.settings.bestOf / 2);
     $('seriesPill').textContent = `Series ${S.myGames}–${S.theirGames} · first to ${goal}`;
-  } else {
-    $('seriesPill').classList.add('hidden');
-  }
-  renderTheirUsed();
-  renderPrizeHistory();
-  buildReactionsBar();
+  } else hide('seriesPill');
+  // Mode pill
+  if (S.currentMode && S.currentMode !== 'multi' && S.currentMode !== 'solo') {
+    show('modePill');
+    const labels = { daily: '📅 Daily', endless: '♾️ Endless · Round ' + (S.endlessLevel + 1), tournament: '🏆 ' + (S.currentTournamentAI ? S.currentTournamentAI.name : 'Tournament'), puzzle: '🧩 Puzzle ' + (S.currentPuzzle ? S.currentPuzzle.id : ''), tutorial: '🎓 Tutorial' };
+    $('modePill').textContent = labels[S.currentMode] || '';
+  } else hide('modePill');
+  renderTheirUsed(); renderPrizeHistory(); buildReactionsBar();
+  renderChat();
+  if (S.currentMode === 'multi') show('chatBtn'); else hide('chatBtn');
 }
 
 function nextRound() {
-  S.myPick = null;
-  S.theirPick = null;
-  S.pendingPick = null;
-  S.busy = false;
+  S.myPick = null; S.theirPick = null; S.pendingPick = null; S.busy = false;
   $('round').textContent = S.round + 1;
   $('pot').textContent = S.pot > 0 ? `(+${S.pot} carried)` : '';
   $('prizeRow').innerHTML = '';
   $('prizeRow').appendChild(makeCard(S.prizes[S.round], 'prize', '♦', S.settings.deckSize));
-  $('theirRow').innerHTML = '';
-  $('myRow').innerHTML = '';
-  $('confirmRow').innerHTML = '';
+  $('theirRow').innerHTML = ''; $('myRow').innerHTML = ''; $('confirmRow').innerHTML = '';
   const winLabel = S.settings.winCondition === 'fewest' ? 'Fewest total' : 'Most total';
   const bidLabel = S.settings.direction === 'low' ? 'low' : 'high';
   $('message').textContent = `${bidLabel} bid wins · ${winLabel} wins game`;
   $('myRemaining').textContent = S.myHand.length + ' left';
   $('theirRemaining').textContent = S.theirHand.length + ' left';
   $('prizesLeft').textContent = `${S.round} of ${S.totalRounds} played`;
-  renderHand();
-  renderPrizeHistory();
+  S.pickTime = Date.now();
+  renderHand(); renderPrizeHistory();
   sfx.reveal();
   saveGameState();
   startTimer();
 }
 
 function renderHand() {
-  const row = $('handRow');
-  row.innerHTML = '';
+  const row = $('handRow'); row.innerHTML = '';
   const size = S.settings.deckSize;
   Array.from({length: size}, (_, i) => i + 1).forEach(n => {
     const used = !S.myHand.includes(n);
@@ -1669,21 +1312,23 @@ function renderHand() {
     const pending = S.pendingPick === n && !locked;
     let cls = 'in-hand' + (used ? ' used' : '') + (locked ? ' locked' : '') + (pending ? ' pending' : '');
     const c = makeCard(n, cls, '♥', size);
-    if (!used && !locked) c.onclick = () => selectCard(n);
+    c.setAttribute('tabindex', used || locked ? '-1' : '0');
+    c.setAttribute('aria-label', `Bid ${rankText(n, size)}${used ? ' (used)' : ''}`);
+    if (!used && !locked) {
+      c.onclick = () => selectCard(n);
+      c.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectCard(n); } };
+    }
     row.appendChild(c);
   });
 }
 
 function renderTheirUsed() {
-  const row = $('theirUsedRow');
-  row.innerHTML = '';
+  const row = $('theirUsedRow'); row.innerHTML = '';
   if (S.theirUsedCards.length === 0) {
     const ph = document.createElement('div');
-    ph.style.color = 'var(--text-faint)';
-    ph.style.fontSize = '0.85em';
+    ph.style.color = 'var(--text-faint)'; ph.style.fontSize = '0.85em';
     ph.textContent = 'No cards played yet.';
-    row.appendChild(ph);
-    return;
+    row.appendChild(ph); return;
   }
   S.theirUsedCards.slice().sort((a,b) => a-b).forEach(n => {
     row.appendChild(makeCard(n, 'opponent mini', '♠', S.settings.deckSize));
@@ -1691,15 +1336,12 @@ function renderTheirUsed() {
 }
 
 function renderPrizeHistory() {
-  const row = $('prizeHistoryRow');
-  row.innerHTML = '';
+  const row = $('prizeHistoryRow'); row.innerHTML = '';
   if (S.history.length === 0) {
     const ph = document.createElement('div');
-    ph.style.color = 'var(--text-faint)';
-    ph.style.fontSize = '0.85em';
+    ph.style.color = 'var(--text-faint)'; ph.style.fontSize = '0.85em';
     ph.textContent = 'No prizes played yet.';
-    row.appendChild(ph);
-    return;
+    row.appendChild(ph); return;
   }
   S.history.forEach(h => {
     const winClass = h.winner === 'me' ? 'won-mine' : h.winner === 'them' ? 'won-theirs' : 'won-tie';
@@ -1712,52 +1354,45 @@ function renderPrizeHistory() {
 function selectCard(n) {
   if (S.myPick !== null || S.busy) return;
   if (!S.myHand.includes(n)) return;
-  sfx.pick();
+  sfx.pick(); haptic([15]);
   if (S.pendingPick === n) { confirmPick(); return; }
   S.pendingPick = n;
-  renderHand();
-  renderConfirm();
+  renderHand(); renderConfirm();
 }
 
 function renderConfirm() {
-  const row = $('confirmRow');
-  row.innerHTML = '';
+  const row = $('confirmRow'); row.innerHTML = '';
   if (S.pendingPick !== null && S.myPick === null) {
     const lbl = document.createElement('span');
-    lbl.style.alignSelf = 'center';
-    lbl.style.color = 'var(--text-dim)';
-    lbl.style.marginRight = '6px';
-    lbl.style.fontSize = '0.9em';
+    lbl.style.alignSelf = 'center'; lbl.style.color = 'var(--text-dim)';
+    lbl.style.marginRight = '6px'; lbl.style.fontSize = '0.9em';
     lbl.textContent = `Bid ${rankText(S.pendingPick, S.settings.deckSize)}?`;
     const yes = document.createElement('button');
-    yes.className = 'small';
-    yes.textContent = '✓ Lock in';
+    yes.className = 'small'; yes.textContent = '✓ Lock in';
     yes.onclick = confirmPick;
     const no = document.createElement('button');
-    no.className = 'ghost small';
-    no.textContent = 'Cancel';
+    no.className = 'ghost small'; no.textContent = 'Cancel';
     no.onclick = () => { S.pendingPick = null; renderHand(); renderConfirm(); };
-    row.appendChild(lbl);
-    row.appendChild(yes);
-    row.appendChild(no);
+    row.appendChild(lbl); row.appendChild(yes); row.appendChild(no);
   }
 }
 
 function confirmPick() {
   if (S.pendingPick === null || S.myPick !== null) return;
   const n = S.pendingPick;
+  const confirmTime = Date.now() - S.pickTime;
   S.myPick = n;
   S.myHand = S.myHand.filter(x => x !== n);
   S.pendingPick = null;
-  clearTimer();
-  hide('timerWrap');
+  clearTimer(); hide('timerWrap');
   renderHand();
   $('confirmRow').innerHTML = '';
   $('myRemaining').textContent = S.myHand.length + ' left';
   $('myRow').innerHTML = '';
   $('myRow').appendChild(makeCard(n, 'played', '♥', S.settings.deckSize));
-  sfx.confirm();
+  sfx.confirm(); haptic([25]);
   saveGameState();
+  S.lastConfirmTime = confirmTime;
   if (S.vsAI) {
     setTimeout(() => {
       const aiCard = aiBid();
@@ -1773,12 +1408,8 @@ function confirmPick() {
 }
 
 function resolveRound() {
-  S.busy = true;
-  clearTimer();
-  hide('timerWrap');
-  if (!S.theirUsedCards.includes(S.theirPick)) {
-    S.theirUsedCards.push(S.theirPick);
-  }
+  S.busy = true; clearTimer(); hide('timerWrap');
+  if (!S.theirUsedCards.includes(S.theirPick)) S.theirUsedCards.push(S.theirPick);
   S.theirHand = S.theirHand.filter(x => x !== S.theirPick);
 
   $('theirRow').innerHTML = '';
@@ -1791,46 +1422,29 @@ function resolveRound() {
   let msg, winner;
   if (cmp > 0) {
     S.myScore += prizeValue;
-    msg = `You take ${prizeValue}.`;
-    winner = 'me';
-    myCard.classList.add('winner');
-    S.pot = 0;
-    sfx.win();
+    msg = `You take ${prizeValue}.`; winner = 'me';
+    myCard.classList.add('winner'); S.pot = 0;
+    sfx.win(); haptic([40]);
   } else if (cmp < 0) {
     S.theirScore += prizeValue;
-    msg = `${S.theirName} takes ${prizeValue}.`;
-    winner = 'them';
-    theirCard.classList.add('winner');
-    S.pot = 0;
-    sfx.lose();
+    msg = `${S.theirName} takes ${prizeValue}.`; winner = 'them';
+    theirCard.classList.add('winner'); S.pot = 0;
+    sfx.lose(); haptic([60, 30, 60]);
   } else {
-    if (S.settings.tieRule === 'burn') {
-      msg = `Tie · ${prizeValue} burned.`;
-      S.pot = 0;
-    } else {
-      S.pot = prizeValue;
-      msg = `Tie · ${prizeValue} carries to next round.`;
-    }
+    if (S.settings.tieRule === 'burn') { msg = `Tie · ${prizeValue} burned.`; S.pot = 0; }
+    else { S.pot = prizeValue; msg = `Tie · ${prizeValue} carries to next round.`; }
     winner = 'tie';
-    myCard.classList.add('tied');
-    theirCard.classList.add('tied');
-    sfx.tie();
+    myCard.classList.add('tied'); theirCard.classList.add('tied');
+    sfx.tie(); haptic([30, 30, 30]);
   }
 
-  S.history.push({
-    round: S.round + 1,
-    prize: S.prizes[S.round],
-    mine: S.myPick,
-    theirs: S.theirPick,
-    prizeValue,
-    winner
-  });
-
+  S.history.push({ round: S.round + 1, prize: S.prizes[S.round], mine: S.myPick, theirs: S.theirPick, prizeValue, winner });
   $('message').textContent = msg;
   $('myScore').textContent = S.myScore;
   $('theirScore').textContent = S.theirScore;
-  renderTheirUsed();
-  renderPrizeHistory();
+  renderTheirUsed(); renderPrizeHistory();
+
+  checkAchievements({ bidMade: true, bidWonRound: winner === 'me', bidConfirmTimeMs: S.lastConfirmTime });
 
   S.round++;
   saveGameState();
@@ -1840,111 +1454,214 @@ function resolveRound() {
 
 function endGame() {
   hide('game'); show('end');
+  hide('dailyShareSection');
   const cmp = compareScores(S.myScore, S.theirScore);
   let result, cls, didIWin = false;
-  if (cmp > 0) {
-    result = 'You won';
-    cls = 'win';
-    S.myGames++;
-    didIWin = true;
-  } else if (cmp < 0) {
-    result = `${escapeHtml(S.theirName)} won`;
-    cls = 'lose';
-    S.theirGames++;
-  } else {
-    result = 'Tied';
-    cls = 'tie';
-  }
-  $('endResult').textContent = '';
+  if (cmp > 0) { result = 'You won'; cls = 'win'; S.myGames++; didIWin = true; }
+  else if (cmp < 0) { result = `${escapeHtml(S.theirName)} won`; cls = 'lose'; S.theirGames++; }
+  else { result = 'Tied'; cls = 'tie'; }
   $('endResult').innerHTML = result;
   $('endResult').className = 'end-result ' + cls;
   $('endScore').textContent = `${S.myScore} – ${S.theirScore}`;
 
+  // Series
   const seriesGoal = Math.ceil(S.settings.bestOf / 2);
   const seriesOver = S.settings.bestOf === 1 || S.myGames >= seriesGoal || S.theirGames >= seriesGoal;
   if (S.settings.bestOf > 1) {
-    $('seriesDisplay').classList.remove('hidden');
-    if (seriesOver && (S.myGames !== S.theirGames)) {
+    show('seriesDisplay');
+    if (seriesOver && S.myGames !== S.theirGames) {
       const champ = S.myGames > S.theirGames ? S.myName : S.theirName;
       $('seriesDisplay').innerHTML = `Series: <b>${escapeHtml(champ)}</b> wins ${S.myGames}–${S.theirGames}`;
-    } else {
-      $('seriesDisplay').innerHTML = `Series: <b>${S.myGames}–${S.theirGames}</b> · first to ${seriesGoal}`;
-    }
-  } else {
-    $('seriesDisplay').classList.add('hidden');
-  }
+    } else $('seriesDisplay').innerHTML = `Series: <b>${S.myGames}–${S.theirGames}</b> · first to ${seriesGoal}`;
+  } else hide('seriesDisplay');
 
+  // Record + stats
   if (S.settings.bestOf === 1 || seriesOver) {
-    const rec = getRecord(S.theirName);
-    if (cmp > 0) rec.mine++;
-    else if (cmp < 0) rec.theirs++;
-    else rec.ties++;
-    if (!S.vsAI) saveRecord(S.theirName, rec);
+    if (!S.vsAI) {
+      const rec = getRecord(S.theirName);
+      if (cmp > 0) rec.mine++; else if (cmp < 0) rec.theirs++; else rec.ties++;
+      saveRecord(S.theirName, rec);
+    }
+    updateStats({
+      gamesPlayed: v => v + 1,
+      gamesWon: v => v + (didIWin ? 1 : 0),
+      [S.vsAI ? 'soloGames' : 'multiGames']: v => v + 1,
+      [S.vsAI ? 'soloWon' : 'multiWon']: v => v + (didIWin ? 1 : 0),
+      totalScore: v => v + S.myScore,
+      rounds: v => v + S.history.length,
+      highScore: v => Math.max(v, S.myScore)
+    });
     clearGameState();
-  } else {
-    saveGameState();
-  }
+  } else saveGameState();
 
+  // Stakes
   if (S.settings.stakes && cmp !== 0 && (S.settings.bestOf === 1 || seriesOver)) {
-    $('endStakes').classList.remove('hidden');
+    show('endStakes');
     const loser = cmp < 0 ? S.myName : S.theirName;
     $('endStakesText').innerHTML = `${escapeHtml(loser)}: ${escapeHtml(S.settings.stakes)}`;
-  } else {
-    $('endStakes').classList.add('hidden');
+  } else hide('endStakes');
+
+  // Daily share
+  if (S.currentMode === 'daily') showDailyShareSection(didIWin);
+
+  // Analysis
+  showAnalysis(didIWin);
+
+  // Achievements
+  const allRoundsWon = S.history.filter(h => h.winner === 'me').length === S.history.length;
+  let maxDeficit = 0, runningMine = 0, runningTheirs = 0;
+  S.history.forEach(h => {
+    if (h.winner === 'me') runningMine += h.prizeValue;
+    else if (h.winner === 'them') runningTheirs += h.prizeValue;
+    maxDeficit = Math.max(maxDeficit, runningTheirs - runningMine);
+  });
+  checkAchievements({ gameEnded: true, didIWin, allRoundsWon, maxDeficit });
+
+  // Tournament progression
+  if (S.currentMode === 'tournament') {
+    if (didIWin) {
+      S.tournamentLevel++;
+      setJSON(TOURNEY_KEY, { level: S.tournamentLevel });
+      if (S.tournamentLevel >= TOURNAMENT_AIS.length) {
+        unlockAch('tournament');
+        S.tournamentLevel = 0;
+        setJSON(TOURNEY_KEY, { level: 0 });
+      }
+    }
+  }
+  // Endless progression
+  if (S.currentMode === 'endless') {
+    if (didIWin) {
+      S.endlessLevel++;
+      S.endlessScore += S.myScore;
+      if (S.endlessLevel >= 10) unlockAch('endless_10');
+      if (S.endlessLevel >= 25) unlockAch('endless_25');
+    }
+  }
+  // Puzzle completion
+  if (S.currentMode === 'puzzle' && didIWin) {
+    const solved = getJSON(PUZZLE_KEY, []);
+    if (!solved.includes(S.currentPuzzle.id)) {
+      solved.push(S.currentPuzzle.id);
+      setJSON(PUZZLE_KEY, solved);
+      if (solved.length >= 5) unlockAch('puzzle_5');
+      if (solved.length >= PUZZLES.length) unlockAch('puzzle_all');
+    }
+  }
+  // Daily progression
+  if (S.currentMode === 'daily') updateDailyProgress(didIWin);
+  // Multi-game count for social ach
+  if (!S.vsAI && (S.settings.bestOf === 1 || seriesOver)) {
+    const s = getStats();
+    if (s.multiGames >= 10) unlockAch('multi_10');
   }
 
   $('rematchStatus').textContent = '';
   $('rematchBtn').disabled = false;
-  $('rematchBtn').textContent = seriesOver ? 'New game' : 'Next game';
-  S.myRematch = false;
-  S.theirRematch = false;
-  if (seriesOver) {
-    S.myGames = 0;
-    S.theirGames = 0;
-  }
-  if (didIWin) {
-    setTimeout(() => { sfx.endWin(); fireConfetti(); }, 200);
-  } else if (cmp === 0) {
-    setTimeout(sfx.tie, 200);
-  } else {
-    setTimeout(sfx.endLose, 200);
-  }
+  $('rematchBtn').textContent = seriesOver ? (S.currentMode === 'tournament' ? 'Next opponent' : S.currentMode === 'endless' ? 'Next round' : 'New game') : 'Next game';
+  S.myRematch = false; S.theirRematch = false;
+  if (seriesOver) { S.myGames = 0; S.theirGames = 0; }
+
+  if (didIWin) { setTimeout(() => { sfx.endWin(); fireConfetti(); haptic([100, 50, 100]); }, 200); }
+  else if (cmp === 0) setTimeout(sfx.tie, 200);
+  else { setTimeout(sfx.endLose, 200); haptic([200, 100, 200]); }
+}
+
+function showAnalysis(didIWin) {
+  const grid = $('analysisGrid');
+  grid.innerHTML = '';
+  if (S.history.length === 0) { hide('analysisGrid'); return; }
+  show('analysisGrid');
+  const myWins = S.history.filter(h => h.winner === 'me').length;
+  const ties = S.history.filter(h => h.winner === 'tie').length;
+  const avgBid = S.history.reduce((a, h) => a + h.mine, 0) / S.history.length;
+  const wonPrizes = S.history.filter(h => h.winner === 'me').reduce((a, h) => a + h.prizeValue, 0);
+  // Best/worst rounds
+  let bestRound = S.history[0], worstRound = S.history[0];
+  S.history.forEach(h => {
+    const delta = h.winner === 'me' ? h.prizeValue : h.winner === 'them' ? -h.prizeValue : 0;
+    const bestDelta = bestRound.winner === 'me' ? bestRound.prizeValue : bestRound.winner === 'them' ? -bestRound.prizeValue : 0;
+    const worstDelta = worstRound.winner === 'me' ? worstRound.prizeValue : worstRound.winner === 'them' ? -worstRound.prizeValue : 0;
+    if (delta > bestDelta) bestRound = h;
+    if (delta < worstDelta) worstRound = h;
+  });
+  const items = [
+    { label: 'Rounds won', value: `${myWins}/${S.history.length}` },
+    { label: 'Avg bid', value: avgBid.toFixed(1) },
+    { label: 'Prizes won', value: wonPrizes },
+    { label: 'Ties', value: ties },
+    { label: 'Best round', value: `R${bestRound.round}: bid ${rankText(bestRound.mine, S.settings.deckSize)} for ${bestRound.prizeValue}` },
+    { label: 'Worst round', value: `R${worstRound.round}: bid ${rankText(worstRound.mine, S.settings.deckSize)} lost ${worstRound.prizeValue}` }
+  ];
+  items.forEach(it => {
+    const el = document.createElement('div');
+    el.className = 'analysis-item';
+    el.innerHTML = `<div class="analysis-label">${escapeHtml(it.label)}</div><div class="analysis-value">${escapeHtml(String(it.value))}</div>`;
+    grid.appendChild(el);
+  });
 }
 
 function requestRematch() {
   if (S.myRematch) return;
   S.myRematch = true;
   $('rematchBtn').disabled = true;
-  $('rematchBtn').textContent = 'Waiting...';
-  if (S.vsAI) {
-    S.theirRematch = true;
-    setupGame();
-    return;
-  }
+  $('rematchBtn').textContent = 'Loading...';
+  // Mode-specific rematch
+  if (S.currentMode === 'tournament') { startNextTournamentMatch(); return; }
+  if (S.currentMode === 'endless') { startNextEndlessRound(); return; }
+  if (S.currentMode === 'puzzle') { hide('end'); show('lobby'); openPuzzleModal(); return; }
+  if (S.currentMode === 'daily') { hide('end'); show('lobby'); return; }
+  if (S.vsAI) { S.theirRematch = true; setupGame(); return; }
   sendMsg({ type: 'rematch' });
   checkRematch();
 }
 
 function checkRematch() {
   if (S.myRematch && S.theirRematch) {
-    if (S.isHost) beginGame();
-    else $('rematchStatus').textContent = 'Starting...';
-  } else if (S.theirRematch && !S.myRematch) {
-    $('rematchStatus').textContent = S.theirName + ' wants a rematch!';
-  } else if (S.myRematch && !S.theirRematch) {
-    $('rematchStatus').textContent = 'Waiting for ' + S.theirName + ' to accept...';
-  }
+    if (S.isHost) beginGame(); else $('rematchStatus').textContent = 'Starting...';
+  } else if (S.theirRematch && !S.myRematch) $('rematchStatus').textContent = S.theirName + ' wants a rematch!';
+  else if (S.myRematch && !S.theirRematch) $('rematchStatus').textContent = 'Waiting for ' + S.theirName + ' to accept...';
 }
 
-// ============ AI ============
+// === AI ===
 function aiBid() {
+  if (S.scriptedAI) {
+    const move = S.scriptedAI[S.round];
+    if (move !== undefined) return move;
+  }
   const difficulty = $('soloDifficulty').value;
+  const personality = $('soloPersonality').value;
   const currentPrize = S.prizes[S.round];
   const remainingPrizes = S.prizes.slice(S.round);
   const aiHand = S.theirHand.slice().sort((a, b) => b - a);
   const sortedPrizes = remainingPrizes.slice().sort((a, b) => b - a);
-  if (difficulty === 'easy') return aiHand[Math.floor(Math.random() * aiHand.length)];
   const prizeRank = sortedPrizes.indexOf(currentPrize);
+
+  // Personality overrides
+  if (personality === 'aggressive') {
+    // High cards early
+    const earlyFactor = S.round < S.totalRounds / 2 ? 1 : 0;
+    if (earlyFactor && Math.random() < 0.7) return aiHand[Math.floor(Math.random() * 3)] || aiHand[0];
+  }
+  if (personality === 'defensive') {
+    // Hoard high cards
+    const lateFactor = S.round >= S.totalRounds * 0.7 ? 1 : 0;
+    if (!lateFactor && Math.random() < 0.7) {
+      const lowSorted = aiHand.slice().sort((a, b) => a - b);
+      return lowSorted[Math.floor(Math.random() * Math.min(3, lowSorted.length))];
+    }
+  }
+  if (personality === 'bluffer' && Math.random() < 0.4) {
+    return aiHand[Math.floor(Math.random() * aiHand.length)];
+  }
+  if (personality === 'mirror' && S.history.length > 0) {
+    const myLastBid = S.history[S.history.length - 1].mine;
+    const close = aiHand.reduce((best, c) => Math.abs(c - myLastBid) < Math.abs(best - myLastBid) ? c : best, aiHand[0]);
+    return close;
+  }
+
+  // Difficulty
+  if (difficulty === 'easy') return aiHand[Math.floor(Math.random() * aiHand.length)];
   if (difficulty === 'medium') {
     const offset = Math.floor(Math.random() * 3) - 1;
     const idx = Math.max(0, Math.min(aiHand.length - 1, prizeRank + offset));
@@ -1965,162 +1682,520 @@ function aiBid() {
 }
 
 function startSolo() {
-  S.vsAI = true;
-  S.isHost = true;
-  S.mode = 'solo';
+  S.vsAI = true; S.isHost = true; S.mode = 'solo'; S.currentMode = 'solo';
   S.myName = $('nameInput').value.trim() || 'You';
   const diff = $('soloDifficulty').value;
   S.theirName = 'AI (' + diff + ')';
+  S.theirAvatar = '🤖';
   S.settings.deckSize = parseInt($('soloDeck').value);
-  S.settings.bestOf = 1;
-  S.settings.tieRule = 'carry';
-  S.settings.direction = 'high';
-  S.settings.winCondition = 'most';
-  S.settings.timeLimit = 0;
-  S.settings.stakes = '';
+  S.settings.bestOf = 1; S.settings.tieRule = 'carry';
+  S.settings.direction = 'high'; S.settings.winCondition = 'most';
+  S.settings.timeLimit = 0; S.settings.stakes = '';
   S.totalRounds = S.settings.deckSize;
+  S.scriptedAI = null;
   savePrefs();
   S.prizes = shuffle(Array.from({length: S.settings.deckSize}, (_, i) => i + 1));
   setupGame();
 }
 
-// ============ REACTIONS ============
-const REACTIONS = ['😘', '😤', '🔥', '😂', '💀', '❤️', '🤔', '😎'];
+// === DAILY ===
+function startDaily() {
+  S.vsAI = true; S.isHost = true; S.mode = 'solo'; S.currentMode = 'daily';
+  S.myName = $('nameInput').value.trim() || 'You';
+  S.theirName = "Today's AI"; S.theirAvatar = '📅';
+  // Use date seed
+  const seed = getDailySeed();
+  S.settings.deckSize = 13;
+  S.settings.bestOf = 1; S.settings.tieRule = 'carry';
+  S.settings.direction = 'high'; S.settings.winCondition = 'most';
+  S.settings.timeLimit = 0; S.settings.stakes = '';
+  S.totalRounds = 13;
+  // Force medium difficulty for daily
+  $('soloDifficulty').value = 'medium';
+  $('soloPersonality').value = 'balanced';
+  S.scriptedAI = null;
+  S.prizes = seededShuffle(Array.from({length: 13}, (_, i) => i + 1), seed);
+  setupGame();
+}
+
+function updateDailyProgress(didIWin) {
+  const state = getDailyState();
+  const key = todayKey();
+  if (!state.history[key]) {
+    state.history[key] = { myScore: S.myScore, theirScore: S.theirScore, won: didIWin };
+    state.totalCompleted = (state.totalCompleted || 0) + 1;
+    // Streak: was yesterday completed?
+    const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+    const yKey = `${yesterday.getFullYear()}-${String(yesterday.getMonth()+1).padStart(2,'0')}-${String(yesterday.getDate()).padStart(2,'0')}`;
+    if (state.lastCompleted === yKey) state.streak = (state.streak || 0) + 1;
+    else state.streak = 1;
+    state.lastCompleted = key;
+    setJSON(DAILY_KEY, state);
+    if (state.totalCompleted >= 1) unlockAch('daily_1');
+    if (state.totalCompleted >= 7) unlockAch('daily_7');
+    if (state.totalCompleted >= 30) unlockAch('daily_30');
+  }
+}
+
+function showDailyShareSection(didIWin) {
+  show('dailyShareSection');
+  // Build wordle-style grid: green for round won, red for lost, yellow for tied
+  const grid = $('dailyGrid');
+  const lines = [];
+  const date = new Date();
+  const dateStr = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+  let line = '';
+  S.history.forEach((h, i) => {
+    const sq = h.winner === 'me' ? '🟩' : h.winner === 'them' ? '🟥' : '🟨';
+    line += sq;
+    if ((i + 1) % 5 === 0) { lines.push(line); line = ''; }
+  });
+  if (line) lines.push(line);
+  grid.innerHTML = lines.join('<br>');
+}
+function copyDailyShare() {
+  const date = new Date();
+  const dateStr = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+  let grid = '';
+  S.history.forEach(h => {
+    grid += h.winner === 'me' ? '🟩' : h.winner === 'them' ? '🟥' : '🟨';
+  });
+  const text = `GOPS Daily ${dateStr}\nScore: ${S.myScore}–${S.theirScore}\n${grid}\nhttps://amsanghi.github.io/gops/2.0/`;
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => {
+    $('dailyShareBtn').textContent = '✓ Copied!';
+    setTimeout(() => $('dailyShareBtn').textContent = '📋 Copy result', 1500);
+  });
+}
+
+// === PUZZLE ===
+function openPuzzleModal() {
+  const solved = getJSON(PUZZLE_KEY, []);
+  $('puzzlesSolved').textContent = solved.length;
+  $('puzzlesTotal').textContent = PUZZLES.length;
+  const list = $('puzzleList'); list.innerHTML = '';
+  PUZZLES.forEach(p => {
+    const isSolved = solved.includes(p.id);
+    const card = document.createElement('div');
+    card.style.cssText = 'background: var(--panel-strong); border: 1px solid ' + (isSolved ? 'var(--gold)' : 'var(--panel-border)') + '; padding: 14px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; text-align: left; transition: border-color 0.2s;';
+    card.onmouseover = () => card.style.borderColor = 'var(--primary)';
+    card.onmouseout = () => card.style.borderColor = isSolved ? 'var(--gold)' : 'var(--panel-border)';
+    card.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center;"><div style="font-weight: 600;">${isSolved ? '✓ ' : ''}Puzzle ${p.id}: ${escapeHtml(p.title)}</div><div style="font-size: 0.7em; color: var(--text-faint);">${p.deckSize} cards</div></div><div style="font-size: 0.85em; color: var(--text-dim); margin-top: 6px;">${escapeHtml(p.desc)}</div><div style="font-size: 0.78em; color: var(--text-faint); margin-top: 6px;">Goal: ${escapeHtml(p.goal)}</div>`;
+    card.onclick = () => { hide('puzzleModal'); startPuzzle(p); };
+    list.appendChild(card);
+  });
+  show('puzzleModal');
+}
+function startPuzzle(p) {
+  S.vsAI = true; S.isHost = true; S.mode = 'solo'; S.currentMode = 'puzzle';
+  S.currentPuzzle = p;
+  S.myName = $('nameInput').value.trim() || 'You';
+  S.theirName = 'Puzzle AI'; S.theirAvatar = '🧩';
+  S.settings.deckSize = p.deckSize || 13;
+  S.settings.bestOf = 1;
+  S.settings.tieRule = p.tieRule || 'carry';
+  S.settings.direction = p.direction || 'high';
+  S.settings.winCondition = p.winCondition || 'most';
+  S.settings.timeLimit = p.timeLimit || 0;
+  S.settings.stakes = '';
+  S.totalRounds = S.settings.deckSize;
+  if (p.difficulty) $('soloDifficulty').value = p.difficulty;
+  if (p.scripted) {
+    // Use scripted AI - extract prizes and AI plays
+    S.prizes = p.scripted.map(m => m.prize);
+    S.scriptedAI = p.scripted.map(m => m.ai);
+  } else {
+    S.prizes = shuffle(Array.from({length: S.settings.deckSize}, (_, i) => i + 1));
+    S.scriptedAI = null;
+  }
+  savePrefs();
+  setupGame();
+}
+
+// === ENDLESS ===
+function startEndless() {
+  S.vsAI = true; S.isHost = true; S.mode = 'solo'; S.currentMode = 'endless';
+  S.endlessLevel = 0; S.endlessScore = 0;
+  S.myName = $('nameInput').value.trim() || 'You';
+  startNextEndlessRound();
+}
+function startNextEndlessRound() {
+  hide('end');
+  // Difficulty scales with level
+  const diff = S.endlessLevel < 3 ? 'easy' : S.endlessLevel < 8 ? 'medium' : 'hard';
+  $('soloDifficulty').value = diff;
+  S.theirName = `Endless · L${S.endlessLevel + 1}`; S.theirAvatar = '♾️';
+  S.settings.deckSize = S.endlessLevel < 5 ? 7 : 13;
+  S.settings.bestOf = 1; S.settings.tieRule = 'carry';
+  S.settings.direction = 'high'; S.settings.winCondition = 'most';
+  S.settings.timeLimit = S.endlessLevel >= 15 ? 15 : 0;
+  S.settings.stakes = '';
+  S.totalRounds = S.settings.deckSize;
+  S.scriptedAI = null;
+  S.prizes = shuffle(Array.from({length: S.settings.deckSize}, (_, i) => i + 1));
+  setupGame();
+}
+
+// === TOURNAMENT ===
+function openTournamentModal() {
+  S.tournamentLevel = getJSON(TOURNEY_KEY, { level: 0 }).level;
+  const list = $('tournamentList'); list.innerHTML = '';
+  TOURNAMENT_AIS.forEach((ai, i) => {
+    const status = i < S.tournamentLevel ? 'beaten' : i === S.tournamentLevel ? 'current' : 'locked';
+    const card = document.createElement('div');
+    card.style.cssText = 'background: var(--panel-strong); border: 1px solid ' + (status === 'beaten' ? 'var(--gold)' : status === 'current' ? 'var(--primary)' : 'var(--panel-border)') + '; padding: 14px; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; opacity: ' + (status === 'locked' ? '0.5' : '1') + ';';
+    if (status === 'current') card.style.cursor = 'pointer';
+    card.innerHTML = `<div style="font-size: 2em;">${ai.avatar}</div><div style="flex: 1; text-align: left;"><div style="font-weight: 600;">${status === 'beaten' ? '✓ ' : ''}${escapeHtml(ai.name)}</div><div style="font-size: 0.85em; color: var(--text-dim);">${escapeHtml(ai.description)}</div></div><div style="font-size: 0.75em; color: var(--text-faint);">${ai.difficulty} · ${ai.personality}</div>`;
+    if (status === 'current') card.onclick = () => { hide('tournamentModal'); startTournamentMatch(ai); };
+    list.appendChild(card);
+  });
+  if (S.tournamentLevel >= TOURNAMENT_AIS.length) {
+    const champ = document.createElement('div');
+    champ.style.cssText = 'background: linear-gradient(135deg, var(--gold), var(--gold-end)); color: #3a2700; padding: 16px; border-radius: 12px; text-align: center; font-weight: 600;';
+    champ.innerHTML = '🏆 You are the Champion! Reset to play again.';
+    list.appendChild(champ);
+    const reset = document.createElement('button');
+    reset.className = 'ghost small'; reset.textContent = 'Reset tournament'; reset.style.marginTop = '10px';
+    reset.onclick = () => { setJSON(TOURNEY_KEY, { level: 0 }); openTournamentModal(); };
+    list.appendChild(reset);
+  }
+  show('tournamentModal');
+}
+function startTournamentMatch(ai) {
+  S.vsAI = true; S.isHost = true; S.mode = 'solo'; S.currentMode = 'tournament';
+  S.currentTournamentAI = ai;
+  S.myName = $('nameInput').value.trim() || 'You';
+  S.theirName = ai.name; S.theirAvatar = ai.avatar;
+  $('soloDifficulty').value = ai.difficulty;
+  $('soloPersonality').value = ai.personality;
+  S.settings.deckSize = 13; S.settings.bestOf = 1;
+  S.settings.tieRule = 'carry'; S.settings.direction = 'high';
+  S.settings.winCondition = 'most'; S.settings.timeLimit = 0;
+  S.settings.stakes = '';
+  S.totalRounds = 13;
+  S.scriptedAI = null;
+  S.prizes = shuffle(Array.from({length: 13}, (_, i) => i + 1));
+  setupGame();
+}
+function startNextTournamentMatch() {
+  hide('end');
+  if (S.tournamentLevel < TOURNAMENT_AIS.length) {
+    startTournamentMatch(TOURNAMENT_AIS[S.tournamentLevel]);
+  } else {
+    showLobby();
+    openTournamentModal();
+  }
+}
+
+// === TUTORIAL ===
+let tutorialStep = 0;
+function startTutorial() {
+  tutorialStep = 0;
+  show('tutorialOverlay');
+  renderTutorialStep();
+}
+function renderTutorialStep() {
+  const step = TUTORIAL_STEPS[tutorialStep];
+  $('tutTitle').textContent = step.title;
+  $('tutText').textContent = step.text;
+  $('tutStep').textContent = `Step ${tutorialStep + 1} of ${TUTORIAL_STEPS.length}`;
+  const prog = $('tutProgress'); prog.innerHTML = '';
+  for (let i = 0; i < TUTORIAL_STEPS.length; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'tutorial-dot' + (i <= tutorialStep ? ' active' : '');
+    prog.appendChild(dot);
+  }
+  $('tutNextBtn').textContent = tutorialStep === TUTORIAL_STEPS.length - 1 ? 'Start playing' : 'Next';
+}
+function nextTutorialStep() {
+  tutorialStep++;
+  if (tutorialStep >= TUTORIAL_STEPS.length) {
+    hide('tutorialOverlay');
+    unlockAch('tutorial');
+    // Start a vs AI game on easy
+    $('soloDifficulty').value = 'easy';
+    $('soloPersonality').value = 'balanced';
+    $('soloDeck').value = '7';
+    startSolo();
+  } else renderTutorialStep();
+}
+function skipTutorial() { hide('tutorialOverlay'); }
+
+// === REACTIONS ===
 function buildReactionsBar() {
-  const bar = $('reactionsBar');
-  bar.innerHTML = '';
+  const bar = $('reactionsBar'); bar.innerHTML = '';
   if (S.vsAI) return;
   REACTIONS.forEach(e => {
     const b = document.createElement('button');
-    b.className = 'reaction-btn';
-    b.textContent = e;
+    b.className = 'reaction-btn'; b.textContent = e;
     b.onclick = () => sendReaction(e);
     bar.appendChild(b);
   });
 }
 function sendReaction(emoji) {
   sendMsg({ type: 'reaction', emoji });
-  showReaction(emoji, false);
-  sfx.reaction();
+  showReaction(emoji, false); sfx.reaction(); haptic([15]);
 }
 function showReaction(emoji, fromThem) {
   const el = document.createElement('div');
-  el.className = 'reaction-float';
-  el.textContent = emoji;
+  el.className = 'reaction-float'; el.textContent = emoji;
   el.style.left = fromThem ? '30%' : '70%';
   el.style.top = '45%';
   document.body.appendChild(el);
-  if (fromThem) sfx.reaction();
+  if (fromThem) { sfx.reaction(); haptic([15]); }
   setTimeout(() => el.remove(), 2400);
 }
 
-// ============ HISTORY ============
+// === CHAT ===
+function toggleChat() {
+  if ($('chatPanel').classList.contains('hidden')) {
+    show('chatPanel');
+    $('chatBtn').textContent = '💬';
+    setTimeout(() => $('chatInput').focus(), 50);
+  } else hide('chatPanel');
+}
+function sendChat() {
+  const text = $('chatInput').value.trim();
+  if (!text) return;
+  if (text.length > 200) return;
+  S.chatMsgs.push({ from: 'me', text, t: Date.now() });
+  renderChat();
+  sendMsg({ type: 'chat', text });
+  $('chatInput').value = '';
+}
+function renderChat() {
+  const msgs = $('chatMsgs');
+  msgs.innerHTML = '';
+  S.chatMsgs.slice(-50).forEach(m => {
+    const d = document.createElement('div');
+    d.className = 'chat-msg ' + m.from;
+    const name = m.from === 'me' ? S.myName : S.theirName;
+    d.innerHTML = `<span class="from">${escapeHtml(name)}:</span>${escapeHtml(m.text)}`;
+    msgs.appendChild(d);
+  });
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// === SHARING ===
+function copyChallengeLink() {
+  const params = new URLSearchParams();
+  params.set('deck', $('hostDeck').value);
+  params.set('bestOf', $('hostBestOf').value);
+  params.set('dir', $('hostDirection').value);
+  params.set('win', $('hostWinCondition').value);
+  params.set('tie', $('hostTieRule').value);
+  params.set('time', $('hostTimeLimit').value);
+  const stakes = $('hostStakes').value.trim();
+  if (stakes) params.set('stakes', stakes);
+  const code = $('customCode').value.trim().toUpperCase();
+  if (code) params.set('code', code);
+  const url = location.origin + location.pathname + '#challenge=' + params.toString();
+  if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => {
+    $('copyChallengeBtn').textContent = '✓ Link copied';
+    setTimeout(() => $('copyChallengeBtn').textContent = 'Copy challenge link', 1500);
+  });
+}
+function parseChallengeLink() {
+  const hash = location.hash;
+  if (!hash.startsWith('#challenge=')) return;
+  const params = new URLSearchParams(hash.slice('#challenge='.length));
+  if (params.get('deck')) $('hostDeck').value = params.get('deck');
+  if (params.get('bestOf')) $('hostBestOf').value = params.get('bestOf');
+  if (params.get('dir')) $('hostDirection').value = params.get('dir');
+  if (params.get('win')) $('hostWinCondition').value = params.get('win');
+  if (params.get('tie')) $('hostTieRule').value = params.get('tie');
+  if (params.get('time')) $('hostTimeLimit').value = params.get('time');
+  if (params.get('stakes')) $('hostStakes').value = params.get('stakes');
+  if (params.get('code')) $('customCode').value = params.get('code');
+  $('errorStatus').textContent = 'Challenge settings loaded. Click Create to start.';
+  setTimeout(() => $('errorStatus').textContent = '', 4000);
+  $('hostSettingsDetails').open = true;
+  history.replaceState(null, '', location.pathname);
+}
+function shareImage() {
+  const canvas = document.createElement('canvas');
+  const w = 800, h = 600;
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  // Background
+  const grad = ctx.createLinearGradient(0, 0, w, h);
+  grad.addColorStop(0, '#0a0a1f'); grad.addColorStop(0.5, '#1a1535'); grad.addColorStop(1, '#2a1845');
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
+  // Title
+  ctx.fillStyle = '#ff5c8d';
+  ctx.font = '300 70px Cormorant Garamond, serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('GOPS', w/2, 90);
+  ctx.font = '400 16px Inter, sans-serif';
+  ctx.fillStyle = '#9b91b3';
+  ctx.fillText('GAME OF PURE STRATEGY', w/2, 120);
+  // Result
+  const cmp = compareScores(S.myScore, S.theirScore);
+  const result = cmp > 0 ? 'You won' : cmp < 0 ? S.theirName + ' won' : 'Tied';
+  const color = cmp > 0 ? '#4ade80' : cmp < 0 ? '#ff6b81' : '#ffd93d';
+  ctx.fillStyle = color;
+  ctx.font = '300 56px Cormorant Garamond, serif';
+  ctx.fillText(result, w/2, 200);
+  ctx.fillStyle = '#9b91b3';
+  ctx.font = '400 42px Cormorant Garamond, serif';
+  ctx.fillText(`${S.myScore} – ${S.theirScore}`, w/2, 260);
+  // Names
+  ctx.font = '500 24px Inter, sans-serif';
+  ctx.fillStyle = '#ff5c8d';
+  ctx.fillText(S.myAvatar + ' ' + S.myName, w/4, 340);
+  ctx.fillStyle = '#4ecdc4';
+  ctx.fillText(S.theirAvatar + ' ' + S.theirName, 3*w/4, 340);
+  // Round grid
+  let line = '', lines = [];
+  S.history.forEach((h, i) => {
+    line += h.winner === 'me' ? '🟩' : h.winner === 'them' ? '🟥' : '🟨';
+    if ((i+1) % 5 === 0) { lines.push(line); line = ''; }
+  });
+  if (line) lines.push(line);
+  ctx.font = '36px sans-serif'; ctx.fillStyle = '#fff';
+  lines.forEach((l, i) => ctx.fillText(l, w/2, 420 + i*48));
+  // Footer
+  ctx.font = '400 14px Inter';
+  ctx.fillStyle = '#5a527a';
+  ctx.fillText('amsanghi.github.io/gops/2.0/', w/2, h - 30);
+  // Download
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `gops-result-${Date.now()}.png`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+}
+function exportData() {
+  const data = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith('gops2-')) data[key] = localStorage.getItem(key);
+  }
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `gops-backup-${Date.now()}.json`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function importData(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      Object.keys(data).forEach(k => {
+        if (k.startsWith('gops2-')) localStorage.setItem(k, data[k]);
+      });
+      alert('Data imported. Refresh the page.');
+      location.reload();
+    } catch (e) { alert('Invalid file: ' + e.message); }
+  };
+  reader.readAsText(file);
+}
+
+// === HISTORY ===
 function showHistory() {
   const content = $('historyContent');
-  if (S.history.length === 0) {
-    content.innerHTML = '<p style="color: var(--text-faint); text-align: center;">No rounds played yet.</p>';
-  } else {
+  if (S.history.length === 0) content.innerHTML = '<p style="color: var(--text-faint); text-align: center;">No rounds played yet.</p>';
+  else {
     let html = `<div class="history-row header"><div>#</div><div>Prize</div><div>${escapeHtml(S.myName)}</div><div>${escapeHtml(S.theirName)}</div></div>`;
     S.history.forEach(h => {
       const myCls = h.winner === 'me' ? 'h-winner you' : '';
       const theirCls = h.winner === 'them' ? 'h-winner them' : '';
-      html += `<div class="history-row">
-        <div>${h.round}</div>
-        <div class="h-prize">${rankText(h.prize, S.settings.deckSize)}${h.winner === 'tie' ? ' (tie)' : ''}</div>
-        <div class="h-mine ${myCls}">${rankText(h.mine, S.settings.deckSize)}${h.winner === 'me' ? ' ✓' : ''}</div>
-        <div class="h-theirs ${theirCls}">${rankText(h.theirs, S.settings.deckSize)}${h.winner === 'them' ? ' ✓' : ''}</div>
-      </div>`;
+      html += `<div class="history-row"><div>${h.round}</div><div class="h-prize">${rankText(h.prize, S.settings.deckSize)}${h.winner === 'tie' ? ' (tie)' : ''}</div><div class="h-mine ${myCls}">${rankText(h.mine, S.settings.deckSize)}${h.winner === 'me' ? ' ✓' : ''}</div><div class="h-theirs ${theirCls}">${rankText(h.theirs, S.settings.deckSize)}${h.winner === 'them' ? ' ✓' : ''}</div></div>`;
     });
     content.innerHTML = html;
   }
   show('historyModal');
 }
 
-// ============ RESUME ============
-function showResumeBanner(saved) {
-  const banner = $('resumeBanner');
-  let modeText;
-  if (saved.mode === 'solo') modeText = `Solo game vs ${escapeHtml(saved.theirName)}`;
-  else if (saved.mode === 'host') modeText = `Game with ${escapeHtml(saved.theirName)} (code: ${escapeHtml(saved.roomCode)})`;
-  else modeText = `Game with ${escapeHtml(saved.theirName)} (code: ${escapeHtml(saved.roomCode)})`;
-  const ago = Math.round((Date.now() - saved.timestamp) / 60000);
-  const agoText = ago < 1 ? 'just now' : ago < 60 ? `${ago}m ago` : `${Math.round(ago/60)}h ago`;
-  $('resumeText').innerHTML = `${modeText}<br>Round ${saved.round + 1}/${saved.totalRounds} · Score ${saved.myScore}–${saved.theirScore} · ${agoText}`;
-  banner.classList.remove('hidden');
-}
-function resumeGame() {
-  const saved = loadGameState();
-  if (!saved) return;
-  applyLoadedState(saved);
-  hide('resumeBanner');
-  if (saved.mode === 'solo') {
-    attachGameUI();
-    nextRound();
-  } else {
-    resumeMultiplayer(saved);
-  }
-}
-function collectStateForResume() {
-  return {
-    mode: S.mode, isHost: S.isHost,
-    myName: S.theirName, theirName: S.myName, // swap for peer
-    settings: S.settings,
-    prizes: S.prizes,
-    myHand: S.theirHand, theirHand: S.myHand,
-    theirUsedCards: S.history.filter(h => h.mine).map(h => h.mine), // approx; actually we need to track our used too
-    round: S.round,
-    myScore: S.theirScore, theirScore: S.myScore,
-    pot: S.pot,
-    history: S.history.map(h => ({ ...h, mine: h.theirs, theirs: h.mine, winner: h.winner === 'me' ? 'them' : h.winner === 'them' ? 'me' : 'tie' })),
-    myGames: S.theirGames, theirGames: S.myGames,
-    totalRounds: S.totalRounds, roomCode: S.roomCode
-  };
-}
-function resumeMultiplayer(saved) {
-  show('lobby');
-  S.resumingMultiplayer = true;
-  if (saved.isHost) {
-    // Recreate host with same code
-    $('customCode').value = saved.roomCode;
-    $('hostDeck').value = saved.settings.deckSize;
-    $('hostBestOf').value = saved.settings.bestOf;
-    $('hostTieRule').value = saved.settings.tieRule;
-    $('hostDirection').value = saved.settings.direction;
-    $('hostWinCondition').value = saved.settings.winCondition || 'most';
-    $('hostTimeLimit').value = saved.settings.timeLimit || 0;
-    $('hostStakes').value = saved.settings.stakes || '';
-    $('errorStatus').textContent = 'Recreating game ' + saved.roomCode + ' — waiting for ' + saved.theirName + ' to also resume.';
-    setTimeout(() => startHost(), 100);
-  } else {
-    // Joiner: reconnect with same code
-    $('joinCode').value = saved.roomCode;
-    $('errorStatus').textContent = 'Reconnecting to ' + saved.roomCode + ' — make sure ' + saved.theirName + ' resumed too.';
-    setTimeout(() => joinGame(), 100);
-  }
+// === ACHIEVEMENTS MODAL ===
+function showAchievementsModal() {
+  const unlocked = getAchievements();
+  $('achProgress').textContent = `${unlocked.length} of ${ACHIEVEMENTS.length} unlocked`;
+  const grid = $('achievementsContent'); grid.innerHTML = '';
+  ACHIEVEMENTS.forEach(a => {
+    const isUnlocked = unlocked.includes(a.id);
+    const div = document.createElement('div');
+    div.className = 'ach-item ' + (isUnlocked ? 'unlocked' : 'locked');
+    div.innerHTML = `<div class="ach-title"><span class="ach-icon">${a.icon}</span>${escapeHtml(a.title)}</div><div class="ach-desc">${escapeHtml(a.desc)}</div>`;
+    grid.appendChild(div);
+  });
+  show('achievementsModal');
 }
 
-// ============ UI WIRING ============
+// === STATS MODAL ===
+function showStatsModal() {
+  const s = getStats();
+  const dailyState = getDailyState();
+  const ach = getAchievements();
+  const winRate = s.gamesPlayed ? Math.round(100 * s.gamesWon / s.gamesPlayed) : 0;
+  const avgScore = s.gamesPlayed ? Math.round(s.totalScore / s.gamesPlayed) : 0;
+  const tournament = getJSON(TOURNEY_KEY, { level: 0 });
+  const puzzles = getJSON(PUZZLE_KEY, []);
+  let html = `
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-value">${s.gamesPlayed}</div><div class="stat-label">Games</div></div>
+      <div class="stat-card"><div class="stat-value">${winRate}%</div><div class="stat-label">Win rate</div></div>
+      <div class="stat-card"><div class="stat-value">${s.highScore}</div><div class="stat-label">High score</div></div>
+      <div class="stat-card"><div class="stat-value">${avgScore}</div><div class="stat-label">Avg score</div></div>
+      <div class="stat-card"><div class="stat-value">${s.rounds || 0}</div><div class="stat-label">Rounds</div></div>
+      <div class="stat-card"><div class="stat-value">${ach.length}</div><div class="stat-label">Badges</div></div>
+    </div>
+    <div style="margin-top: 1.4em;">
+      <h3 style="font-size: 0.7em; text-transform: uppercase; letter-spacing: 0.3em; color: var(--text-faint); margin-bottom: 12px;">Breakdown</h3>
+      <div class="bar-row"><div class="bar-name">Solo</div><div class="bar-wrap"><div class="bar-fill" style="width: ${s.soloGames ? (100 * s.soloWon / s.soloGames) : 0}%"></div></div><div class="bar-text">${s.soloWon}/${s.soloGames}</div></div>
+      <div class="bar-row"><div class="bar-name">Multi</div><div class="bar-wrap"><div class="bar-fill" style="width: ${s.multiGames ? (100 * s.multiWon / s.multiGames) : 0}%"></div></div><div class="bar-text">${s.multiWon}/${s.multiGames}</div></div>
+    </div>
+    <div style="margin-top: 1.4em;">
+      <h3 style="font-size: 0.7em; text-transform: uppercase; letter-spacing: 0.3em; color: var(--text-faint); margin-bottom: 12px;">Modes</h3>
+      <div class="bar-row"><div class="bar-name">Daily</div><div class="bar-text" style="margin-left:auto;">${dailyState.totalCompleted || 0} completed · streak ${dailyState.streak || 0} 🔥</div></div>
+      <div class="bar-row"><div class="bar-name">Puzzles</div><div class="bar-text" style="margin-left:auto;">${puzzles.length}/${PUZZLES.length} solved</div></div>
+      <div class="bar-row"><div class="bar-name">Tournament</div><div class="bar-text" style="margin-left:auto;">Level ${tournament.level}/${TOURNAMENT_AIS.length}</div></div>
+    </div>
+  `;
+  $('statsContent').innerHTML = html;
+  show('statsModal');
+}
+
+// === PWA INSTALL ===
+let deferredInstall = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstall = e;
+  show('installPromptArea');
+});
+
+// === LOBBY HELPERS ===
 function showLobby() {
   hide('game'); hide('end'); show('lobby');
   show('initialOptions');
   hide('hostInfo'); hide('joinInfo');
   $('errorStatus').textContent = '';
-  S.mode = null;
+  S.mode = null; S.currentMode = null;
+  S.scriptedAI = null;
+  refreshLobbyState();
+}
+function refreshLobbyState() {
+  updateDailySubtitle();
+  const t = getJSON(TOURNEY_KEY, { level: 0 });
+  $('tournamentSubtitle').textContent = t.level >= TOURNAMENT_AIS.length ? '👑 Champion!' : `Next: ${TOURNAMENT_AIS[t.level].name}`;
+  const p = getJSON(PUZZLE_KEY, []);
+  $('puzzleSubtitle').textContent = `${p.length}/${PUZZLES.length} solved`;
+  $('endlessSubtitle').textContent = 'Survival mode';
+  $('achCount').textContent = `(${getAchievements().length}/${ACHIEVEMENTS.length})`;
 }
 function cleanup() {
   clearTimer();
   if (S.conn) { try { S.conn.close(); } catch (e) {} S.conn = null; }
   if (S.peer) { try { S.peer.destroy(); } catch (e) {} S.peer = null; }
-  S.vsAI = false;
-  S.isHost = false;
-  S.mode = null;
+  S.vsAI = false; S.isHost = false; S.mode = null;
 }
 function quitGame() {
   if (!confirm('Quit the current game? Progress will be discarded.')) return;
   if (!S.vsAI) sendMsg({ type: 'quit' });
-  clearGameState();
-  cleanup();
-  showLobby();
+  clearGameState(); cleanup(); showLobby();
 }
 
 function bindKeyboard() {
@@ -2141,27 +2216,56 @@ function bindKeyboard() {
   });
 }
 
-// ============ INIT ============
+// === RESUME ===
+function showResumeBanner(saved) {
+  const banner = $('resumeBanner');
+  let modeText;
+  if (saved.mode === 'solo') modeText = `Solo game vs ${escapeHtml(saved.theirName)}`;
+  else modeText = `Game with ${escapeHtml(saved.theirName)} (code: ${escapeHtml(saved.roomCode)})`;
+  const ago = Math.round((Date.now() - saved.timestamp) / 60000);
+  const agoText = ago < 1 ? 'just now' : ago < 60 ? `${ago}m ago` : `${Math.round(ago/60)}h ago`;
+  $('resumeText').innerHTML = `${modeText}<br>Round ${saved.round + 1}/${saved.totalRounds} · Score ${saved.myScore}–${saved.theirScore} · ${agoText}`;
+  banner.classList.remove('hidden');
+}
+function resumeGame() {
+  const saved = loadGameState();
+  if (!saved) return;
+  applyLoadedState(saved);
+  hide('resumeBanner');
+  if (saved.mode === 'solo') { attachGameUI(); nextRound(); }
+  else { showLobby(); $('errorStatus').textContent = 'Multiplayer auto-resume not yet supported. Reconnect manually with code ' + saved.roomCode; }
+}
+
+// === INIT ===
 function init() {
   buildThemePicker();
+  buildAvatarPicker();
+  buildCardBackPicker();
   loadPrefs();
+  parseChallengeLink();
+
   $('nameInput').addEventListener('input', () => {
     S.myName = $('nameInput').value.trim() || 'You';
-    savePrefs();
-    updateHeadToHead();
+    savePrefs(); updateHeadToHead();
   });
   updateHeadToHead();
 
-  // Check for saved game
+  // Resume
   const saved = loadGameState();
   if (saved) showResumeBanner(saved);
   $('resumeBtn').onclick = resumeGame;
   $('resumeDiscardBtn').onclick = () => { clearGameState(); hide('resumeBanner'); };
 
+  // Buttons
   $('createBtn').onclick = startHost;
   $('joinBtn').onclick = joinGame;
   $('joinCode').addEventListener('keypress', e => { if (e.key === 'Enter') joinGame(); });
   $('soloBtn').onclick = startSolo;
+  $('dailyBtn').onclick = startDaily;
+  $('puzzleBtn').onclick = openPuzzleModal;
+  $('endlessBtn').onclick = startEndless;
+  $('tournamentBtn').onclick = openTournamentModal;
+  $('tutorialBtn').onclick = startTutorial;
   $('cancelHostBtn').onclick = () => { cleanup(); showLobby(); };
   $('cancelJoinBtn').onclick = () => { cleanup(); showLobby(); };
   $('rematchBtn').onclick = requestRematch;
@@ -2170,17 +2274,60 @@ function init() {
   $('historyBtn2').onclick = showHistory;
   $('historyCloseBtn').onclick = () => hide('historyModal');
   $('historyModal').onclick = e => { if (e.target === $('historyModal')) hide('historyModal'); };
-  $('soundBtn').onclick = () => {
-    S.sound = !S.sound;
-    updateSoundBtn();
-    savePrefs();
-    if (S.sound) sfx.pick();
-  };
+  $('soundBtn').onclick = () => { S.sound = !S.sound; updateSoundBtn(); savePrefs(); if (S.sound) sfx.pick(); };
   $('quitBtn').onclick = quitGame;
+  $('chatBtn').onclick = toggleChat;
+  $('chatSendBtn').onclick = sendChat;
+  $('chatInput').addEventListener('keydown', e => { if (e.key === 'Enter') sendChat(); });
+  $('dailyShareBtn').onclick = copyDailyShare;
+  $('shareImgBtn').onclick = shareImage;
+  $('copyChallengeBtn').onclick = copyChallengeLink;
+
+  // Modals
+  $('achievementsBtn').onclick = showAchievementsModal;
+  $('achievementsCloseBtn').onclick = () => hide('achievementsModal');
+  $('achievementsModal').onclick = e => { if (e.target === $('achievementsModal')) hide('achievementsModal'); };
+  $('statsBtn').onclick = showStatsModal;
+  $('statsCloseBtn').onclick = () => hide('statsModal');
+  $('statsModal').onclick = e => { if (e.target === $('statsModal')) hide('statsModal'); };
+  $('settingsBtn').onclick = () => { buildCardBackPicker(); $('soundToggleSetting').value = S.sound ? '1' : '0'; $('hapticsToggleSetting').value = S.haptics ? '1' : '0'; show('settingsModal'); };
+  $('settingsCloseBtn').onclick = () => hide('settingsModal');
+  $('settingsModal').onclick = e => { if (e.target === $('settingsModal')) hide('settingsModal'); };
+  $('puzzleCloseBtn').onclick = () => hide('puzzleModal');
+  $('puzzleModal').onclick = e => { if (e.target === $('puzzleModal')) hide('puzzleModal'); };
+  $('tournamentCloseBtn').onclick = () => hide('tournamentModal');
+  $('tournamentModal').onclick = e => { if (e.target === $('tournamentModal')) hide('tournamentModal'); };
+  $('soundToggleSetting').onchange = e => { S.sound = e.target.value === '1'; savePrefs(); updateSoundBtn(); };
+  $('hapticsToggleSetting').onchange = e => { S.haptics = e.target.value === '1'; savePrefs(); };
+  $('exportBtn').onclick = exportData;
+  $('exportBtn2').onclick = exportData;
+  $('importBtn').onclick = () => $('importFile').click();
+  $('importFile').addEventListener('change', e => { if (e.target.files[0]) importData(e.target.files[0]); });
+  $('resetDataBtn').onclick = () => {
+    if (!confirm('Delete all stats, achievements, and saved data? This cannot be undone.')) return;
+    const keys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('gops2-')) keys.push(k);
+    }
+    keys.forEach(k => localStorage.removeItem(k));
+    location.reload();
+  };
+  $('installBtn').onclick = () => {
+    if (!deferredInstall) return;
+    deferredInstall.prompt();
+    deferredInstall.userChoice.then(() => { deferredInstall = null; hide('installPromptArea'); });
+  };
+
+  // Tutorial
+  $('tutNextBtn').onclick = nextTutorialStep;
+  $('tutSkipBtn').onclick = skipTutorial;
+
   bindKeyboard();
 
-  // Save state on visibility changes too
   window.addEventListener('beforeunload', saveGameState);
+
+  refreshLobbyState();
 
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 }
