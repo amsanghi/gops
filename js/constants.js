@@ -4,18 +4,19 @@ export const PROTO_VERSION = 6;
 export const PEER_PREFIX = 'gops-room-';
 
 export const STORAGE = {
-  PREFS: 'gops3-prefs',
-  SAVE: 'gops3-saved-game',
-  STATS: 'gops3-stats',
-  ACH: 'gops3-achievements',
-  DAILY: 'gops3-daily',
-  PUZZLE: 'gops3-puzzles',
-  TOURNEY: 'gops3-tournament',
-  GHOST: 'gops3-ghost',
-  H2H_PREFIX: 'gops3-h2h-',
-  HEATMAP: 'gops3-heatmap',          // per-bid frequency tracking
-  RECORDS: 'gops3-records',          // per-mode high scores
-  CUSTOM_THEME: 'gops3-custom-theme',
+  PREFS: 'gops-prefs',
+  SAVE: 'gops-saved-game',
+  STATS: 'gops-stats',
+  ACH: 'gops-achievements',
+  DAILY: 'gops-daily',
+  PUZZLE: 'gops-puzzles',
+  TOURNEY: 'gops-tournament',
+  GHOST: 'gops-ghost',
+  H2H_PREFIX: 'gops-h2h-',
+  HEATMAP: 'gops-heatmap',
+  RECORDS: 'gops-records',
+  CUSTOM_THEME: 'gops-custom-theme',
+  MULTI_SESSION: 'gops-multi-session',  // for refresh-rejoin
 };
 
 export const SAVE_MAX_AGE_MS = 24 * 60 * 60 * 1000;

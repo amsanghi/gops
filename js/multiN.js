@@ -22,6 +22,7 @@ import { PROTO_VERSION, PEER_PREFIX } from './constants.js';
 import { sfx, haptic, fireConfetti, floatReaction } from './effects.js';
 import { makeCard, renderHand } from './render.js';
 import { startTimer, clearTimer, setTimerExpireCallback } from './timer.js';
+import { saveMultiSession, clearMultiSession } from './storage.js';
 
 const HOST_ID_PREFIX = PEER_PREFIX + 'PARTY-';
 
@@ -70,7 +71,10 @@ export async function startPartyHost() {
   try { S.peer = new Peer(HOST_ID_PREFIX + code); }
   catch { onError('Failed to init peer.'); hideParty(); return; }
 
-  S.peer.on('open', () => updatePartyStatus(`Room ${code} — waiting for players...`));
+  S.peer.on('open', () => {
+    updatePartyStatus(`Room ${code} — waiting for players...`);
+    saveMultiSession({ mode: 'party', role: 'host', code, name: S.myName, avatar: S.myAvatar });
+  });
   S.peer.on('connection', c => acceptConnection(c));
   S.peer.on('call', call => handleIncomingCall(call));
   S.peer.on('error', err => {
@@ -108,6 +112,7 @@ export async function joinPartyRoom(code) {
     S.myId = myId;
     S.conn = S.peer.connect(HOST_ID_PREFIX + code, { reliable: true });
     bindJoinerConn();
+    saveMultiSession({ mode: 'party', role: 'joiner', code, name: S.myName, avatar: S.myAvatar });
   });
   S.peer.on('call', call => handleIncomingCall(call));
   S.peer.on('error', err => {
@@ -757,7 +762,8 @@ function randomCode() {
   return s;
 }
 
-export function cleanupParty() {
+export function cleanupParty(intentional = false) {
+  if (intentional) clearMultiSession();
   clearTimer();
   stopMic();
   try { S.conn?.close(); } catch {}
