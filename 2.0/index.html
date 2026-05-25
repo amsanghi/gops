@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a1a2e">
+<title>GOPS 2.0</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='80' font-size='80'%3E%E2%99%A0%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --primary: #ff6b9d;
+    --primary-end: #c44569;
+    --opponent: #5dade2;
+    --opponent-end: #2874a6;
+    --bg-start: #1a1a2e;
+    --bg-mid: #16213e;
+    --bg-end: #0f3460;
+    --gold: #ffd700;
+    --gold-end: #b8860b;
+  }
+  [data-theme="teal"] {
+    --primary: #1abc9c;
+    --primary-end: #16a085;
+    --opponent: #e67e22;
+    --opponent-end: #d35400;
+    --bg-start: #0d1b2a;
+    --bg-mid: #1b263b;
+    --bg-end: #03334a;
+  }
+  [data-theme="purple"] {
+    --primary: #bb86fc;
+    --primary-end: #6200ea;
+    --opponent: #ffb74d;
+    --opponent-end: #f57c00;
+    --bg-start: #1a1033;
+    --bg-mid: #2a1a4a;
+    --bg-end: #0f0524;
+  }
+  [data-theme="forest"] {
+    --primary: #66bb6a;
+    --primary-end: #2e7d32;
+    --opponent: #ef5350;
+    --opponent-end: #c62828;
+    --bg-start: #0d1f0d;
+    --bg-mid: #142914;
+    --bg-end: #1b3b1b;
+  }
+  [data-theme="sunset"] {
+    --primary: #ff9a8b;
+    --primary-end: #ff6a88;
+    --opponent: #a18cd1;
+    --opponent-end: #6c5ce7;
+    --bg-start: #2d1b3d;
+    --bg-mid: #4a2c5c;
+    --bg-end: #1f0f2e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { overscroll-behavior: none; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-mid) 50%, var(--bg-end) 100%);
+    color: #e8e8e8;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .container { max-width: 980px; width: 100%; text-align: center; }
+
+  h1 {
+    font-size: 3.5em;
+    font-weight: 200;
+    letter-spacing: 0.3em;
+    margin-bottom: 0.05em;
+    background: linear-gradient(135deg, var(--primary), var(--primary-end));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .ver { font-size: 0.3em; vertical-align: super; opacity: 0.6; letter-spacing: 0.1em; }
+  .subtitle {
+    color: #888;
+    margin-bottom: 1.6em;
+    letter-spacing: 0.15em;
+    font-size: 0.85em;
+    text-transform: uppercase;
+  }
+
+  button {
+    background: linear-gradient(135deg, var(--primary), var(--primary-end));
+    color: white;
+    border: none;
+    padding: 12px 26px;
+    font-size: 1em;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 6px;
+    font-weight: 500;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    font-family: inherit;
+  }
+  button:hover:not(:disabled) { transform: translateY(-2px); }
+  button:active:not(:disabled) { transform: translateY(0); }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+  button.ghost {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: none;
+  }
+  button.ghost:hover:not(:disabled) { background: rgba(255,255,255,0.12); }
+  button.small { padding: 6px 14px; font-size: 0.85em; }
+  button.icon-btn {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 8px 10px;
+    box-shadow: none;
+    font-size: 1.1em;
+  }
+
+  input, select {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: white;
+    padding: 11px 16px;
+    font-size: 1em;
+    border-radius: 8px;
+    margin: 4px;
+    outline: none;
+    font-family: inherit;
+  }
+  input:focus, select:focus { border-color: var(--primary); }
+  input::placeholder { color: rgba(255,255,255,0.3); }
+  input[type="text"].code-input {
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    text-align: center;
+    width: 160px;
+  }
+  select { cursor: pointer; }
+
+  .status { margin-top: 1em; color: #888; font-size: 0.9em; min-height: 1.2em; }
+  .err { color: #f44336; }
+  .divider { margin: 1.2em 0; color: #555; letter-spacing: 0.2em; font-size: 0.8em; }
+  .code-display {
+    background: rgba(255,255,255,0.08);
+    padding: 16px 26px;
+    border-radius: 10px;
+    font-size: 1.8em;
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    letter-spacing: 0.4em;
+    margin: 1em auto;
+    color: var(--primary);
+    cursor: pointer;
+    display: inline-block;
+    border: 1px solid rgba(255,107,157,0.2);
+  }
+  .code-display:hover { background: rgba(255,255,255,0.12); }
+  .hint {
+    color: #666;
+    font-size: 0.82em;
+    margin-top: 1em;
+    line-height: 1.5;
+    max-width: 460px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Lobby */
+  .lobby-section {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 18px;
+    margin: 12px 0;
+  }
+  .lobby-section h3 {
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: #888;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .name-row { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+    text-align: left;
+  }
+  .setting-item {
+    background: rgba(255,255,255,0.04);
+    padding: 10px 12px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .setting-label { font-size: 0.85em; color: #aaa; }
+  .setting-item select { padding: 4px 8px; font-size: 0.85em; margin: 0; }
+  .stakes-input { width: 100%; }
+  .theme-picker { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
+  .theme-swatch {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: transform 0.15s;
+  }
+  .theme-swatch:hover { transform: scale(1.1); }
+  .theme-swatch.active { border-color: white; }
+  .head-to-head {
+    color: #888;
+    font-size: 0.9em;
+    margin-top: 12px;
+  }
+  .head-to-head .wins-mine { color: var(--primary); font-weight: 600; }
+  .head-to-head .wins-theirs { color: var(--opponent); font-weight: 600; }
+
+  /* Game */
+  .info-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.2em;
+    padding: 0 8px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .round-info {
+    font-size: 0.95em;
+    color: #aaa;
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .round-info b { color: #fff; font-weight: 600; }
+  .series-pill {
+    background: rgba(255,255,255,0.08);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    color: #ccc;
+  }
+  .score { display: flex; gap: 1.5em; }
+  .score-item { display: flex; flex-direction: column; align-items: center; }
+  .score-label {
+    font-size: 0.65em;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .score-label.me { color: var(--primary); }
+  .score-label.them { color: var(--opponent); }
+  .score-value { font-size: 1.5em; font-weight: 600; color: #fff; }
+  .toolbar { display: flex; gap: 6px; }
+
+  .play-area {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 0.8em;
+  }
+  .section-label {
+    font-size: 0.65em;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    min-height: 92px;
+    align-items: center;
+  }
+  .row.hand { min-height: 96px; }
+  .row.mini { min-height: 50px; }
+  .row.bids { gap: 16px; min-height: 100px; }
+
+  /* Cards */
+  .card {
+    width: 60px;
+    height: 84px;
+    border-radius: 8px;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4em;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    transition: transform 0.2s, opacity 0.3s, box-shadow 0.2s;
+    user-select: none;
+    position: relative;
+  }
+  .card .suit { font-size: 0.55em; margin-top: 4px; opacity: 0.65; }
+  .card.in-hand {
+    background: linear-gradient(135deg, #ffffff, #e8e8e8);
+    color: #1a1a2e;
+    cursor: pointer;
+    border: 2px solid transparent;
+  }
+  .card.in-hand:hover:not(.used):not(.locked) {
+    transform: translateY(-10px);
+    border-color: var(--primary);
+  }
+  .card.in-hand.pending {
+    border-color: var(--primary);
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4), 0 0 0 2px var(--primary);
+  }
+  .card.in-hand.used { opacity: 0.15; cursor: default; }
+  .card.in-hand.locked { cursor: default; }
+  .card.in-hand.locked:hover { transform: none; border-color: transparent; }
+  .card.prize {
+    background: linear-gradient(135deg, var(--gold), var(--gold-end));
+    color: #4a3000;
+    width: 76px;
+    height: 106px;
+    font-size: 1.7em;
+    animation: prize-in 0.4s ease-out;
+  }
+  .card.played {
+    background: linear-gradient(135deg, var(--primary), var(--primary-end));
+    color: white;
+    animation: slide-in-up 0.3s ease-out;
+  }
+  .card.opponent {
+    background: linear-gradient(135deg, var(--opponent), var(--opponent-end));
+    color: white;
+    animation: flip-in 0.5s ease-out;
+  }
+  .card.face-down {
+    background: repeating-linear-gradient(45deg, var(--opponent-end), var(--opponent-end) 6px, var(--opponent) 6px, var(--opponent) 12px);
+    color: transparent;
+    border: 2px solid rgba(255,255,255,0.1);
+    animation: slide-in-up 0.3s ease-out;
+  }
+  .card.winner {
+    box-shadow: 0 0 0 3px #4caf50, 0 0 20px rgba(76,175,80,0.6), 0 4px 10px rgba(0,0,0,0.4);
+    animation: win-pulse 0.6s ease-out;
+  }
+  .card.tied {
+    box-shadow: 0 0 0 3px var(--gold), 0 0 20px rgba(255,215,0,0.4), 0 4px 10px rgba(0,0,0,0.4);
+  }
+  .card.mini {
+    width: 36px;
+    height: 50px;
+    font-size: 0.9em;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  .card.mini .suit { font-size: 0.55em; margin-top: 2px; }
+
+  @keyframes slide-in-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes flip-in {
+    0% { transform: rotateY(180deg) scale(0.8); opacity: 0; }
+    100% { transform: rotateY(0deg) scale(1); opacity: 1; }
+  }
+  @keyframes prize-in {
+    0% { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+    100% { transform: scale(1) rotate(0); opacity: 1; }
+  }
+  @keyframes win-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+  @keyframes float-up {
+    0% { opacity: 0; transform: translate(-50%, 0) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -10px) scale(1.2); }
+    100% { opacity: 0; transform: translate(-50%, -120px) scale(1); }
+  }
+
+  .message {
+    margin-top: 0.8em;
+    font-size: 1.05em;
+    min-height: 1.6em;
+    color: #ddd;
+    font-weight: 500;
+  }
+  .pot-label { color: var(--gold); margin-left: 10px; font-size: 0.85em; font-weight: 500; }
+  .confirm-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    min-height: 36px;
+  }
+
+  /* Reactions */
+  .reactions-bar {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-top: 0.6em;
+  }
+  .reaction-btn {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1.4em;
+    transition: transform 0.15s, background 0.15s;
+    line-height: 1;
+  }
+  .reaction-btn:hover { background: rgba(255,255,255,0.12); transform: scale(1.1); }
+  .reaction-btn:active { transform: scale(0.95); }
+  .reaction-float {
+    position: fixed;
+    font-size: 4em;
+    z-index: 100;
+    pointer-events: none;
+    animation: float-up 2s ease-out forwards;
+    top: 50%;
+    left: 50%;
+  }
+
+  /* History modal */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+  .modal {
+    background: var(--bg-mid);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 24px;
+    max-width: 560px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .modal h2 {
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    margin-bottom: 1em;
+    text-transform: uppercase;
+    font-size: 1.1em;
+    color: #ccc;
+  }
+  .history-row {
+    display: grid;
+    grid-template-columns: 50px 1fr 1fr 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 4px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.95em;
+  }
+  .history-row.header {
+    color: #888;
+    font-size: 0.7em;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  .history-row .h-prize { color: var(--gold); font-weight: 600; }
+  .history-row .h-mine { color: var(--primary); }
+  .history-row .h-theirs { color: var(--opponent); }
+  .history-row .h-winner { font-size: 0.85em; }
+  .history-row .h-winner.you { color: #4caf50; }
+  .history-row .h-winner.them { color: #ef5350; }
+  .history-row .h-winner.tie { color: var(--gold); }
+  .modal-close { float: right; }
+
+  /* End */
+  .end-result { font-size: 2.6em; margin-bottom: 0.2em; font-weight: 300; }
+  .end-score {
+    font-size: 1.4em;
+    color: #aaa;
+    margin-bottom: 1.4em;
+    letter-spacing: 0.1em;
+  }
+  .end-stakes {
+    background: rgba(255,255,255,0.05);
+    border: 1px dashed rgba(255,255,255,0.15);
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin: 1em auto;
+    max-width: 460px;
+    font-style: italic;
+  }
+  .end-stakes-label { font-size: 0.7em; text-transform: uppercase; letter-spacing: 0.2em; color: #888; margin-bottom: 6px; }
+  .win { color: #4caf50; }
+  .lose { color: #ef5350; }
+  .tie { color: var(--gold); }
+  .series-display { margin: 1em 0; font-size: 1em; color: #aaa; }
+  .series-display b { color: #fff; font-weight: 600; }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 600px) {
+    body { padding: 12px; }
+    h1 { font-size: 2.3em; }
+    .card { width: 42px; height: 60px; font-size: 1em; }
+    .card .suit { font-size: 0.5em; margin-top: 2px; }
+    .card.prize { width: 54px; height: 76px; font-size: 1.3em; }
+    .card.mini { width: 28px; height: 40px; font-size: 0.75em; }
+    .row { gap: 3px; min-height: 66px; }
+    .row.mini { min-height: 42px; }
+    .row.bids { gap: 10px; }
+    .play-area { padding: 12px; }
+    .score { gap: 1em; }
+    .end-result { font-size: 1.8em; }
+    .reaction-btn { padding: 5px 10px; font-size: 1.2em; }
+    .info-bar { font-size: 0.9em; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- LOBBY -->
+<div id="lobby">
+  <h1>GOPS<span class="ver">2.0</span></h1>
+  <p class="subtitle">Game of Pure Strategy</p>
+
+  <div class="lobby-section">
+    <h3>Your name</h3>
+    <div class="name-row">
+      <input id="nameInput" type="text" placeholder="Name" maxlength="14">
+      <div class="theme-picker" id="themePicker"></div>
+    </div>
+    <div class="head-to-head" id="headToHead"></div>
+  </div>
+
+  <div id="initialOptions">
+    <div class="lobby-section">
+      <h3>Solo</h3>
+      <button id="soloBtn">🤖 Play vs AI</button>
+      <div class="settings-grid" id="soloSettings" style="margin-top: 12px;">
+        <div class="setting-item">
+          <span class="setting-label">Deck</span>
+          <select id="soloDeck"><option value="13">13 cards</option><option value="7">7 cards (quick)</option></select>
+        </div>
+        <div class="setting-item">
+          <span class="setting-label">Difficulty</span>
+          <select id="soloDifficulty"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option></select>
+        </div>
+      </div>
+    </div>
+
+    <div class="lobby-section">
+      <h3>Multiplayer</h3>
+      <button id="createBtn">Create game</button>
+      <div class="divider">— or —</div>
+      <input id="joinCode" class="code-input" type="text" placeholder="CODE" maxlength="12" autocapitalize="characters" autocomplete="off">
+      <br>
+      <button id="joinBtn">Join game</button>
+    </div>
+
+    <details class="lobby-section" id="hostSettingsDetails">
+      <summary style="cursor: pointer; color: #888; font-size: 0.85em; letter-spacing: 0.1em;">⚙️ Host settings (when creating)</summary>
+      <div style="margin-top: 12px;">
+        <div class="settings-grid">
+          <div class="setting-item">
+            <span class="setting-label">Custom code</span>
+            <input id="customCode" type="text" placeholder="(random)" maxlength="10" style="width: 100px; padding: 4px 8px; font-size: 0.85em; margin: 0;">
+          </div>
+          <div class="setting-item">
+            <span class="setting-label">Deck</span>
+            <select id="hostDeck"><option value="13">13 cards</option><option value="7">7 cards (quick)</option></select>
+          </div>
+          <div class="setting-item">
+            <span class="setting-label">Best of</span>
+            <select id="hostBestOf"><option value="1">1 game</option><option value="3">3 games</option><option value="5">5 games</option></select>
+          </div>
+          <div class="setting-item">
+            <span class="setting-label">Tie rule</span>
+            <select id="hostTieRule"><option value="carry">Carry pot</option><option value="burn">Burn prize</option></select>
+          </div>
+          <div class="setting-item">
+            <span class="setting-label">Direction</span>
+            <select id="hostDirection"><option value="high">High wins</option><option value="low">Low wins</option></select>
+          </div>
+        </div>
+        <input id="hostStakes" class="stakes-input" type="text" placeholder="Stakes (optional, e.g. 'loser picks next movie')" maxlength="80" style="margin-top: 10px;">
+      </div>
+    </details>
+
+    <p class="hint">High bid wins each prize. Ties carry pot to next round. <br>Open this page on both devices and share the code.</p>
+  </div>
+
+  <div id="hostInfo" class="hidden">
+    <p>Share this code with your partner:</p>
+    <div class="code-display" id="myCode" title="Click to copy"></div>
+    <p class="status" id="hostStatus">Waiting for them to join...</p>
+    <button id="cancelHostBtn" class="ghost small">Cancel</button>
+  </div>
+
+  <div id="joinInfo" class="hidden">
+    <p class="status" id="joinStatus">Connecting...</p>
+    <button id="cancelJoinBtn" class="ghost small">Cancel</button>
+  </div>
+
+  <div class="status err" id="errorStatus"></div>
+</div>
+
+<!-- GAME -->
+<div id="game" class="hidden">
+  <div class="info-bar">
+    <div class="round-info">
+      <span>Round <b id="round">1</b>/<b id="totalRounds">13</b></span>
+      <span class="series-pill hidden" id="seriesPill"></span>
+    </div>
+    <div class="score">
+      <div class="score-item">
+        <span class="score-label me" id="myNameLabel">You</span>
+        <span class="score-value" id="myScore">0</span>
+      </div>
+      <div class="score-item">
+        <span class="score-label them" id="theirNameLabel">Them</span>
+        <span class="score-value" id="theirScore">0</span>
+      </div>
+    </div>
+    <div class="toolbar">
+      <button class="icon-btn" id="historyBtn" title="History">📜</button>
+      <button class="icon-btn" id="soundBtn" title="Sound">🔊</button>
+      <button class="icon-btn" id="quitBtn" title="Quit">✕</button>
+    </div>
+  </div>
+
+  <div class="play-area">
+    <div class="section-label"><span>Their used cards</span><span id="theirRemaining" style="text-transform: none; letter-spacing: 0; color: #888;"></span></div>
+    <div class="row mini" id="theirUsedRow"></div>
+  </div>
+
+  <div class="play-area">
+    <div class="section-label"><span>Prize</span><span class="pot-label" id="pot"></span></div>
+    <div class="row" id="prizeRow"></div>
+  </div>
+
+  <div class="play-area">
+    <div class="section-label">Bids</div>
+    <div class="row bids">
+      <div style="text-align: center;">
+        <div style="font-size: 0.7em; color: #888; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 6px;" id="theirBidLabel">Them</div>
+        <div id="theirRow"></div>
+      </div>
+      <div style="text-align: center;">
+        <div style="font-size: 0.7em; color: var(--primary); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 6px;" id="myBidLabel">You</div>
+        <div id="myRow"></div>
+      </div>
+    </div>
+    <div class="confirm-row" id="confirmRow"></div>
+  </div>
+
+  <div class="play-area">
+    <div class="section-label"><span>Your hand</span><span style="text-transform: none; letter-spacing: 0; color: #888;" id="myRemaining"></span></div>
+    <div class="row hand" id="handRow"></div>
+  </div>
+
+  <div class="message" id="message"></div>
+
+  <div class="reactions-bar" id="reactionsBar"></div>
+</div>
+
+<!-- END -->
+<div id="end" class="hidden">
+  <h1 id="endResult" class="end-result"></h1>
+  <p class="end-score" id="endScore"></p>
+  <div class="series-display hidden" id="seriesDisplay"></div>
+  <div class="end-stakes hidden" id="endStakes">
+    <div class="end-stakes-label">Stakes</div>
+    <div id="endStakesText"></div>
+  </div>
+  <button id="rematchBtn">Rematch</button>
+  <button id="historyBtn2" class="ghost">View round-by-round</button>
+  <button id="exitBtn" class="ghost">Back to lobby</button>
+  <p class="status" id="rematchStatus"></p>
+</div>
+
+<!-- HISTORY MODAL -->
+<div id="historyModal" class="modal-overlay hidden">
+  <div class="modal">
+    <button class="ghost small modal-close" id="historyCloseBtn">Close</button>
+    <h2>Round History</h2>
+    <div id="historyContent"></div>
+  </div>
+</div>
+
+</div>
+
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+const PROTO_VERSION = 2;
+const PREFIX = 'gops-v2-room-';
+
+const S = {
+  peer: null, conn: null, isHost: false, vsAI: false,
+  myName: 'You', theirName: 'Them',
+  settings: { deckSize: 13, bestOf: 1, tieRule: 'carry', direction: 'high', stakes: '' },
+  prizes: [], myHand: [], theirHand: [], theirUsedCards: [],
+  round: 0, myScore: 0, theirScore: 0, pot: 0,
+  myPick: null, theirPick: null, pendingPick: null,
+  history: [],
+  myGames: 0, theirGames: 0,
+  myStakes: '', theirStakes: '',
+  myRematch: false, theirRematch: false,
+  busy: false, sound: true, theme: 'pink',
+  recordKey: null,
+  totalRounds: 13
+};
+
+const $ = id => document.getElementById(id);
+const show = id => $(id).classList.remove('hidden');
+const hide = id => $(id).classList.add('hidden');
+const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// ============ STORAGE ============
+function loadPrefs() {
+  try {
+    const p = JSON.parse(localStorage.getItem('gops2-prefs') || '{}');
+    if (p.name) { S.myName = p.name; $('nameInput').value = p.name; }
+    if (p.theme) setTheme(p.theme);
+    if (p.sound !== undefined) S.sound = p.sound;
+    updateSoundBtn();
+  } catch (e) {}
+}
+function savePrefs() {
+  try {
+    localStorage.setItem('gops2-prefs', JSON.stringify({ name: S.myName, theme: S.theme, sound: S.sound }));
+  } catch (e) {}
+}
+function recordKeyFor(otherName) { return 'gops2-h2h-' + (otherName || '').toLowerCase().trim(); }
+function getRecord(otherName) {
+  try { return JSON.parse(localStorage.getItem(recordKeyFor(otherName)) || '{"mine":0,"theirs":0,"ties":0}'); }
+  catch (e) { return { mine: 0, theirs: 0, ties: 0 }; }
+}
+function saveRecord(otherName, rec) {
+  try { localStorage.setItem(recordKeyFor(otherName), JSON.stringify(rec)); } catch (e) {}
+}
+function updateHeadToHead() {
+  const name = $('nameInput').value.trim();
+  if (!name) { $('headToHead').textContent = ''; return; }
+  // Show all-time wins across all opponents
+  try {
+    let mine = 0, theirs = 0, ties = 0;
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('gops2-h2h-')) {
+        const r = JSON.parse(localStorage.getItem(key) || '{}');
+        mine += r.mine || 0;
+        theirs += r.theirs || 0;
+        ties += r.ties || 0;
+      }
+    }
+    if (mine + theirs + ties > 0) {
+      $('headToHead').innerHTML = `All-time: <span class="wins-mine">${mine}W</span> · <span class="wins-theirs">${theirs}L</span> · ${ties}T`;
+    } else {
+      $('headToHead').textContent = '';
+    }
+  } catch (e) {}
+}
+
+// ============ THEMES ============
+const THEMES = [
+  { name: 'pink', color: '#ff6b9d' },
+  { name: 'teal', color: '#1abc9c' },
+  { name: 'purple', color: '#bb86fc' },
+  { name: 'forest', color: '#66bb6a' },
+  { name: 'sunset', color: '#ff9a8b' }
+];
+function setTheme(name) {
+  S.theme = name;
+  document.documentElement.setAttribute('data-theme', name === 'pink' ? '' : name);
+  document.querySelectorAll('.theme-swatch').forEach(s => {
+    s.classList.toggle('active', s.dataset.theme === name);
+  });
+  savePrefs();
+}
+function buildThemePicker() {
+  const picker = $('themePicker');
+  THEMES.forEach(t => {
+    const s = document.createElement('div');
+    s.className = 'theme-swatch';
+    s.dataset.theme = t.name;
+    s.style.background = t.color;
+    s.title = t.name;
+    s.onclick = () => setTheme(t.name);
+    picker.appendChild(s);
+  });
+}
+
+// ============ AUDIO ============
+let audioCtx = null;
+function beep(freq, dur, type = 'sine', vol = 0.1) {
+  if (!S.sound) return;
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = type;
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start();
+    o.stop(audioCtx.currentTime + dur);
+  } catch (e) {}
+}
+const sfx = {
+  pick: () => beep(440, 0.08, 'triangle', 0.08),
+  confirm: () => { beep(660, 0.05, 'triangle', 0.08); setTimeout(() => beep(880, 0.08, 'triangle', 0.08), 50); },
+  reveal: () => beep(330, 0.12, 'sawtooth', 0.06),
+  win: () => { beep(523, 0.1, 'triangle'); setTimeout(() => beep(659, 0.1, 'triangle'), 80); setTimeout(() => beep(784, 0.15, 'triangle'), 160); },
+  lose: () => { beep(330, 0.15, 'sawtooth', 0.08); setTimeout(() => beep(220, 0.2, 'sawtooth', 0.08), 100); },
+  tie: () => { beep(440, 0.08, 'square', 0.06); setTimeout(() => beep(440, 0.08, 'square', 0.06), 100); },
+  endWin: () => { beep(523, 0.12); setTimeout(() => beep(659, 0.12), 100); setTimeout(() => beep(784, 0.12), 200); setTimeout(() => beep(1047, 0.25), 300); },
+  endLose: () => { beep(440, 0.15, 'sawtooth'); setTimeout(() => beep(330, 0.2, 'sawtooth'), 150); setTimeout(() => beep(220, 0.3, 'sawtooth'), 350); },
+  reaction: () => beep(880, 0.06, 'triangle', 0.05)
+};
+function updateSoundBtn() {
+  if ($('soundBtn')) $('soundBtn').textContent = S.sound ? '🔊' : '🔇';
+}
+
+// ============ HELPERS ============
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function genCode() {
+  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  let s = '';
+  for (let i = 0; i < 5; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return s;
+}
+function rankText(n, size = 13) {
+  if (size === 13) return ({1:'A',11:'J',12:'Q',13:'K'})[n] || String(n);
+  return String(n);
+}
+function makeCard(n, className, suit, size = 13) {
+  const div = document.createElement('div');
+  div.className = 'card ' + className;
+  if (className.includes('face-down')) {
+    div.textContent = '';
+  } else {
+    div.innerHTML = `${rankText(n, size)}${suit ? `<div class="suit">${suit}</div>` : ''}`;
+  }
+  return div;
+}
+function compare(myCard, theirCard) {
+  if (S.settings.direction === 'low') {
+    if (myCard < theirCard) return 1;
+    if (myCard > theirCard) return -1;
+    return 0;
+  }
+  if (myCard > theirCard) return 1;
+  if (myCard < theirCard) return -1;
+  return 0;
+}
+
+// ============ NETWORK ============
+function startHost() {
+  S.isHost = true;
+  S.vsAI = false;
+  S.myName = $('nameInput').value.trim() || 'Player 1';
+  S.settings.deckSize = parseInt($('hostDeck').value);
+  S.settings.bestOf = parseInt($('hostBestOf').value);
+  S.settings.tieRule = $('hostTieRule').value;
+  S.settings.direction = $('hostDirection').value;
+  S.settings.stakes = $('hostStakes').value.trim();
+  S.totalRounds = S.settings.deckSize;
+  savePrefs();
+
+  hide('initialOptions'); show('hostInfo');
+  $('errorStatus').textContent = '';
+  const customCode = $('customCode').value.trim().toUpperCase();
+  const code = customCode || genCode();
+  $('myCode').textContent = code;
+  $('myCode').onclick = () => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(code).then(() => {
+        const orig = $('myCode').textContent;
+        $('myCode').textContent = 'COPIED';
+        setTimeout(() => { $('myCode').textContent = orig; }, 900);
+      });
+    }
+  };
+  S.peer = new Peer(PREFIX + code);
+  S.peer.on('open', () => { $('hostStatus').textContent = 'Waiting for them to join...'; });
+  S.peer.on('connection', c => {
+    if (S.conn && S.conn.open) { c.close(); return; }
+    S.conn = c;
+    bindConn();
+    S.conn.on('open', () => {
+      S.conn.send({ type: 'hello', version: PROTO_VERSION, name: S.myName });
+    });
+  });
+  S.peer.on('error', err => {
+    if (err.type === 'unavailable-id') {
+      S.peer.destroy(); S.peer = null;
+      hide('hostInfo'); show('initialOptions');
+      $('errorStatus').textContent = 'Code already in use, try another.';
+    } else {
+      $('errorStatus').textContent = 'Connection error: ' + err.type;
+    }
+  });
+}
+
+function joinGame() {
+  const code = $('joinCode').value.trim().toUpperCase();
+  if (!code) return;
+  S.isHost = false;
+  S.vsAI = false;
+  S.myName = $('nameInput').value.trim() || 'Player 2';
+  savePrefs();
+
+  hide('initialOptions'); show('joinInfo');
+  $('errorStatus').textContent = '';
+  $('joinStatus').textContent = 'Connecting...';
+  S.peer = new Peer();
+  S.peer.on('open', () => {
+    S.conn = S.peer.connect(PREFIX + code, { reliable: true });
+    bindConn();
+    S.conn.on('open', () => {
+      $('joinStatus').textContent = 'Connected. Saying hello...';
+      S.conn.send({ type: 'hello', version: PROTO_VERSION, name: S.myName });
+    });
+  });
+  S.peer.on('error', err => {
+    if (err.type === 'peer-unavailable') {
+      $('errorStatus').textContent = 'No game found with code "' + code + '".';
+    } else {
+      $('errorStatus').textContent = 'Connection error: ' + err.type;
+    }
+    hide('joinInfo'); show('initialOptions');
+  });
+}
+
+function bindConn() {
+  S.conn.on('data', handleMsg);
+  S.conn.on('close', () => {
+    $('message').textContent = 'Disconnected.';
+    $('errorStatus').textContent = 'Connection lost. Refresh to restart.';
+  });
+  S.conn.on('error', err => {
+    $('errorStatus').textContent = 'Error: ' + (err.type || err.message || 'unknown');
+  });
+}
+
+function handleMsg(data) {
+  if (data.type === 'hello') {
+    S.theirName = data.name || 'Opponent';
+    if (S.isHost) {
+      beginGame();
+    }
+  } else if (data.type === 'start') {
+    S.prizes = data.prizes;
+    S.settings = data.settings;
+    S.totalRounds = S.settings.deckSize;
+    S.theirStakes = data.stakes || '';
+    S.myStakes = S.settings.stakes;
+    setupGame();
+  } else if (data.type === 'pick') {
+    S.theirPick = data.card;
+    if (S.myPick !== null) {
+      resolveRound();
+    } else {
+      $('theirRow').innerHTML = '';
+      $('theirRow').appendChild(makeCard('', 'face-down'));
+      $('message').textContent = S.theirName + ' locked in. Your turn.';
+      sfx.reveal();
+    }
+  } else if (data.type === 'rematch') {
+    S.theirRematch = true;
+    checkRematch();
+  } else if (data.type === 'reaction') {
+    showReaction(data.emoji, true);
+  } else if (data.type === 'quit') {
+    $('errorStatus').textContent = S.theirName + ' left the game.';
+    cleanup();
+    showLobby();
+  }
+}
+
+function sendMsg(msg) {
+  if (S.conn && S.conn.open) S.conn.send(msg);
+}
+
+// ============ GAME FLOW ============
+function beginGame() {
+  // Host initiates new game (called when both hello'd or rematch agreed)
+  const size = S.settings.deckSize;
+  S.prizes = shuffle(Array.from({length: size}, (_, i) => i + 1));
+  sendMsg({ type: 'start', prizes: S.prizes, settings: S.settings, stakes: S.settings.stakes });
+  S.theirStakes = S.theirStakes || ''; // Joiner sends their stakes via 'hello' - simplified: only host sets stakes
+  S.myStakes = S.settings.stakes;
+  setupGame();
+}
+
+function setupGame() {
+  const size = S.settings.deckSize;
+  S.totalRounds = size;
+  S.myHand = Array.from({length: size}, (_, i) => i + 1);
+  S.theirHand = Array.from({length: size}, (_, i) => i + 1);
+  S.theirUsedCards = [];
+  S.round = 0;
+  S.myScore = 0;
+  S.theirScore = 0;
+  S.pot = 0;
+  S.myPick = null;
+  S.theirPick = null;
+  S.pendingPick = null;
+  S.history = [];
+  S.myRematch = false;
+  S.theirRematch = false;
+  S.busy = false;
+
+  hide('lobby'); hide('end'); show('game');
+  $('myNameLabel').textContent = S.myName;
+  $('theirNameLabel').textContent = S.theirName;
+  $('myBidLabel').textContent = S.myName;
+  $('theirBidLabel').textContent = S.theirName;
+  $('myScore').textContent = '0';
+  $('theirScore').textContent = '0';
+  $('totalRounds').textContent = size;
+
+  if (S.settings.bestOf > 1) {
+    $('seriesPill').classList.remove('hidden');
+    $('seriesPill').textContent = `Series ${S.myGames}-${S.theirGames} (best of ${S.settings.bestOf})`;
+  } else {
+    $('seriesPill').classList.add('hidden');
+  }
+
+  renderTheirUsed();
+  buildReactionsBar();
+  nextRound();
+}
+
+function nextRound() {
+  S.myPick = null;
+  S.theirPick = null;
+  S.pendingPick = null;
+  S.busy = false;
+  $('round').textContent = S.round + 1;
+  $('pot').textContent = S.pot > 0 ? `(+${S.pot} carried)` : '';
+  $('prizeRow').innerHTML = '';
+  $('prizeRow').appendChild(makeCard(S.prizes[S.round], 'prize', '♦', S.settings.deckSize));
+  $('theirRow').innerHTML = '';
+  $('myRow').innerHTML = '';
+  $('confirmRow').innerHTML = '';
+  $('message').textContent = (S.settings.direction === 'low' ? 'Low' : 'High') + ' bid wins. Tap a card.';
+  $('myRemaining').textContent = S.myHand.length + ' left';
+  $('theirRemaining').textContent = S.theirHand.length + ' left';
+  renderHand();
+  sfx.reveal();
+}
+
+function renderHand() {
+  const row = $('handRow');
+  row.innerHTML = '';
+  const size = S.settings.deckSize;
+  Array.from({length: size}, (_, i) => i + 1).forEach(n => {
+    const used = !S.myHand.includes(n);
+    const locked = S.myPick !== null;
+    const pending = S.pendingPick === n && !locked;
+    let cls = 'in-hand' + (used ? ' used' : '') + (locked ? ' locked' : '') + (pending ? ' pending' : '');
+    const c = makeCard(n, cls, '♥', size);
+    if (!used && !locked) {
+      c.onclick = () => selectCard(n);
+    }
+    row.appendChild(c);
+  });
+}
+
+function renderTheirUsed() {
+  const row = $('theirUsedRow');
+  row.innerHTML = '';
+  if (S.theirUsedCards.length === 0) {
+    const ph = document.createElement('div');
+    ph.style.color = '#555';
+    ph.style.fontSize = '0.85em';
+    ph.textContent = 'No cards played yet.';
+    row.appendChild(ph);
+    return;
+  }
+  // Sort by rank for clarity
+  S.theirUsedCards.slice().sort((a,b) => a-b).forEach(n => {
+    row.appendChild(makeCard(n, 'opponent mini', '♠', S.settings.deckSize));
+  });
+}
+
+function selectCard(n) {
+  if (S.myPick !== null || S.busy) return;
+  if (!S.myHand.includes(n)) return;
+  sfx.pick();
+  if (S.pendingPick === n) {
+    confirmPick();
+    return;
+  }
+  S.pendingPick = n;
+  renderHand();
+  renderConfirm();
+}
+
+function renderConfirm() {
+  const row = $('confirmRow');
+  row.innerHTML = '';
+  if (S.pendingPick !== null && S.myPick === null) {
+    const lbl = document.createElement('span');
+    lbl.style.alignSelf = 'center';
+    lbl.style.color = '#aaa';
+    lbl.style.marginRight = '6px';
+    lbl.textContent = `Bid ${rankText(S.pendingPick, S.settings.deckSize)}?`;
+    const yes = document.createElement('button');
+    yes.className = 'small';
+    yes.textContent = '✓ Lock in';
+    yes.onclick = confirmPick;
+    const no = document.createElement('button');
+    no.className = 'ghost small';
+    no.textContent = 'Cancel';
+    no.onclick = () => { S.pendingPick = null; renderHand(); renderConfirm(); };
+    row.appendChild(lbl);
+    row.appendChild(yes);
+    row.appendChild(no);
+  }
+}
+
+function confirmPick() {
+  if (S.pendingPick === null || S.myPick !== null) return;
+  const n = S.pendingPick;
+  S.myPick = n;
+  S.myHand = S.myHand.filter(x => x !== n);
+  S.pendingPick = null;
+  renderHand();
+  $('confirmRow').innerHTML = '';
+  $('myRemaining').textContent = S.myHand.length + ' left';
+  $('myRow').innerHTML = '';
+  $('myRow').appendChild(makeCard(n, 'played', '♥', S.settings.deckSize));
+  sfx.confirm();
+  if (S.vsAI) {
+    // AI picks
+    setTimeout(() => {
+      const aiCard = aiBid();
+      S.theirPick = aiCard;
+      S.theirHand = S.theirHand.filter(x => x !== aiCard);
+      resolveRound();
+    }, 400 + Math.random() * 800);
+  } else {
+    sendMsg({ type: 'pick', card: n });
+    if (S.theirPick !== null) {
+      resolveRound();
+    } else {
+      $('message').textContent = 'Bid locked. Waiting for ' + S.theirName + '...';
+    }
+  }
+}
+
+function resolveRound() {
+  S.busy = true;
+  S.theirUsedCards.push(S.theirPick);
+  S.theirHand = S.theirHand.filter(x => x !== S.theirPick);
+
+  $('theirRow').innerHTML = '';
+  const theirCard = makeCard(S.theirPick, 'opponent', '♠', S.settings.deckSize);
+  $('theirRow').appendChild(theirCard);
+  const myCard = $('myRow').firstChild;
+
+  const prizeValue = S.prizes[S.round] + S.pot;
+  const cmp = compare(S.myPick, S.theirPick);
+  let msg, winner;
+  if (cmp > 0) {
+    S.myScore += prizeValue;
+    msg = `You win ${prizeValue}!`;
+    winner = 'me';
+    myCard.classList.add('winner');
+    S.pot = 0;
+    sfx.win();
+  } else if (cmp < 0) {
+    S.theirScore += prizeValue;
+    msg = `${S.theirName} wins ${prizeValue}.`;
+    winner = 'them';
+    theirCard.classList.add('winner');
+    S.pot = 0;
+    sfx.lose();
+  } else {
+    if (S.settings.tieRule === 'burn') {
+      msg = `Tie! ${prizeValue} burned.`;
+      S.pot = 0;
+    } else {
+      S.pot = prizeValue;
+      msg = `Tie! ${prizeValue} carries to next round.`;
+    }
+    winner = 'tie';
+    myCard.classList.add('tied');
+    theirCard.classList.add('tied');
+    sfx.tie();
+  }
+
+  S.history.push({
+    round: S.round + 1,
+    prize: S.prizes[S.round],
+    mine: S.myPick,
+    theirs: S.theirPick,
+    pot: S.pot,
+    prizeValue,
+    winner
+  });
+
+  $('message').textContent = msg;
+  $('myScore').textContent = S.myScore;
+  $('theirScore').textContent = S.theirScore;
+  renderTheirUsed();
+
+  S.round++;
+  if (S.round >= S.totalRounds) {
+    setTimeout(endGame, 2400);
+  } else {
+    setTimeout(nextRound, 2200);
+  }
+}
+
+function endGame() {
+  hide('game'); show('end');
+  let result, cls, sfxFn;
+  if (S.myScore > S.theirScore) {
+    result = 'You won';
+    cls = 'win';
+    S.myGames++;
+    sfxFn = sfx.endWin;
+  } else if (S.myScore < S.theirScore) {
+    result = `${S.theirName} won`;
+    cls = 'lose';
+    S.theirGames++;
+    sfxFn = sfx.endLose;
+  } else {
+    result = 'Tied';
+    cls = 'tie';
+    sfxFn = sfx.tie;
+  }
+  $('endResult').textContent = result;
+  $('endResult').className = 'end-result ' + cls;
+  $('endScore').textContent = `${S.myScore} – ${S.theirScore}`;
+
+  // Series
+  const seriesGoal = Math.ceil(S.settings.bestOf / 2);
+  const seriesOver = S.myGames >= seriesGoal || S.theirGames >= seriesGoal;
+  if (S.settings.bestOf > 1) {
+    $('seriesDisplay').classList.remove('hidden');
+    if (seriesOver) {
+      const champ = S.myGames > S.theirGames ? S.myName : S.theirName;
+      $('seriesDisplay').innerHTML = `Series ended: <b>${escapeHtml(champ)}</b> wins ${S.myGames}–${S.theirGames}`;
+    } else {
+      $('seriesDisplay').innerHTML = `Series: <b>${S.myGames}–${S.theirGames}</b> (first to ${seriesGoal})`;
+    }
+  } else {
+    $('seriesDisplay').classList.add('hidden');
+  }
+
+  // Record (only on series end or single game)
+  if (S.settings.bestOf === 1 || seriesOver) {
+    const rec = getRecord(S.theirName);
+    if (S.myScore > S.theirScore) rec.mine++;
+    else if (S.myScore < S.theirScore) rec.theirs++;
+    else rec.ties++;
+    if (!S.vsAI) saveRecord(S.theirName, rec);
+  }
+
+  // Stakes (host's stakes shown to loser, or both)
+  if (S.settings.stakes && (S.myScore !== S.theirScore) && (S.settings.bestOf === 1 || seriesOver)) {
+    $('endStakes').classList.remove('hidden');
+    const loser = S.myScore < S.theirScore ? S.myName : S.theirName;
+    $('endStakesText').innerHTML = `${escapeHtml(loser)}: ${escapeHtml(S.settings.stakes)}`;
+  } else {
+    $('endStakes').classList.add('hidden');
+  }
+
+  $('rematchStatus').textContent = '';
+  $('rematchBtn').disabled = false;
+  $('rematchBtn').textContent = seriesOver ? 'Play again (new series)' : 'Next game';
+  S.myRematch = false;
+  S.theirRematch = false;
+  if (seriesOver) {
+    S.myGames = 0;
+    S.theirGames = 0;
+  }
+  setTimeout(sfxFn, 200);
+}
+
+function requestRematch() {
+  if (S.myRematch) return;
+  S.myRematch = true;
+  $('rematchBtn').disabled = true;
+  $('rematchBtn').textContent = 'Waiting...';
+  if (S.vsAI) {
+    S.theirRematch = true;
+    setupGame();
+    return;
+  }
+  sendMsg({ type: 'rematch' });
+  checkRematch();
+}
+
+function checkRematch() {
+  if (S.myRematch && S.theirRematch) {
+    if (S.isHost) beginGame();
+    else $('rematchStatus').textContent = 'Starting...';
+  } else if (S.theirRematch && !S.myRematch) {
+    $('rematchStatus').textContent = S.theirName + ' wants a rematch!';
+  } else if (S.myRematch && !S.theirRematch) {
+    $('rematchStatus').textContent = 'Waiting for ' + S.theirName + ' to accept...';
+  }
+}
+
+// ============ AI ============
+function aiBid() {
+  const difficulty = $('soloDifficulty').value;
+  const currentPrize = S.prizes[S.round];
+  const remainingPrizes = S.prizes.slice(S.round);
+  const aiHand = S.theirHand.slice().sort((a, b) => b - a); // high to low
+  const sortedPrizes = remainingPrizes.slice().sort((a, b) => b - a); // high to low
+
+  if (difficulty === 'easy') {
+    // Random card
+    return aiHand[Math.floor(Math.random() * aiHand.length)];
+  }
+
+  // Find rank of current prize among remaining
+  const prizeRank = sortedPrizes.indexOf(currentPrize);
+
+  if (difficulty === 'medium') {
+    // Match prize rank with card rank, plus noise
+    const offset = Math.floor(Math.random() * 3) - 1; // -1, 0, +1
+    const idx = Math.max(0, Math.min(aiHand.length - 1, prizeRank + offset));
+    return aiHand[idx];
+  }
+
+  // Hard: more strategic - bid the card that matches prize rank, with deception
+  // Also consider direction (low wins)
+  if (S.settings.direction === 'low') {
+    // For low-wins, we want to win HIGH prizes with LOW cards, so flip strategy
+    const lowSorted = aiHand.slice().sort((a, b) => a - b);
+    const idx = Math.max(0, Math.min(lowSorted.length - 1, prizeRank));
+    // Add slight randomness
+    const offset = Math.random() < 0.7 ? 0 : (Math.random() < 0.5 ? -1 : 1);
+    return lowSorted[Math.max(0, Math.min(lowSorted.length - 1, idx + offset))];
+  }
+  // Default high-wins hard AI
+  // Track what player has used to guess what they have
+  const playerUsedKnown = []; // we don't actually see player hand; rely on what's been played
+  // 70% of time play optimal, 30% bluff
+  if (Math.random() < 0.3) {
+    // Bluff: play low card on high prize occasionally
+    const offset = Math.random() < 0.5 ? -2 : 2;
+    const idx = Math.max(0, Math.min(aiHand.length - 1, prizeRank + offset));
+    return aiHand[idx];
+  }
+  return aiHand[prizeRank];
+}
+
+function startSolo() {
+  S.vsAI = true;
+  S.isHost = true;
+  S.myName = $('nameInput').value.trim() || 'You';
+  const diff = $('soloDifficulty').value;
+  S.theirName = 'AI (' + diff + ')';
+  S.settings.deckSize = parseInt($('soloDeck').value);
+  S.settings.bestOf = 1;
+  S.settings.tieRule = 'carry';
+  S.settings.direction = 'high';
+  S.settings.stakes = '';
+  S.totalRounds = S.settings.deckSize;
+  savePrefs();
+  S.prizes = shuffle(Array.from({length: S.settings.deckSize}, (_, i) => i + 1));
+  setupGame();
+}
+
+// ============ REACTIONS ============
+const REACTIONS = ['😘', '😤', '🔥', '😂', '💀', '❤️', '🤔', '😎'];
+function buildReactionsBar() {
+  const bar = $('reactionsBar');
+  bar.innerHTML = '';
+  if (S.vsAI) return;
+  REACTIONS.forEach(e => {
+    const b = document.createElement('button');
+    b.className = 'reaction-btn';
+    b.textContent = e;
+    b.onclick = () => sendReaction(e);
+    bar.appendChild(b);
+  });
+}
+function sendReaction(emoji) {
+  sendMsg({ type: 'reaction', emoji });
+  showReaction(emoji, false);
+  sfx.reaction();
+}
+function showReaction(emoji, fromThem) {
+  const el = document.createElement('div');
+  el.className = 'reaction-float';
+  el.textContent = emoji;
+  const left = fromThem ? '30%' : '70%';
+  el.style.left = left;
+  el.style.top = '40%';
+  document.body.appendChild(el);
+  if (fromThem) sfx.reaction();
+  setTimeout(() => el.remove(), 2100);
+}
+
+// ============ HISTORY ============
+function showHistory() {
+  const content = $('historyContent');
+  if (S.history.length === 0) {
+    content.innerHTML = '<p style="color: #888; text-align: center;">No rounds played yet.</p>';
+  } else {
+    let html = `<div class="history-row header"><div>#</div><div>Prize</div><div>${escapeHtml(S.myName)}</div><div>${escapeHtml(S.theirName)}</div></div>`;
+    S.history.forEach(h => {
+      const myCls = h.winner === 'me' ? 'h-winner you' : '';
+      const theirCls = h.winner === 'them' ? 'h-winner them' : '';
+      const tieCls = h.winner === 'tie' ? 'h-winner tie' : '';
+      html += `<div class="history-row">
+        <div>${h.round}</div>
+        <div class="h-prize">${rankText(h.prize, S.settings.deckSize)}${h.winner === 'tie' ? ' (tied)' : ''}</div>
+        <div class="h-mine ${myCls}">${rankText(h.mine, S.settings.deckSize)}${h.winner === 'me' ? ' ✓' : ''}</div>
+        <div class="h-theirs ${theirCls}">${rankText(h.theirs, S.settings.deckSize)}${h.winner === 'them' ? ' ✓' : ''}</div>
+      </div>`;
+    });
+    content.innerHTML = html;
+  }
+  show('historyModal');
+}
+
+// ============ UI WIRING ============
+function showLobby() {
+  hide('game'); hide('end'); show('lobby');
+  show('initialOptions');
+  hide('hostInfo'); hide('joinInfo');
+  $('errorStatus').textContent = '';
+}
+function cleanup() {
+  if (S.conn) { try { S.conn.close(); } catch (e) {} S.conn = null; }
+  if (S.peer) { try { S.peer.destroy(); } catch (e) {} S.peer = null; }
+  S.vsAI = false;
+  S.isHost = false;
+}
+function quitGame() {
+  if (!confirm('Quit the current game?')) return;
+  if (!S.vsAI) sendMsg({ type: 'quit' });
+  cleanup();
+  showLobby();
+}
+
+function bindKeyboard() {
+  window.addEventListener('keydown', e => {
+    if ($('game').classList.contains('hidden')) return;
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (S.myPick !== null) return;
+    let n = null;
+    if (e.key >= '1' && e.key <= '9') n = parseInt(e.key);
+    else if (e.key === '0') n = 10;
+    else if (e.key.toLowerCase() === 'j') n = 11;
+    else if (e.key.toLowerCase() === 'q') n = 12;
+    else if (e.key.toLowerCase() === 'k') n = 13;
+    else if (e.key.toLowerCase() === 'a') n = 1;
+    else if (e.key === 'Enter' && S.pendingPick !== null) { confirmPick(); return; }
+    else if (e.key === 'Escape' && S.pendingPick !== null) { S.pendingPick = null; renderHand(); renderConfirm(); return; }
+    if (n !== null && S.myHand.includes(n) && n <= S.settings.deckSize) {
+      selectCard(n);
+    }
+  });
+}
+
+// ============ INIT ============
+function init() {
+  buildThemePicker();
+  loadPrefs();
+  if (!$('nameInput').value) $('nameInput').value = '';
+  $('nameInput').addEventListener('input', () => {
+    S.myName = $('nameInput').value.trim() || 'You';
+    savePrefs();
+    updateHeadToHead();
+  });
+  updateHeadToHead();
+
+  $('createBtn').onclick = startHost;
+  $('joinBtn').onclick = joinGame;
+  $('joinCode').addEventListener('keypress', e => { if (e.key === 'Enter') joinGame(); });
+  $('soloBtn').onclick = startSolo;
+  $('cancelHostBtn').onclick = () => { cleanup(); showLobby(); };
+  $('cancelJoinBtn').onclick = () => { cleanup(); showLobby(); };
+  $('rematchBtn').onclick = requestRematch;
+  $('exitBtn').onclick = () => { cleanup(); showLobby(); };
+  $('historyBtn').onclick = showHistory;
+  $('historyBtn2').onclick = showHistory;
+  $('historyCloseBtn').onclick = () => hide('historyModal');
+  $('historyModal').onclick = e => { if (e.target === $('historyModal')) hide('historyModal'); };
+  $('soundBtn').onclick = () => {
+    S.sound = !S.sound;
+    updateSoundBtn();
+    savePrefs();
+    if (S.sound) sfx.pick();
+  };
+  $('quitBtn').onclick = quitGame;
+  bindKeyboard();
+
+  // Register service worker for PWA (optional, fails silently)
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+}
+
+init();
+</script>
+</body>
+</html>
