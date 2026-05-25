@@ -153,7 +153,15 @@
   .score-value { font-size: 1.6em; font-weight: 600; color: var(--text); margin-top: 2px; }
   .toolbar { display: flex; gap: 6px; }
 
-  .play-area { background: var(--panel); backdrop-filter: blur(12px) saturate(140%); -webkit-backdrop-filter: blur(12px) saturate(140%); border: 1px solid var(--panel-border); border-radius: 18px; padding: 16px; margin-bottom: 0.8em; box-shadow: var(--shadow-sm); }
+  .play-area { background: var(--panel); backdrop-filter: blur(12px) saturate(140%); -webkit-backdrop-filter: blur(12px) saturate(140%); border: 1px solid var(--panel-border); border-radius: 18px; padding: 14px; margin-bottom: 0.6em; box-shadow: var(--shadow-sm); }
+  .game-grid { display: grid; grid-template-columns: 0.85fr 1.3fr 0.85fr; gap: 8px; margin-bottom: 0.6em; align-items: stretch; }
+  .game-grid > .play-area, .game-grid .center-stack > .play-area { margin-bottom: 0; }
+  .side-panel { padding: 10px 8px; }
+  .center-stack { display: flex; flex-direction: column; gap: 8px; }
+  .vertical-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; justify-items: center; align-content: start; padding: 2px; }
+  .vertical-cards .card { width: 34px; height: 48px; font-size: 0.85em; border-radius: 6px; }
+  .vertical-cards .card .suit { font-size: 0.5em; margin-top: 1px; }
+  .vertical-cards-empty { color: var(--text-faint); font-size: 0.78em; grid-column: 1 / -1; padding: 14px 0; text-align: center; }
   .section-label { font-size: 0.62em; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.3em; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-weight: 500; }
   .row { display: flex; justify-content: center; flex-wrap: wrap; gap: 5px; min-height: 92px; align-items: center; }
   .row.hand { min-height: 96px; }
@@ -300,6 +308,12 @@
 
   .hidden { display: none !important; }
 
+  @media (max-width: 760px) {
+    .game-grid { grid-template-columns: 1fr; gap: 6px; }
+    .vertical-cards { grid-template-columns: repeat(7, 1fr); }
+    .side-panel { padding: 10px; }
+    .vertical-cards .card { width: 30px; height: 42px; font-size: 0.78em; }
+  }
   @media (max-width: 600px) {
     body { padding: 12px; }
     h1 { font-size: 3em; letter-spacing: 0.14em; }
@@ -307,6 +321,8 @@
     .card .suit { font-size: 0.5em; margin-top: 2px; }
     .card.prize { width: 56px; height: 78px; font-size: 1.3em; }
     .card.mini, .card.prize-played { width: 28px; height: 40px; font-size: 0.75em; }
+    .vertical-cards { grid-template-columns: repeat(6, 1fr); }
+    .vertical-cards .card { width: 26px; height: 36px; font-size: 0.7em; }
     .row { gap: 3px; min-height: 66px; }
     .row.mini { min-height: 44px; }
     .row.bids { gap: 12px; }
@@ -467,35 +483,36 @@
     </div>
   </div>
 
-  <div class="play-area">
-    <div class="section-label"><span>Prizes played</span><span style="text-transform: none; letter-spacing: 0; color: var(--text-faint);" id="prizesLeft"></span></div>
-    <div class="row mini" id="prizeHistoryRow"></div>
-  </div>
-
-  <div class="play-area">
-    <div class="section-label"><span id="theirUsedLabel">Their used cards</span><span id="theirRemaining" style="text-transform: none; letter-spacing: 0; color: var(--text-faint);"></span></div>
-    <div class="row mini" id="theirUsedRow"></div>
-  </div>
-
-  <div class="play-area">
-    <div class="section-label"><span>Current prize</span><span class="pot-label" id="pot"></span></div>
-    <div class="row" id="prizeRow"></div>
-  </div>
-
-  <div class="play-area">
-    <div class="section-label"><span>Bids</span><span class="timer-text" id="timerText"></span></div>
-    <div class="row bids">
-      <div style="text-align: center;">
-        <div style="font-size: 0.65em; color: var(--opponent); text-transform: uppercase; letter-spacing: 0.25em; margin-bottom: 6px; font-weight: 500;" id="theirBidLabel">Them</div>
-        <div id="theirRow"></div>
+  <div class="game-grid">
+    <div class="play-area side-panel">
+      <div class="section-label"><span>Prizes left</span><span style="text-transform: none; letter-spacing: 0; color: var(--text-faint);" id="prizesLeft"></span></div>
+      <div class="vertical-cards" id="prizeHistoryRow"></div>
+    </div>
+    <div class="center-stack">
+      <div class="play-area">
+        <div class="section-label"><span>Current prize</span><span class="pot-label" id="pot"></span></div>
+        <div class="row" id="prizeRow"></div>
       </div>
-      <div style="text-align: center;">
-        <div style="font-size: 0.65em; color: var(--primary); text-transform: uppercase; letter-spacing: 0.25em; margin-bottom: 6px; font-weight: 500;" id="myBidLabel">You</div>
-        <div id="myRow"></div>
+      <div class="play-area">
+        <div class="section-label"><span>Bids</span><span class="timer-text" id="timerText"></span></div>
+        <div class="row bids">
+          <div style="text-align: center;">
+            <div style="font-size: 0.65em; color: var(--opponent); text-transform: uppercase; letter-spacing: 0.25em; margin-bottom: 6px; font-weight: 500;" id="theirBidLabel">Them</div>
+            <div id="theirRow"></div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 0.65em; color: var(--primary); text-transform: uppercase; letter-spacing: 0.25em; margin-bottom: 6px; font-weight: 500;" id="myBidLabel">You</div>
+            <div id="myRow"></div>
+          </div>
+        </div>
+        <div class="timer-wrap hidden" id="timerWrap"><div class="timer-bar" id="timerBar"></div></div>
+        <div class="confirm-row" id="confirmRow"></div>
       </div>
     </div>
-    <div class="timer-wrap hidden" id="timerWrap"><div class="timer-bar" id="timerBar"></div></div>
-    <div class="confirm-row" id="confirmRow"></div>
+    <div class="play-area side-panel">
+      <div class="section-label"><span id="theirUsedLabel">Their cards</span><span id="theirRemaining" style="text-transform: none; letter-spacing: 0; color: var(--text-faint);"></span></div>
+      <div class="vertical-cards" id="theirUsedRow"></div>
+    </div>
   </div>
 
   <div class="play-area">
@@ -1263,7 +1280,7 @@ function attachGameUI() {
   $('theirAvatarLabel').textContent = S.theirAvatar;
   $('myBidLabel').textContent = S.myName;
   $('theirBidLabel').textContent = S.theirName;
-  $('theirUsedLabel').textContent = S.theirName + "'s used cards";
+  $('theirUsedLabel').textContent = S.theirName + "'s cards";
   $('myScore').textContent = S.myScore;
   $('theirScore').textContent = S.theirScore;
   $('totalRounds').textContent = S.totalRounds;
@@ -1295,7 +1312,7 @@ function nextRound() {
   $('message').textContent = `${bidLabel} bid wins · ${winLabel} wins game`;
   $('myRemaining').textContent = S.myHand.length + ' left';
   $('theirRemaining').textContent = S.theirHand.length + ' left';
-  $('prizesLeft').textContent = `${S.round} of ${S.totalRounds} played`;
+  $('prizesLeft').textContent = `${S.totalRounds - S.round} left`;
   S.pickTime = Date.now();
   renderHand(); renderPrizeHistory();
   sfx.reveal();
@@ -1323,30 +1340,36 @@ function renderHand() {
 }
 
 function renderTheirUsed() {
+  // Renders what's LEFT in their hand, sorted ascending.
   const row = $('theirUsedRow'); row.innerHTML = '';
-  if (S.theirUsedCards.length === 0) {
+  const remaining = S.theirHand.slice().sort((a, b) => a - b);
+  if (remaining.length === 0) {
     const ph = document.createElement('div');
-    ph.style.color = 'var(--text-faint)'; ph.style.fontSize = '0.85em';
-    ph.textContent = 'No cards played yet.';
+    ph.className = 'vertical-cards-empty';
+    ph.textContent = 'No cards left.';
     row.appendChild(ph); return;
   }
-  S.theirUsedCards.slice().sort((a,b) => a-b).forEach(n => {
+  remaining.forEach(n => {
     row.appendChild(makeCard(n, 'opponent mini', '♠', S.settings.deckSize));
   });
 }
 
 function renderPrizeHistory() {
+  // Renders prize cards still IN the deck (not yet revealed), sorted ascending.
   const row = $('prizeHistoryRow'); row.innerHTML = '';
-  if (S.history.length === 0) {
+  const playedPrizes = new Set(S.history.map(h => h.prize));
+  const size = S.settings.deckSize;
+  const remaining = Array.from({length: size}, (_, i) => i + 1).filter(n => !playedPrizes.has(n));
+  remaining.sort((a, b) => a - b);
+  if (remaining.length === 0) {
     const ph = document.createElement('div');
-    ph.style.color = 'var(--text-faint)'; ph.style.fontSize = '0.85em';
-    ph.textContent = 'No prizes played yet.';
+    ph.className = 'vertical-cards-empty';
+    ph.textContent = 'All revealed.';
     row.appendChild(ph); return;
   }
-  S.history.forEach(h => {
-    const winClass = h.winner === 'me' ? 'won-mine' : h.winner === 'them' ? 'won-theirs' : 'won-tie';
-    const card = makeCard(h.prize, 'prize-played ' + winClass, '♦', S.settings.deckSize);
-    card.title = `Round ${h.round}: ${rankText(h.prize, S.settings.deckSize)} → ${h.winner === 'me' ? S.myName : h.winner === 'them' ? S.theirName : 'tied'}`;
+  remaining.forEach(n => {
+    const card = makeCard(n, 'prize-played', '♦', size);
+    card.title = `Prize ${rankText(n, size)} still in deck`;
     row.appendChild(card);
   });
 }
