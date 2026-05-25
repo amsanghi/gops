@@ -281,8 +281,8 @@ function tryResume() {
   const saved = getSavedGame();
   if (!saved) return;
   if (Date.now() - saved.timestamp > 24 * 60 * 60 * 1000) { clearSavedGame(); return; }
-  // Only solo Vs-AI is resumable. Drop any stale multiplayer snapshot silently.
-  if (saved.mode !== 'solo') { clearSavedGame(); return; }
+  // Solo banner only handles vs-AI. Multi snapshots are restored by tryRejoinMulti — leave them.
+  if (saved.mode !== 'solo') return;
   showResumeBanner(saved, () => {
     applySaveSnap(saved);
     hide('resume');
