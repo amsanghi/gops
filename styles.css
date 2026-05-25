@@ -181,6 +181,9 @@ body.in-game .board {
   overflow: hidden;
 }
 body.in-game .zone { padding: 14px 16px; min-height: 0; overflow: hidden; }
+/* The bids zone (center-stack child 2) MUST allow its content to overflow visibly
+   so the drop-zone card never clips when reactions/chat squeeze available height. */
+body.in-game .center-stack > .zone:nth-child(2) { overflow: visible; }
 body.in-game .center-stack { gap: 10px; min-height: 0; height: 100%; }
 /* Center stack zones grow to fill — the bid area should expand into the leftover space */
 body.in-game .center-stack > .zone:nth-child(1) { flex: 0 0 auto; min-height: clamp(140px, 28vh, 260px); }
@@ -269,7 +272,10 @@ body.in-game .confirm-row { margin-top: 4px; min-height: 38px; }
   body.in-game .hand .card.in-hand:hover:not(.used):not(.locked) { transform: translateY(-4px) scale(1.04); }
   body.in-game .message { font-size: 13px; min-height: 18px; }
   body.in-game .bid-area { min-height: 88px; gap: 14px; }
-  body.in-game .bid-slot { min-height: 70px; }
+  body.in-game .bid-slot { width: 60px; height: 84px; }
+  body.in-game .bid-slot > .card { --w: 60px; --h: 84px; width: 60px; height: 84px; max-width: 60px; max-height: 84px; font-size: 22px; }
+  body.in-game .bid-slot > .card.drop-zone-card .drop-check { font-size: 8px; }
+  body.in-game .bid-slot > .card.drop-zone-card .drop-sub { font-size: 7px; }
   body.in-game .reactions { gap: 3px; margin-top: 3px; }
   body.in-game .react-btn { width: 30px; height: 30px; font-size: 15px; }
   /* Side panels show as a compact grid */
@@ -790,15 +796,16 @@ details > summary::-webkit-details-marker { display: none; }
 }
 /* DOM order (me, divider, them) matches the header (You on left, Them on right). */
 
-/* Both bid-cols are identical structure: label at top, slot below. The min-height
-   accommodates the largest card variant + label + gap, with viewport scaling. */
+/* Both bid-cols are identical structure: label at top, fixed-size slot below.
+   Using FIXED dimensions for the bid-slot (not viewport-relative) means cards
+   inside never overflow regardless of how much vertical space the parent has —
+   solves the duel-mode clip where reactions+chat squeeze the bids zone. */
 .bid-col {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 8px;
-  min-height: clamp(140px, 16vh, 180px);
 }
 .bid-col .bid-label {
   font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em;
@@ -814,12 +821,22 @@ details > summary::-webkit-details-marker { display: none; }
   align-self: center;
 }
 .bid-slot {
-  flex: 1 1 auto;
-  width: 100%;
-  min-height: clamp(96px, 13vh, 140px);
+  width: 80px;
+  height: 112px;
   display: grid;
   place-items: center;
 }
+/* All cards inside the bid-slot — played, opp, face-down, drop-zone — use a
+   fixed size that matches the slot. They never overflow. */
+.bid-slot > .card {
+  --w: 80px; --h: 112px;
+  font-size: 32px;
+  width: 80px; height: 112px;
+  max-width: 80px; max-height: 112px;
+}
+.bid-slot > .card.drop-zone-card .drop-check { font-size: 9px; width: 1.4em; height: 1.4em; }
+.bid-slot > .card.drop-zone-card .drop-sub { font-size: 8px; letter-spacing: 0.1em; }
+.bid-slot > .card .pip { font-size: 9px; }
 
 /* Confirm prompt — just a label now (tap-to-confirm pattern, no button) */
 .confirm-row {
