@@ -11,6 +11,18 @@ function buildResultGrid() {
   return S.history.map(h => h.winner === 'me' ? '🟩' : h.winner === 'them' ? '🟥' : '🟨').join('');
 }
 
+// Compact, tweet-friendly: under 240 chars.
+export async function copyCompactShare() {
+  const cmp = (S.settings.winCondition === 'fewest') ? S.theirScore - S.myScore : S.myScore - S.theirScore;
+  const outcome = cmp > 0 ? '✓ W' : cmp < 0 ? '✗ L' : '~';
+  const grid = buildResultGrid();
+  const text = `GOPS ${outcome} ${S.myScore}-${S.theirScore}\n${grid}\namsanghi.github.io/gops/3.0/`;
+  if (await copyToClipboard(text)) {
+    const btn = $('share-text-btn');
+    if (btn) { const old = btn.textContent; btn.textContent = '✓ Copied'; setTimeout(() => btn.textContent = old, 1500); }
+  }
+}
+
 export async function copyDailyResult() {
   const date = todayKey();
   const grid = buildResultGrid();

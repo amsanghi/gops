@@ -7,7 +7,7 @@ import {
 } from './constants.js';
 import {
   getAchievements, getStats, getDailyState, getSolvedPuzzles, getTournament, getPrefs, savePrefs, totalH2H,
-  getHeatmap, getRecords, getCustomTheme, saveCustomTheme,
+  getHeatmap, getRecords, getCustomTheme, saveCustomTheme, getMastery,
 } from './storage.js';
 import { drawHeatmap, drawScoreCurve } from './charts.js';
 import { analyze as coachAnalyze } from './coach.js';
@@ -502,16 +502,19 @@ export function openPuzzleModal() {
 export function openTournamentModal() {
   const t = getTournament();
   S.tournamentLevel = t.level;
+  const mastery = getMastery();
   const list = $('tournament-list');
   list.innerHTML = '';
   TOURNAMENT_AIS.forEach((ai, i) => {
     const status = i < S.tournamentLevel ? 'done' : i === S.tournamentLevel ? 'current' : 'locked';
+    const wins = mastery[ai.name] || 0;
+    const masteryTag = wins > 0 ? ` <span style="color:var(--gold);font-size:11px;font-family:var(--font-mono)">★${wins}</span>` : '';
     const card = document.createElement('div');
     card.className = 'list-item' + (status === 'done' ? ' done' : status === 'locked' ? ' locked' : '');
     card.innerHTML = `
       <div class="list-icon">${ai.avatar}</div>
       <div class="list-body">
-        <div class="list-title">${status === 'done' ? '✓ ' : ''}${escapeHtml(ai.name)}</div>
+        <div class="list-title">${status === 'done' ? '✓ ' : ''}${escapeHtml(ai.name)}${masteryTag}</div>
         <div class="list-desc">${escapeHtml(ai.description)}</div>
       </div>
       <div class="list-meta">${ai.difficulty} · ${ai.personality}</div>
