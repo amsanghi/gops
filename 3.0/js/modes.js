@@ -23,6 +23,42 @@ function readAISettings() {
   };
 }
 
+// Random rule mode: surprise ruleset every game.
+const FIRST_NAMES = ['Astra','Bex','Cyrus','Drift','Echo','Fable','Glint','Halo','Inko','Juno','Koda','Lume','Mira','Nyx','Onyx','Pico','Quill','Riven','Sable','Tide','Umber','Vex','Wisp','Xenon','Yarrow','Zen'];
+function randomName() { return FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)]; }
+
+export function startRandomRule() {
+  const rng = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  const decks = [7, 9, 11, 13, 15];
+  const tieRules = ['carry', 'burn'];
+  const dirs = ['high', 'low'];
+  const goals = ['most', 'fewest'];
+  const personalities = ['balanced','aggressive','defensive','bluffer','mirror'];
+  const diffs = ['easy', 'medium', 'hard'];
+  const deck = decks[rng(0, decks.length - 1)];
+  const tie = tieRules[rng(0, tieRules.length - 1)];
+  const dir = dirs[rng(0, dirs.length - 1)];
+  const goal = goals[rng(0, goals.length - 1)];
+  const persona = personalities[rng(0, personalities.length - 1)];
+  const diff = diffs[rng(0, diffs.length - 1)];
+  const power = Math.random() < 0.3;
+
+  S.vsAI = true; S.isHost = true; S.mode = 'solo'; S.currentMode = 'random';
+  S.myName = $('name-input').value.trim() || 'You';
+  S.theirName = randomName(); S.theirAvatar = '🎲';
+  $('ai-diff').value = diff;
+  $('ai-persona').value = persona;
+  S.settings = {
+    deckSize: deck, bestOf: 1, tieRule: tie, direction: dir,
+    winCondition: goal, timeLimit: 0, stakes: '',
+    powerCards: power,
+  };
+  S.totalRounds = deck;
+  S.scriptedAI = null;
+  S.prizes = shuffle(Array.from({ length: deck }, (_, i) => i + 1));
+  setupGame();
+}
+
 // Practice mode: opponent's hand is visible to the player. Useful for learning.
 export function startPractice() {
   const a = readAISettings();
