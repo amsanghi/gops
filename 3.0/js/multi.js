@@ -55,6 +55,7 @@ export async function startHost() {
   S.settings.winCondition = $('host-goal').value;
   S.settings.timeLimit = Math.max(0, parseInt($('host-time').value, 10) || 0);
   S.settings.stakes = $('host-stakes').value.trim();
+  S.settings.powerCards = $('host-power')?.checked || false;
   S.totalRounds = S.settings.deckSize;
   savePrefs({
     lastHost: {
