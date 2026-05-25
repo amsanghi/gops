@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="mono">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0a0a0b" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+<meta name="description" content="GOPS — Game of Pure Strategy. A no-luck card duel. Play solo, vs AI, or with a friend.">
+
+<title>GOPS</title>
+
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;rect width='100' height='100' rx='22' fill='%230a0a0b'/&gt;&lt;text x='50' y='66' font-family='Georgia,serif' font-size='52' font-weight='500' text-anchor='middle' fill='%23f4f4f5'&gt;G&lt;/text&gt;&lt;/svg&gt;">
+
+<meta property="og:title" content="GOPS — Game of Pure Strategy">
+<meta property="og:description" content="A no-luck card duel. Bid wisely. Play solo, vs AI, or with a friend.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,30..100&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,30..100&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="aurora" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<canvas id="confetti-canvas" hidden></canvas>
+
+<main class="app">
+
+  <!-- ===== TOP BAR ===== -->
+  <header class="topbar">
+    <div class="brand">GOPS<span class="v" id="ver-pill">3.0</span></div>
+    <div class="topbar-actions">
+      <div class="theme-row" id="theme-row" role="group" aria-label="Accent color"></div>
+      <span class="divider-y"></span>
+      <button class="btn-icon" id="mode-toggle-btn" title="Light/dark" aria-label="Toggle light/dark">◐</button>
+      <button class="btn-icon" id="achievements-btn" title="Achievements" aria-label="Achievements">★</button>
+      <button class="btn-icon" id="stats-btn" title="Statistics" aria-label="Statistics">≣</button>
+      <button class="btn-icon" id="settings-btn" title="Settings" aria-label="Settings">⚙</button>
+    </div>
+  </header>
+
+  <!-- ===== LOBBY ===== -->
+  <section id="lobby">
+    <div class="hero">
+      <h1>Game of <em>Pure</em> Strategy</h1>
+      <p class="tagline">No luck. Just nerve. Bid <kbd>A</kbd>–<kbd>K</kbd> to win prizes — high total wins.</p>
+    </div>
+
+    <div class="profile">
+      <button class="avatar" id="avatar-btn" title="Change avatar" aria-label="Change avatar" aria-haspopup="true" aria-expanded="false">😎</button>
+      <input class="name-input" id="name-input" type="text" placeholder="Your name" maxlength="14" aria-label="Your name">
+      <span class="divider" id="h2h-divider" hidden></span>
+      <span class="h2h" id="h2h" aria-live="polite"></span>
+    </div>
+
+    <div id="resume" class="resume" hidden>
+      <div class="resume-text"><b>Resume game?</b><span id="resume-text"></span></div>
+      <div class="resume-actions">
+        <button class="btn btn-ghost btn-sm" id="resume-discard">Discard</button>
+        <button class="btn btn-primary btn-sm" id="resume-go">Resume</button>
+      </div>
+    </div>
+
+    <div id="lobby-default">
+      <div class="modes">
+        <!-- Solo column -->
+        <div class="panel">
+          <h3>Solo</h3>
+          <div class="tiles">
+            <button class="tile featured" id="daily-tile">
+              <span class="tile-icon">◷</span>
+              <span class="tile-label">Daily challenge</span>
+              <span class="tile-sub" id="daily-sub">Today</span>
+            </button>
+            <button class="tile" id="solo-tile">
+              <span class="tile-icon">◇</span>
+              <span class="tile-label">Vs AI</span>
+              <span class="tile-sub">Quick practice</span>
+            </button>
+            <button class="tile" id="hotseat-tile">
+              <span class="tile-icon">◉</span>
+              <span class="tile-label">Hot seat</span>
+              <span class="tile-sub">2 on 1 device</span>
+            </button>
+            <button class="tile" id="puzzle-tile">
+              <span class="tile-icon">◈</span>
+              <span class="tile-label">Puzzles</span>
+              <span class="tile-sub" id="puzzle-sub">Solve</span>
+            </button>
+            <button class="tile" id="endless-tile">
+              <span class="tile-icon">∞</span>
+              <span class="tile-label">Endless</span>
+              <span class="tile-sub" id="endless-sub">Survival</span>
+            </button>
+            <button class="tile" id="tournament-tile">
+              <span class="tile-icon">♔</span>
+              <span class="tile-label">Tournament</span>
+              <span class="tile-sub" id="tournament-sub">8-AI ladder</span>
+            </button>
+          </div>
+
+          <details class="expander" id="ai-settings">
+            <summary>AI settings</summary>
+            <div class="settings-grid">
+              <div class="field"><label class="field-label" for="ai-deck">Deck</label><select class="select" id="ai-deck"><option value="13">13 cards</option><option value="7">7 cards</option></select></div>
+              <div class="field"><label class="field-label" for="ai-diff">Difficulty</label><select class="select" id="ai-diff"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option></select></div>
+              <div class="field"><label class="field-label" for="ai-persona">Personality</label><select class="select" id="ai-persona"><option value="balanced">Balanced</option><option value="aggressive">Aggressive</option><option value="defensive">Defensive</option><option value="bluffer">Bluffer</option><option value="mirror">Mirror</option></select></div>
+              <div class="field"><label class="field-label" for="ai-time">Time/bid (s)</label><input class="input" id="ai-time" type="number" min="0" max="600" value="0" inputmode="numeric"></div>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="ghost-tile" style="margin-top:10px;width:100%">▷ Play your ghost (best recorded game)</button>
+          </details>
+        </div>
+
+        <!-- Multiplayer column -->
+        <div class="panel">
+          <h3>Multiplayer</h3>
+          <button class="btn btn-primary btn-block" id="create-btn">Create game</button>
+          <div class="mp-or">or</div>
+          <div class="mp-row">
+            <input class="input input-code" id="join-code" type="text" placeholder="CODE" maxlength="12" autocapitalize="characters" autocomplete="off" aria-label="Room code">
+            <button class="btn btn-ghost" id="join-btn">Join</button>
+          </div>
+          <details class="expander">
+            <summary>Host settings</summary>
+            <div class="settings-grid">
+              <div class="field"><label class="field-label" for="host-code">Code</label><input class="input" id="host-code" type="text" placeholder="random" maxlength="10"></div>
+              <div class="field"><label class="field-label" for="host-deck">Deck</label><select class="select" id="host-deck"><option value="13">13</option><option value="7">7</option></select></div>
+              <div class="field"><label class="field-label" for="host-bestof">Best of</label><input class="input" id="host-bestof" type="number" min="1" max="99" value="1" inputmode="numeric"></div>
+              <div class="field"><label class="field-label" for="host-dir">Bid wins</label><select class="select" id="host-dir"><option value="high">High</option><option value="low">Low</option></select></div>
+              <div class="field"><label class="field-label" for="host-goal">Goal</label><select class="select" id="host-goal"><option value="most">Most pts</option><option value="fewest">Fewest pts</option></select></div>
+              <div class="field"><label class="field-label" for="host-tie">On tie</label><select class="select" id="host-tie"><option value="carry">Carry</option><option value="burn">Burn</option></select></div>
+              <div class="field"><label class="field-label" for="host-time">Time/bid (s)</label><input class="input" id="host-time" type="number" min="0" max="600" value="0" inputmode="numeric"></div>
+              <div class="field"><label class="field-label" for="host-stakes">Stakes</label><input class="input" id="host-stakes" type="text" placeholder="(optional)" maxlength="80"></div>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="copy-challenge-btn" style="margin-top:10px;width:100%">Copy challenge link</button>
+          </details>
+        </div>
+      </div>
+
+      <div class="lobby-foot">
+        <button class="btn btn-ghost btn-sm" id="tutorial-btn">◵ Tutorial</button>
+        <button class="btn btn-ghost btn-sm" id="export-btn">↧ Export data</button>
+      </div>
+    </div>
+
+    <!-- Host waiting -->
+    <div id="host-info" class="host-card" hidden>
+      <div class="host-label">Share this code</div>
+      <div class="code" id="my-code" role="button" tabindex="0" title="Click to copy"></div>
+      <div class="copy-hint">Click to copy</div>
+      <div class="host-status" id="host-status"><span class="dot"></span>Waiting for them to join...</div>
+      <button class="btn btn-ghost btn-sm" id="host-cancel" style="margin-top:14px">Cancel</button>
+    </div>
+
+    <!-- Joiner waiting -->
+    <div id="join-info" class="host-card" hidden>
+      <div class="host-status" id="join-status"><span class="dot"></span>Connecting...</div>
+      <button class="btn btn-ghost btn-sm" id="join-cancel" style="margin-top:14px">Cancel</button>
+    </div>
+
+    <p class="status err" id="lobby-err" aria-live="polite"></p>
+  </section>
+
+  <!-- ===== GAME ===== -->
+  <section id="game" hidden>
+    <div class="game-head">
+      <div class="score-side me">
+        <div class="score-name me"><span class="av" id="me-av">😎</span><span class="label" id="me-name">You</span></div>
+        <div class="score-num me" id="me-score">0</div>
+      </div>
+      <div class="game-center">
+        <div class="round-pill">Round <b id="round-n">1</b> / <b id="round-tot">13</b></div>
+        <div class="mode-pill" id="mode-pill" hidden></div>
+      </div>
+      <div class="score-side them">
+        <div class="score-num them" id="them-score">0</div>
+        <div class="score-name them"><span class="label" id="them-name">Them</span><span class="av" id="them-av">🎭</span></div>
+      </div>
+    </div>
+
+    <div class="series-bar" id="series-bar" hidden></div>
+
+    <div class="game-actions" style="display:flex;justify-content:flex-end;gap:6px;margin-bottom:8px">
+      <button class="btn-icon" id="chat-btn" title="Chat" aria-label="Chat" hidden>✎</button>
+      <button class="btn-icon" id="history-btn" title="Round history" aria-label="History">≡</button>
+      <button class="btn-icon" id="sound-btn" title="Sound" aria-label="Toggle sound">♪</button>
+      <button class="btn-icon" id="quit-btn" title="Quit" aria-label="Quit game">×</button>
+    </div>
+
+    <div class="board">
+      <div class="zone">
+        <div class="zone-head"><span>Prizes remaining</span><span class="meta" id="prizes-meta"></span></div>
+        <div class="mini-grid" id="prizes-mini"></div>
+      </div>
+
+      <div class="center-stack">
+        <div class="zone">
+          <div class="zone-head"><span>Current prize</span><span class="pot-chip" id="pot-chip" hidden></span></div>
+          <div class="prize-area" id="prize-area"></div>
+        </div>
+        <div class="zone">
+          <div class="zone-head"><span>Bids</span><span class="timer-text" id="timer-text"></span></div>
+          <div class="bid-area">
+            <div class="bid-col them">
+              <span class="bid-label" id="them-bid-label">Them</span>
+              <div class="bid-slot" id="them-bid"></div>
+            </div>
+            <div class="bid-divider">vs</div>
+            <div class="bid-col me">
+              <span class="bid-label" id="me-bid-label">You</span>
+              <div class="bid-slot" id="me-bid"></div>
+            </div>
+          </div>
+          <div class="timer" id="timer" hidden><div class="timer-bar" id="timer-bar"></div></div>
+          <div class="confirm-row" id="confirm-row"></div>
+        </div>
+      </div>
+
+      <div class="zone">
+        <div class="zone-head"><span id="them-cards-label">Their cards</span><span class="meta" id="them-meta"></span></div>
+        <div class="mini-grid" id="them-mini"></div>
+      </div>
+    </div>
+
+    <div class="hand-zone">
+      <div class="zone-head" style="margin-bottom:10px"><span>Your hand</span><span class="meta" id="me-meta"></span></div>
+      <div class="hand" id="hand"></div>
+    </div>
+
+    <p class="message" id="message" aria-live="polite"></p>
+
+    <div class="reactions" id="reactions" hidden></div>
+
+    <div class="chat" id="chat" hidden>
+      <div class="chat-msgs" id="chat-msgs" aria-live="polite"></div>
+      <div class="chat-input-row">
+        <input class="input" id="chat-input" type="text" placeholder="Type a message..." maxlength="200" aria-label="Chat message">
+        <button class="btn btn-primary btn-sm" id="chat-send">Send</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== END SCREEN ===== -->
+  <section id="end" class="end" hidden>
+    <h1 class="end-result" id="end-result"></h1>
+    <p class="end-score" id="end-score"></p>
+    <p class="end-meta" id="end-series" hidden></p>
+
+    <div class="end-stakes" id="end-stakes" hidden>
+      <div class="end-stakes-label">Stakes</div>
+      <div id="end-stakes-text"></div>
+    </div>
+
+    <div class="daily-grid" id="daily-grid" hidden></div>
+
+    <div class="replay" id="replay" hidden>
+      <div class="replay-head"><span>Replay</span><span id="replay-step">0 / 0</span></div>
+      <div class="replay-body">
+        <div class="replay-side them"><span class="lbl" id="rp-them-name">Them</span><div id="rp-them"></div></div>
+        <div class="replay-prize"><span class="pz-lbl">Prize</span><div id="rp-prize"></div></div>
+        <div class="replay-side me"><span class="lbl" id="rp-me-name">You</span><div id="rp-me"></div></div>
+      </div>
+      <input type="range" class="replay-track" id="replay-track" min="0" max="0" value="0">
+      <div class="replay-info" id="replay-info"></div>
+    </div>
+
+    <div class="analysis" id="analysis"></div>
+
+    <div class="end-actions">
+      <button class="btn btn-primary" id="rematch-btn">Rematch</button>
+      <button class="btn btn-ghost" id="share-img-btn">↧ Image</button>
+      <button class="btn btn-ghost" id="share-text-btn">⎙ Copy result</button>
+      <button class="btn btn-ghost" id="history-btn-2">≡ Rounds</button>
+      <button class="btn btn-ghost" id="back-to-lobby-btn">← Lobby</button>
+    </div>
+    <p class="status" id="rematch-status" aria-live="polite"></p>
+  </section>
+
+  <!-- ===== MODALS ===== -->
+  <div class="scrim" id="modal-history" hidden role="dialog" aria-modal="true" aria-labelledby="modal-history-title">
+    <div class="modal">
+      <div class="modal-head"><h2 id="modal-history-title">Round history</h2><button class="modal-close" data-close="modal-history" aria-label="Close">×</button></div>
+      <div id="history-body"></div>
+      <div style="margin-top:14px;display:flex;justify-content:flex-end">
+        <button class="btn btn-ghost btn-sm" id="export-csv-btn">↧ Export CSV</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="scrim" id="modal-ach" hidden role="dialog" aria-modal="true" aria-labelledby="modal-ach-title">
+    <div class="modal">
+      <div class="modal-head"><h2 id="modal-ach-title">Achievements</h2><button class="modal-close" data-close="modal-ach" aria-label="Close">×</button></div>
+      <p class="modal-desc" id="ach-progress"></p>
+      <div class="ach-grid" id="ach-grid"></div>
+    </div>
+  </div>
+
+  <div class="scrim" id="modal-stats" hidden role="dialog" aria-modal="true" aria-labelledby="modal-stats-title">
+    <div class="modal">
+      <div class="modal-head"><h2 id="modal-stats-title">Statistics</h2><button class="modal-close" data-close="modal-stats" aria-label="Close">×</button></div>
+      <div id="stats-body"></div>
+    </div>
+  </div>
+
+  <div class="scrim" id="modal-puzzles" hidden role="dialog" aria-modal="true" aria-labelledby="modal-puzzles-title">
+    <div class="modal">
+      <div class="modal-head"><h2 id="modal-puzzles-title">Puzzles</h2><button class="modal-close" data-close="modal-puzzles" aria-label="Close">×</button></div>
+      <p class="modal-desc">Solve scripted GOPS scenarios. Solved: <span id="puzzles-progress">0/0</span></p>
+      <div id="puzzles-list"></div>
+    </div>
+  </div>
+
+  <div class="scrim" id="modal-tournament" hidden role="dialog" aria-modal="true" aria-labelledby="modal-tournament-title">
+    <div class="modal">
+      <div class="modal-head"><h2 id="modal-tournament-title">Tournament ladder</h2><button class="modal-close" data-close="modal-tournament" aria-label="Close">×</button></div>
+      <p class="modal-desc">Defeat 8 AIs in sequence to become champion.</p>
+      <div id="tournament-list"></div>
+    </div>
+  </div>
+
+  <div class="scrim" id="modal-settings" hidden role="dialog" aria-modal="true" aria-labelledby="modal-settings-title">
+    <div class="modal">
+      <div class="modal-head"><h2 id="modal-settings-title">Settings</h2><button class="modal-close" data-close="modal-settings" aria-label="Close">×</button></div>
+
+      <h3 style="font-size:11px;text-transform:uppercase;letter-spacing:0.18em;color:var(--ink-faint);font-weight:600;margin-bottom:10px">Card back</h3>
+      <div id="cardback-picker" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:24px"></div>
+
+      <h3 style="font-size:11px;text-transform:uppercase;letter-spacing:0.18em;color:var(--ink-faint);font-weight:600;margin-bottom:10px">Audio &amp; haptics</h3>
+      <div class="settings-grid">
+        <div class="field"><label class="field-label" for="set-sound">Sound</label><select class="select" id="set-sound"><option value="1">On</option><option value="0">Off</option></select></div>
+        <div class="field"><label class="field-label" for="set-haptics">Haptics</label><select class="select" id="set-haptics"><option value="1">On</option><option value="0">Off</option></select></div>
+      </div>
+
+      <h3 style="font-size:11px;text-transform:uppercase;letter-spacing:0.18em;color:var(--ink-faint);font-weight:600;margin:24px 0 10px">Data</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+        <input type="file" id="import-file" accept=".json" hidden>
+        <button class="btn btn-ghost btn-sm" id="import-btn">↥ Import</button>
+        <button class="btn btn-ghost btn-sm" id="export-btn-2">↧ Export</button>
+        <button class="btn btn-ghost btn-sm" id="reset-data-btn">⌫ Reset all</button>
+      </div>
+
+      <div id="install-area" hidden style="margin-top:24px;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);text-align:center">
+        <p style="font-size:13px;margin-bottom:8px;color:var(--ink-dim)">Install GOPS as an app</p>
+        <button class="btn btn-primary btn-sm" id="install-btn">Install</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm dialog (replaces window.confirm) -->
+  <div class="scrim" id="modal-confirm" hidden role="alertdialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div class="modal confirm-modal">
+      <h2 id="confirm-title"></h2>
+      <p id="confirm-msg"></p>
+      <div class="actions">
+        <button class="btn btn-ghost" id="confirm-no">Cancel</button>
+        <button class="btn btn-primary" id="confirm-yes">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tutorial overlay -->
+  <div class="tut-overlay" id="tutorial" hidden>
+    <div class="tut-box">
+      <div class="tut-step" id="tut-step"></div>
+      <div class="tut-title" id="tut-title"></div>
+      <div class="tut-text" id="tut-text"></div>
+      <div class="tut-dots" id="tut-dots"></div>
+      <div class="tut-actions">
+        <button class="btn btn-ghost btn-sm" id="tut-skip">Skip</button>
+        <button class="btn btn-primary btn-sm" id="tut-next">Next</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
