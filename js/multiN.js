@@ -267,19 +267,21 @@ function bindJoinerConn() {
 }
 
 // ---- Voice/video ----
-function handleIncomingCall(call) {
-  // Auto-answer with our local stream (if we have one)
+// Auto-answer incoming calls. Exported so duel (multi.js) can register the same handler.
+export function handleIncomingCall(call) {
   if (!S.localStream) { call.close(); return; }
   call.answer(S.localStream);
   call.on('stream', remoteStream => {
+    S.remoteStreams = S.remoteStreams || new Map();
     S.remoteStreams.set(call.peer, remoteStream);
     renderRemoteStream(call.peer, remoteStream);
   });
   call.on('close', () => {
-    S.remoteStreams.delete(call.peer);
+    S.remoteStreams?.delete(call.peer);
     const tile = document.querySelector(`[data-stream="${call.peer}"]`);
     if (tile) tile.remove();
   });
+  S.mediaConns = S.mediaConns || new Map();
   S.mediaConns.set(call.peer, call);
 }
 
@@ -288,14 +290,22 @@ export async function startMic(useVideo = false) {
     const constraints = useVideo ? { audio: true, video: { width: 320, height: 240 } } : { audio: true, video: false };
     S.localStream = await navigator.mediaDevices.getUserMedia(constraints);
     S.micOn = true; S.camOn = useVideo;
-    // Call every other peer
-    for (const p of S.players) {
-      if (p.id !== S.myId && p.connected) callPeer(p.id);
+    S.mediaConns = S.mediaConns || new Map();
+    S.remoteStreams = S.remoteStreams || new Map();
+
+    if (S.currentMode === 'multi-n') {
+      // Party: call every other player
+      for (const p of S.players) {
+        if (p.id !== S.myId && p.connected) callPeer(p.id);
+      }
+    } else if (S.currentMode === 'multi' && S.conn) {
+      // Duel: call the single remote peer
+      callPeerDirect(S.conn.peer);
     }
     renderMediaControls();
     return true;
   } catch (e) {
-    onError('Microphone permission denied.');
+    console.error(e);
     return false;
   }
 }
@@ -303,24 +313,34 @@ export async function startMic(useVideo = false) {
 function callPeer(id) {
   if (!S.peer || !S.localStream) return;
   const targetPeerId = (id === S.hostId && !S.isHost) ? HOST_ID_PREFIX + S.roomCode : id;
+  callPeerDirect(targetPeerId, id);
+}
+function callPeerDirect(targetPeerId, trackId) {
+  if (!S.peer || !S.localStream) return;
+  const key = trackId || targetPeerId;
   const call = S.peer.call(targetPeerId, S.localStream);
+  if (!call) return;
   call.on('stream', remoteStream => {
-    S.remoteStreams.set(id, remoteStream);
-    renderRemoteStream(id, remoteStream);
+    S.remoteStreams.set(key, remoteStream);
+    renderRemoteStream(key, remoteStream);
   });
   call.on('close', () => {
-    S.remoteStreams.delete(id);
+    S.remoteStreams.delete(key);
+    const tile = document.querySelector(`[data-stream="${key}"]`);
+    if (tile) tile.remove();
   });
-  S.mediaConns.set(id, call);
+  S.mediaConns.set(key, call);
 }
 
 export function stopMic() {
   S.localStream?.getTracks().forEach(t => t.stop());
   S.localStream = null;
   S.micOn = false; S.camOn = false;
-  for (const c of S.mediaConns.values()) try { c.close(); } catch {}
-  S.mediaConns.clear();
-  S.remoteStreams.clear();
+  if (S.mediaConns) {
+    for (const c of S.mediaConns.values()) try { c.close(); } catch {}
+    S.mediaConns.clear();
+  }
+  S.remoteStreams?.clear();
   document.querySelectorAll('[data-stream]').forEach(el => el.remove());
   renderMediaControls();
 }

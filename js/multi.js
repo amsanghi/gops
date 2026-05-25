@@ -121,6 +121,10 @@ export async function startHost({ rejoinExisting = false } = {}) {
     bindConn();
     S.conn.on('open', () => S.conn.send({ type: 'hello', version: PROTO_VERSION, name: S.myName, avatar: S.myAvatar }));
   });
+  // Incoming voice/video calls
+  S.peer.on('call', call => {
+    import('./multiN.js').then(m => m.handleIncomingCall(call));
+  });
   S.peer.on('error', err => {
     if (err.type === 'unavailable-id') {
       try { S.peer.destroy(); } catch {}
@@ -171,6 +175,11 @@ export async function joinGame() {
     S.peer = null; S.conn = null;
     clearMultiSession();
   };
+
+  // Incoming voice/video calls from the host
+  S.peer.on('call', call => {
+    import('./multiN.js').then(m => m.handleIncomingCall(call));
+  });
 
   S.peer.on('open', () => {
     $('join-status').innerHTML = '<span class="dot"></span>Reaching host…';
