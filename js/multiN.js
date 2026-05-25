@@ -711,7 +711,7 @@ function renderConfirmRowN() {
   dropCard.type = 'button';
   dropCard.className = 'card in-hand drop-zone-card';
   dropCard.setAttribute('aria-label', `Confirm bid ${label}`);
-  dropCard.innerHTML = `<span class="drop-check">✓</span><span>${label}</span><span class="drop-sub">Tap to confirm</span>`;
+  dropCard.innerHTML = `<span class="drop-check">✓</span><span>${label}</span><span class="drop-sub">Confirm</span>`;
   dropCard.onclick = confirmPickN;
   myBid.appendChild(dropCard);
 }

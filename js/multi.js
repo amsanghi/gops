@@ -116,7 +116,9 @@ export async function startHost({ rejoinExisting = false } = {}) {
     saveMultiSession({ mode: 'duel', role: 'host', code, name: S.myName, avatar: S.myAvatar });
   });
   S.peer.on('connection', c => {
-    if (S.conn && S.conn.open) { c.close(); return; }
+    // If the previous conn is stale (peer refreshed/disconnected), its `open`
+    // flag can still report true — force-close it so the new connection wins.
+    if (S.conn) { try { S.conn.close(); } catch {} }
     S.conn = c;
     bindConn();
     S.conn.on('open', () => S.conn.send({ type: 'hello', version: PROTO_VERSION, name: S.myName, avatar: S.myAvatar }));
@@ -215,13 +217,46 @@ function bindConn() {
   S.conn.on('data', handleMsg);
   S.conn.on('close', () => {
     if (document.getElementById('game').hidden === false) {
-      const m = document.getElementById('message'); if (m) m.textContent = 'Disconnected.';
+      const m = document.getElementById('message'); if (m) m.textContent = 'Reconnecting…';
     }
     $('lobby-err').textContent = 'Connection lost.';
+    // Joiner mid-game: auto-attempt to re-attach to the host (likely refreshed).
+    if (!S.isHost && S.currentMode === 'multi' && S.peer && !S.peer.destroyed && S.roomCode) {
+      tryReconnect();
+    }
   });
   S.conn.on('error', err => {
     $('lobby-err').textContent = 'Error: ' + (err.type || err.message || 'unknown');
   });
+}
+
+// Joiner-side: when conn drops mid-game, retry connecting to the host's code
+// (the host may be re-hosting after their own refresh). Backs off after a few tries.
+let reconnectTimer = null;
+let reconnectTries = 0;
+function tryReconnect() {
+  if (reconnectTimer) return;
+  reconnectTries = 0;
+  const attempt = () => {
+    reconnectTimer = null;
+    if (!S.peer || S.peer.destroyed || S.isHost || !S.roomCode) return;
+    if (S.conn && S.conn.open) return; // already reconnected via another path
+    reconnectTries++;
+    try {
+      S.conn = S.peer.connect(PEER_PREFIX + S.roomCode, { reliable: true });
+      bindConn();
+      S.conn.on('open', () => {
+        const m = document.getElementById('message'); if (m) m.textContent = '';
+        $('lobby-err').textContent = '';
+        S.conn.send({ type: 'hello', version: PROTO_VERSION, name: S.myName, avatar: S.myAvatar });
+      });
+    } catch {}
+    if (reconnectTries < 15) reconnectTimer = setTimeout(attempt, 2000);
+    else {
+      const m = document.getElementById('message'); if (m) m.textContent = 'Disconnected.';
+    }
+  };
+  reconnectTimer = setTimeout(attempt, 1000);
 }
 
 function handleMsg(data) {
