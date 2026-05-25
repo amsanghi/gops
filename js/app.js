@@ -210,18 +210,13 @@ function tryResume() {
   const saved = getSavedGame();
   if (!saved) return;
   if (Date.now() - saved.timestamp > 24 * 60 * 60 * 1000) { clearSavedGame(); return; }
+  // Only solo Vs-AI is resumable. Drop any stale multiplayer snapshot silently.
+  if (saved.mode !== 'solo') { clearSavedGame(); return; }
   showResumeBanner(saved, () => {
     applySaveSnap(saved);
     hide('resume');
-    if (saved.mode === 'solo') {
-      // Restart at next round from snapshot
-      // We can't easily resume mid-round; round was already committed at save time
-      hide('lobby'); show('game');
-      // Best effort: rebuild UI as fresh round
-      import('./game.js').then(g => g.nextRound());
-    } else {
-      $('lobby-err').textContent = `Multi resume isn't supported — reconnect with code ${saved.roomCode}.`;
-    }
+    hide('lobby'); show('game');
+    import('./game.js').then(g => g.nextRound());
   }, clearSavedGame);
 }
 
