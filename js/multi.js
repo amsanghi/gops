@@ -6,7 +6,7 @@ import { $, show, hide, shuffle } from './util.js';
 import { PROTO_VERSION, PEER_PREFIX } from './constants.js';
 import { setupGame, receiveTheirPick, setNetSender } from './game.js';
 import { sfx, floatReaction, haptic } from './effects.js';
-import { savePrefs } from './storage.js';
+import { savePrefs, saveMultiSession, clearMultiSession } from './storage.js';
 
 let PeerLib = null;
 async function loadPeerJS() {
@@ -90,7 +90,10 @@ export async function startHost() {
     onLobbyError('Failed to initialize peer.');
     hide('host-info'); show('lobby-default'); return;
   }
-  S.peer.on('open', () => { $('host-status').innerHTML = '<span class="dot"></span>Waiting for them to join…'; });
+  S.peer.on('open', () => {
+    $('host-status').innerHTML = '<span class="dot"></span>Waiting for them to join…';
+    saveMultiSession({ mode: 'duel', role: 'host', code, name: S.myName, avatar: S.myAvatar });
+  });
   S.peer.on('connection', c => {
     if (S.conn && S.conn.open) { c.close(); return; }
     S.conn = c;
@@ -138,6 +141,7 @@ export async function joinGame() {
     bindConn();
     S.conn.on('open', () => {
       $('join-status').innerHTML = '<span class="dot"></span>Connected. Saying hello…';
+      saveMultiSession({ mode: 'duel', role: 'joiner', code, name: S.myName, avatar: S.myAvatar });
       S.conn.send({ type: 'hello', version: PROTO_VERSION, name: S.myName, avatar: S.myAvatar });
     });
   });
@@ -211,6 +215,12 @@ export function cleanup() {
   try { S.peer?.destroy(); } catch {}
   S.conn = null; S.peer = null;
   S.vsAI = false; S.isHost = false; S.mode = null;
+}
+
+// Called by Quit button — intentional exit clears the rejoin session.
+export function cleanupIntentional() {
+  clearMultiSession();
+  cleanup();
 }
 
 let checkRematchFn = () => {};
