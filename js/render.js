@@ -101,6 +101,7 @@ export function renderPrize() {
 export function renderMyBid(card = null, klass = 'played') {
   const row = $('me-bid'); if (!row) return;
   row.innerHTML = '';
+  row.classList.remove('drop-zone-active');
   if (card !== null) row.appendChild(makeCard(card, klass));
 }
 

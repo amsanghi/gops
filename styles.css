@@ -918,6 +918,59 @@ details > summary::-webkit-details-marker { display: none; }
 /* The hand stays above the board so lifted cards aren't covered by the bid area above. */
 .hand-zone { position: relative; z-index: 5; }
 .hand { position: relative; z-index: 5; }
+
+/* Drop-zone: an obvious "tap to confirm" card that appears in the bid slot while pending */
+.card.drop-zone-card {
+  background: linear-gradient(135deg, var(--me-soft), transparent);
+  border: 2px dashed var(--me);
+  color: var(--me);
+  cursor: pointer;
+  outline: none;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  animation: drop-zone-pulse 1.4s ease-in-out infinite;
+  user-select: none;
+  -webkit-user-select: none;
+  padding: 4px;
+  text-align: center;
+}
+.card.drop-zone-card:hover {
+  background: linear-gradient(135deg, var(--me-glow), var(--me-soft));
+  transform: scale(1.04);
+}
+.card.drop-zone-card:focus-visible { box-shadow: 0 0 0 3px var(--me); }
+.card.drop-zone-card .drop-check {
+  font-family: var(--font-sans);
+  font-size: 0.45em;
+  font-weight: 700;
+  color: var(--me);
+  background: var(--bg-elev-1);
+  border: 1px solid var(--me);
+  border-radius: 999px;
+  width: 1.4em; height: 1.4em;
+  display: grid; place-items: center;
+  margin-bottom: 2px;
+}
+.card.drop-zone-card .drop-sub {
+  font-family: var(--font-sans);
+  font-size: 0.22em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.8;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+@keyframes drop-zone-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--me-soft); }
+  50%      { box-shadow: 0 0 0 8px var(--me-soft); }
+}
+
 .card.in-hand.used { opacity: 0.12; cursor: default; }
 .card.in-hand.locked { cursor: default; }
 .card.in-hand.locked:hover { transform: none; }

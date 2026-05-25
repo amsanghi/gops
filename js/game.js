@@ -137,22 +137,40 @@ export function selectCard(n) {
 }
 
 function renderConfirm() {
-  // The lifted card itself is the primary visual cue. The message line below the
-  // hand turns into the instruction "Tap again to lock in" while pending.
+  // Two affordances:
+  //   1) the lifted hand card pulses + can be tapped again
+  //   2) an explicit "Tap to confirm" drop-zone appears in the bid slot (the
+  //      place where the bid will land) so new players see exactly where the
+  //      card goes.
   $('confirm-row').innerHTML = '';
   const msg = $('message');
-  if (!msg) return;
+  const myBid = $('me-bid');
+  if (!msg || !myBid) return;
+
   if (S.pendingPick === null || S.myPick !== null) {
     msg.classList.remove('pending-prompt');
-    // Restore the default message
     const winLabel = S.settings.winCondition === 'fewest' ? 'Fewest wins' : 'Most wins';
     const bidLabel = S.settings.direction === 'low' ? 'Low bid' : 'High bid';
     msg.textContent = `${bidLabel} wins each prize · ${winLabel} overall`;
+    // Clear any drop-zone hint when not pending
+    myBid.classList.remove('drop-zone-active');
     return;
   }
+
   const label = S.pendingPick === 99 ? '★' : rankText(S.pendingPick, S.settings.deckSize);
-  msg.innerHTML = `Bid <b>${label}</b> — tap again to lock in`;
+  msg.innerHTML = `Bid <b>${label}</b> — tap the card again or the slot to confirm`;
   msg.classList.add('pending-prompt');
+
+  // Render a clickable drop-zone in the bid slot
+  myBid.innerHTML = '';
+  myBid.classList.add('drop-zone-active');
+  const dropCard = document.createElement('button');
+  dropCard.type = 'button';
+  dropCard.className = 'card in-hand drop-zone-card';
+  dropCard.setAttribute('aria-label', `Confirm bid ${label}`);
+  dropCard.innerHTML = `<span class="drop-check">✓</span><span>${label}</span><span class="drop-sub">Tap to confirm</span>`;
+  dropCard.onclick = confirmPick;
+  myBid.appendChild(dropCard);
 }
 
 export function confirmPick() {
