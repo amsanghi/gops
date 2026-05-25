@@ -9,8 +9,13 @@ import {
   renderScoreboard, renderMetaCounts, renderSeries, renderModePill, renderMessage,
 } from './render.js';
 import { startTimer, clearTimer, setTimerExpireCallback } from './timer.js';
-import { sfx, haptic, fireConfetti } from './effects.js';
-import { saveGame, clearSavedGame, getGhost, saveGhost, updateStats, getStats, saveH2H, getH2H } from './storage.js';
+import { sfx, haptic, fireConfetti, catchphrase } from './effects.js';
+import {
+  saveGame, clearSavedGame, getGhost, saveGhost,
+  updateStats, getStats, saveH2H, getH2H,
+  updateHeatmap, updateRecord,
+} from './storage.js';
+import { AI_CATCHPHRASES } from './constants.js';
 import { aiBid } from './ai.js';
 import { checkAchOnBid, checkAchOnGameEnd, unlockAch } from './achievements.js';
 
@@ -75,6 +80,26 @@ export function nextRound() {
 
   setTimerExpireCallback(autoBidOnTimeout);
   startTimer();
+
+  // Battle mode: auto-bid the "me" side using personality A.
+  if (S.currentMode === 'battle') {
+    setTimeout(() => {
+      import('./ai.js').then(({ aiBid }) => {
+        const saved = { hand: S.myHand.slice(), pick: S.myPick };
+        // Temporarily swap to compute "me" bid using A personality on my hand
+        const aHand = S.myHand.slice();
+        const fakeS = { ...S, theirHand: aHand };
+        // simpler: use the standard aiBid by swapping
+        const orig = S.theirHand; S.theirHand = S.myHand;
+        const card = aiBid({ difficulty: 'hard', personality: S.battlePersonA });
+        S.theirHand = orig;
+        if (card != null && S.myHand.includes(card)) {
+          S.pendingPick = card;
+          confirmPick();
+        }
+      });
+    }, 350 + Math.random() * 400);
+  }
 }
 
 function autoBidOnTimeout() {
@@ -160,6 +185,12 @@ export function confirmPick() {
   }
 
   if (S.vsAI) {
+    // Maybe show a catchphrase for personality-driven AIs
+    if (Math.random() < 0.25 && !['battle','ghost','daily','puzzle'].includes(S.currentMode)) {
+      const persona = (document.getElementById('ai-persona')?.value) || 'balanced';
+      const lines = AI_CATCHPHRASES[persona];
+      if (lines && lines.length) setTimeout(() => catchphrase(lines[Math.floor(Math.random() * lines.length)]), 200);
+    }
     setTimeout(() => {
       const aiCard = aiBid();
       S.theirPick = aiCard;
@@ -343,6 +374,10 @@ export function endGame() {
       rounds: v => v + S.history.length,
       highScore: v => Math.max(v, S.myScore),
     });
+    // Per-mode high score
+    updateRecord(S.currentMode || (S.vsAI ? 'solo' : 'multi'), S.myScore, didIWin);
+    // Heatmap (only full-deck games for consistency)
+    if (S.settings.deckSize === 13) updateHeatmap(S.history, 13);
     clearSavedGame();
 
     // Ghost: record this game if it's a personal best solo win

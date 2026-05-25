@@ -30,7 +30,8 @@ export function renderHand(onSelect) {
   const row = $('hand'); if (!row) return;
   row.innerHTML = '';
   const size = S.settings.deckSize;
-  for (let n = 1; n <= size; n++) {
+  const order = orderedRanks(size);
+  for (const n of order) {
     const used = !S.myHand.includes(n);
     const locked = S.myPick !== null;
     const pending = S.pendingPick === n && !locked;
@@ -44,9 +45,41 @@ export function renderHand(onSelect) {
       c.onkeydown = e => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(n); }
       };
+      attachSwipe(c, () => onSelect(n));
     }
     row.appendChild(c);
   }
+}
+
+function orderedRanks(size) {
+  const all = Array.from({ length: size }, (_, i) => i + 1);
+  if (S.handSort === 'desc') return all.reverse();
+  if (S.handSort === 'used-last') {
+    const live = all.filter(n => S.myHand.includes(n));
+    const used = all.filter(n => !S.myHand.includes(n));
+    return [...live, ...used];
+  }
+  return all;
+}
+
+// Touch swipe-up to select & lock-in (mobile UX shortcut).
+function attachSwipe(el, onCommit) {
+  let sy = null;
+  el.addEventListener('touchstart', e => { sy = e.touches[0].clientY; }, { passive: true });
+  el.addEventListener('touchmove', e => {
+    if (sy == null) return;
+    const dy = sy - e.touches[0].clientY;
+    if (dy > 40) {
+      el.style.transform = `translateY(${-Math.min(dy, 80)}px) scale(1.05)`;
+    }
+  }, { passive: true });
+  el.addEventListener('touchend', e => {
+    if (sy == null) return;
+    const dy = sy - (e.changedTouches[0]?.clientY ?? sy);
+    el.style.transform = '';
+    sy = null;
+    if (dy > 60) onCommit();
+  }, { passive: true });
 }
 
 export function renderPrize() {

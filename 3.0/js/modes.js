@@ -27,13 +27,46 @@ export function startSolo() {
   S.myName = $('name-input').value.trim() || 'You';
   S.theirName = `AI (${$('ai-diff').value})`;
   S.theirAvatar = '🤖';
+  const power = $('ai-power')?.checked || false;
   S.settings = {
     deckSize: a.deckSize, bestOf: 1, tieRule: 'carry',
     direction: 'high', winCondition: 'most', timeLimit: a.timeLimit, stakes: '',
+    powerCards: power,
   };
   S.totalRounds = a.deckSize;
   S.scriptedAI = null;
   S.prizes = shuffle(Array.from({ length: a.deckSize }, (_, i) => i + 1));
+  setupGame();
+}
+
+// Bullet mode: 3-second timer, full 13-deck, medium AI.
+export function startBullet() {
+  S.vsAI = true; S.isHost = true; S.mode = 'solo'; S.currentMode = 'bullet';
+  S.myName = $('name-input').value.trim() || 'You';
+  S.theirName = 'Bullet AI'; S.theirAvatar = '⏱';
+  $('ai-diff').value = 'medium'; $('ai-persona').value = 'balanced';
+  S.settings = { deckSize: 13, bestOf: 1, tieRule: 'carry',
+    direction: 'high', winCondition: 'most', timeLimit: 3, stakes: '', powerCards: false };
+  S.totalRounds = 13;
+  S.scriptedAI = null;
+  S.prizes = shuffle(Array.from({ length: 13 }, (_, i) => i + 1));
+  setupGame();
+}
+
+// AI battle: two AIs play out the deck while you spectate.
+// We pre-compute both sides' bids using aiBid logic, then auto-advance.
+export function startBattle(personA = 'balanced', personB = 'aggressive', diff = 'hard') {
+  S.vsAI = true; S.isHost = true; S.mode = 'solo'; S.currentMode = 'battle';
+  S.myName = `AI · ${personA}`; S.myAvatar = '🤖';
+  S.theirName = `AI · ${personB}`; S.theirAvatar = '🦾';
+  $('ai-diff').value = diff; $('ai-persona').value = personB;
+  S.settings = { deckSize: 13, bestOf: 1, tieRule: 'carry',
+    direction: 'high', winCondition: 'most', timeLimit: 0, stakes: '', powerCards: false };
+  S.totalRounds = 13;
+  S.scriptedAI = null;
+  S.battlePersonA = personA;
+  S.battlePersonB = personB;
+  S.prizes = shuffle(Array.from({ length: 13 }, (_, i) => i + 1));
   setupGame();
 }
 

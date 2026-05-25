@@ -121,3 +121,20 @@ export function floatReaction(emoji, fromOpponent = false) {
   if (fromOpponent) { sfx.reaction(); haptic([15]); }
   setTimeout(() => el.remove(), 2400);
 }
+
+// ---- AI catchphrase float ----
+// Anchors above the opponent bid slot.
+export function catchphrase(text) {
+  if (!text) return;
+  const anchor = document.getElementById('them-bid');
+  if (!anchor) return;
+  const r = anchor.getBoundingClientRect();
+  const el = document.createElement('div');
+  el.className = 'catch-float';
+  el.textContent = text;
+  el.style.left = (r.left + r.width / 2) + 'px';
+  el.style.top = (r.top - 8) + 'px';
+  el.style.transform = 'translate(-50%, -100%)';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2400);
+}

@@ -10,8 +10,11 @@ import {
   setTheme, setMode, buildThemePicker, setupAvatarPicker, buildCardBackPicker,
   updateH2H, refreshLobbySubtitles, setupModals, openAchievementsModal, openStatsModal,
   openPuzzleModal, openTournamentModal, openHotSeatPrompt, showResumeBanner,
+  openArchiveModal, openBattleModal,
   renderEnd, buildReactionsBar, toggleChat, sendChat, renderChatMsgs,
+  applyStreakFrame, applyCustomTheme, applyAnimSpeed,
 } from './ui.js';
+import { getCustomTheme, saveCustomTheme, getDailyState } from './storage.js';
 import { renderHistory } from './render.js';
 import { sfx, haptic } from './effects.js';
 import {
@@ -22,11 +25,11 @@ import { configureMulti, startHost, joinGame, sendQuit, cleanup as cleanupMulti,
 import {
   startSolo, startDaily, startEndless, startTournamentMatch, startNextTournamentMatch,
   progressTournament, progressEndless, progressPuzzle, progressDaily, startNextEndlessRound,
-  startTutorial, startHotSeat, startGhost,
+  startTutorial, startHotSeat, startGhost, startBullet, startBattle,
 } from './modes.js';
 import {
   copyDailyResult, copyAnyResult, shareImage, copyChallengeLink, parseChallengeLink,
-  exportData, importData, exportHistoryCSV,
+  exportData, importData, exportHistoryCSV, copyReplayURL, parseReplayLink,
 } from './share.js';
 
 // ---- Net sender (defined here to mediate between game.js and multi.js) ----
@@ -72,6 +75,41 @@ configureMulti({
   },
   onChatMessage: renderChatMsgs,
 });
+
+// Open a shared replay on the end screen (no game played, just history scrubbing).
+function openSharedReplay(r) {
+  S.settings = {
+    deckSize: r.deckSize, bestOf: 1, tieRule: r.tieRule,
+    direction: r.direction, winCondition: r.winCondition, timeLimit: 0, stakes: '',
+  };
+  S.totalRounds = r.deckSize;
+  S.myName = r.myName; S.theirName = r.theirName;
+  S.prizes = r.prizes;
+  S.history = [];
+  // Reconstruct round records
+  let pot = 0;
+  for (let i = 0; i < r.prizes.length; i++) {
+    const mine = r.myBids[i], theirs = r.theirBids[i];
+    const value = r.prizes[i] + pot;
+    let winner;
+    const cmp = r.direction === 'low' ? theirs - mine : mine - theirs;
+    if (cmp > 0) { winner = 'me'; pot = 0; }
+    else if (cmp < 0) { winner = 'them'; pot = 0; }
+    else { winner = 'tie'; pot = r.tieRule === 'burn' ? 0 : value; }
+    S.history.push({ round: i + 1, prize: r.prizes[i], mine, theirs, prizeValue: value, winner });
+  }
+  // Compute final scores from history
+  S.myScore = S.history.filter(h => h.winner === 'me').reduce((a, h) => a + h.prizeValue, 0);
+  S.theirScore = S.history.filter(h => h.winner === 'them').reduce((a, h) => a + h.prizeValue, 0);
+  S.currentMode = 'replay'; S.vsAI = true;
+  hide('lobby');
+  show('end');
+  const cmp = (r.winCondition === 'fewest') ? S.theirScore - S.myScore : S.myScore - S.theirScore;
+  renderEnd({ didIWin: cmp > 0, seriesOver: true, cmp });
+  // Mark this isn't a real game played; disable rematch and update label
+  $('rematch-btn').textContent = '← Back to lobby';
+  $('rematch-btn').onclick = () => { hide('end'); show('lobby'); };
+}
 
 // ---- Lobby helpers ----
 function showLobby() {
@@ -156,8 +194,16 @@ function loadPrefs() {
   if (p.haptics !== undefined) S.haptics = !!p.haptics;
   if (Array.isArray(p.themesTried)) S.themesTried = new Set(p.themesTried);
   if (p.modeLight) S.mode_light = true;
+  if (p.handSort) S.handSort = p.handSort;
+  if (p.animSpeed) S.animSpeed = p.animSpeed;
+  if (p.coachMode !== undefined) S.coachMode = !!p.coachMode;
   setTheme(S.theme || 'mono');
   if (p.modeLight) setMode('light');
+  if (p.cbSafe) document.documentElement.setAttribute('data-cb', '1');
+  applyAnimSpeed(S.animSpeed || 1);
+  // Custom theme
+  const ct = getCustomTheme();
+  if (ct) applyCustomTheme(ct);
   if (p.lastHost) {
     const ls = p.lastHost;
     ['deck','tie','dir','goal','time'].forEach(k => {
@@ -166,7 +212,17 @@ function loadPrefs() {
     });
   }
   $('avatar-btn').textContent = S.myAvatar;
+  // Reflect prefs in settings controls
+  if ($('set-handsort')) $('set-handsort').value = S.handSort;
+  if ($('set-animspeed')) $('set-animspeed').value = String(S.animSpeed || 1);
+  if ($('set-coach')) $('set-coach').value = S.coachMode === false ? '0' : '1';
+  if ($('set-cbsafe')) $('set-cbsafe').value = p.cbSafe ? '1' : '0';
+  if (ct) {
+    if ($('set-accent')) $('set-accent').value = ct.accent || '#fafafa';
+    if ($('set-opp')) $('set-opp').value = ct.opp || '#a1a1aa';
+  }
   updateSoundBtn();
+  applyStreakFrame();
 }
 
 function updateSoundBtn() {
@@ -230,6 +286,10 @@ function init() {
   updateH2H();
   tryResume();
 
+  // Replay link: if URL has #replay=..., open the end-screen scrubber on it.
+  const replay = parseReplayLink();
+  if (replay) openSharedReplay(replay);
+
   // Name input
   $('name-input').addEventListener('input', () => {
     S.myName = $('name-input').value.trim() || 'You';
@@ -244,6 +304,9 @@ function init() {
   $('puzzle-tile').onclick = openPuzzleModal;
   $('endless-tile').onclick = startEndless;
   $('tournament-tile').onclick = openTournamentModal;
+  $('bullet-tile').onclick = startBullet;
+  $('battle-tile').onclick = () => openBattleModal((a, b, d) => startBattle(a, b, d));
+  $('archive-tile').onclick = openArchiveModal;
 
   // AI settings panel
   $('ghost-tile').onclick = () => {
@@ -279,6 +342,26 @@ function init() {
   // Settings modal controls
   $('set-sound').onchange = e => { S.sound = e.target.value === '1'; savePrefs({ sound: S.sound }); updateSoundBtn(); if (S.sound) sfx.pick(); };
   $('set-haptics').onchange = e => { S.haptics = e.target.value === '1'; savePrefs({ haptics: S.haptics }); };
+  $('set-handsort').onchange = e => { S.handSort = e.target.value; savePrefs({ handSort: e.target.value }); };
+  $('set-animspeed').onchange = e => { S.animSpeed = parseFloat(e.target.value); applyAnimSpeed(S.animSpeed); savePrefs({ animSpeed: S.animSpeed }); };
+  $('set-coach').onchange = e => { S.coachMode = e.target.value === '1'; savePrefs({ coachMode: S.coachMode }); };
+  $('set-cbsafe').onchange = e => {
+    const on = e.target.value === '1';
+    if (on) document.documentElement.setAttribute('data-cb', '1');
+    else document.documentElement.removeAttribute('data-cb');
+    savePrefs({ cbSafe: on });
+  };
+  $('apply-custom-btn').onclick = () => {
+    const accent = $('set-accent').value, opp = $('set-opp').value;
+    saveCustomTheme({ accent, opp });
+    applyCustomTheme({ accent, opp });
+    savePrefs({ customTheme: { accent, opp } });
+  };
+  $('clear-custom-btn').onclick = () => {
+    saveCustomTheme(null);
+    applyCustomTheme(null);
+    savePrefs({ customTheme: null });
+  };
   $('import-btn').onclick = () => $('import-file').click();
   $('import-file').addEventListener('change', e => {
     const f = e.target.files[0];
@@ -331,6 +414,30 @@ function init() {
   $('back-to-lobby-btn').onclick = () => { cleanupMulti(); showLobby(); };
   $('share-img-btn').onclick = shareImage;
   $('share-text-btn').onclick = () => { S.currentMode === 'daily' ? copyDailyResult() : copyAnyResult(); };
+  $('share-replay-btn').onclick = () => copyReplayURL(S);
+  $('coach-toggle').onclick = () => {
+    const c = $('coach');
+    const list = $('coach-list');
+    list.hidden = !list.hidden;
+    $('coach-toggle').textContent = list.hidden ? 'Show' : 'Hide';
+  };
+
+  // Archive day click → show 5-square grid in confirm modal (read-only view)
+  $('archive-body')?.addEventListener('click', (e) => {
+    const day = e.target.closest('.arc-day.done');
+    if (!day) return;
+    const k = day.dataset.date;
+    const st = getDailyState();
+    const rec = st.history[k];
+    if (!rec) return;
+    // We don't store the round-by-round grid for past dailies (only score), so just show summary
+    confirmDialog({
+      title: `Daily ${k}`,
+      message: `Result: ${rec.won ? 'Win' : rec.theirScore === rec.myScore ? 'Tie' : 'Loss'} · ${rec.myScore} – ${rec.theirScore}`,
+      confirm: 'OK',
+      cancel: 'Close',
+    });
+  });
 
   // Keyboard
   bindKeys();
