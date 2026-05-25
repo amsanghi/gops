@@ -104,6 +104,21 @@
               <span class="tile-label">Tournament</span>
               <span class="tile-sub" id="tournament-sub">8-AI ladder</span>
             </button>
+            <button class="tile" id="bullet-tile">
+              <span class="tile-icon">⏱</span>
+              <span class="tile-label">Bullet</span>
+              <span class="tile-sub">3s per bid</span>
+            </button>
+            <button class="tile" id="battle-tile">
+              <span class="tile-icon">⚔</span>
+              <span class="tile-label">AI Battle</span>
+              <span class="tile-sub">Spectate</span>
+            </button>
+            <button class="tile" id="archive-tile">
+              <span class="tile-icon">▤</span>
+              <span class="tile-label">Daily archive</span>
+              <span class="tile-sub" id="archive-sub">Past dailies</span>
+            </button>
           </div>
 
           <details class="expander" id="ai-settings">
@@ -273,10 +288,21 @@
 
     <div class="analysis" id="analysis"></div>
 
+    <div class="score-curve" id="score-curve-wrap" hidden>
+      <div class="curve-head">Score over rounds</div>
+      <canvas id="score-curve" width="560" height="160"></canvas>
+    </div>
+
+    <div class="coach" id="coach" hidden>
+      <div class="coach-head"><span>◐ Coach insights</span><button class="btn btn-xs btn-ghost" id="coach-toggle" type="button">Hide</button></div>
+      <div class="coach-list" id="coach-list"></div>
+    </div>
+
     <div class="end-actions">
       <button class="btn btn-primary" id="rematch-btn">Rematch</button>
       <button class="btn btn-ghost" id="share-img-btn">↧ Image</button>
       <button class="btn btn-ghost" id="share-text-btn">⎙ Copy result</button>
+      <button class="btn btn-ghost" id="share-replay-btn">↗ Replay link</button>
       <button class="btn btn-ghost" id="history-btn-2">≡ Rounds</button>
       <button class="btn btn-ghost" id="back-to-lobby-btn">← Lobby</button>
     </div>
@@ -325,6 +351,29 @@
     </div>
   </div>
 
+  <div class="scrim" id="modal-archive" hidden role="dialog" aria-modal="true" aria-labelledby="modal-archive-title">
+    <div class="modal">
+      <div class="modal-head"><h2 id="modal-archive-title">Daily archive</h2><button class="modal-close" data-close="modal-archive" aria-label="Close">×</button></div>
+      <p class="modal-desc">Past daily challenges. Click any day to view its grid.</p>
+      <div id="archive-body"></div>
+    </div>
+  </div>
+
+  <div class="scrim" id="modal-battle" hidden role="dialog" aria-modal="true" aria-labelledby="modal-battle-title">
+    <div class="modal">
+      <div class="modal-head"><h2 id="modal-battle-title">AI Battle setup</h2><button class="modal-close" data-close="modal-battle" aria-label="Close">×</button></div>
+      <p class="modal-desc">Pick two personalities. They'll play out the deck while you spectate.</p>
+      <div class="settings-grid">
+        <div class="field"><label class="field-label" for="battle-a">Player 1</label><select class="select" id="battle-a"><option value="balanced">Balanced</option><option value="aggressive">Aggressive</option><option value="defensive">Defensive</option><option value="bluffer">Bluffer</option><option value="mirror">Mirror</option></select></div>
+        <div class="field"><label class="field-label" for="battle-b">Player 2</label><select class="select" id="battle-b"><option value="aggressive">Aggressive</option><option value="balanced">Balanced</option><option value="defensive">Defensive</option><option value="bluffer">Bluffer</option><option value="mirror">Mirror</option></select></div>
+        <div class="field"><label class="field-label" for="battle-diff">Difficulty</label><select class="select" id="battle-diff"><option value="medium">Medium</option><option value="hard" selected>Hard</option><option value="easy">Easy</option></select></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:14px">
+        <button class="btn btn-primary btn-sm" id="battle-start-btn">Start battle</button>
+      </div>
+    </div>
+  </div>
+
   <div class="scrim" id="modal-settings" hidden role="dialog" aria-modal="true" aria-labelledby="modal-settings-title">
     <div class="modal">
       <div class="modal-head"><h2 id="modal-settings-title">Settings</h2><button class="modal-close" data-close="modal-settings" aria-label="Close">×</button></div>
@@ -336,6 +385,24 @@
       <div class="settings-grid">
         <div class="field"><label class="field-label" for="set-sound">Sound</label><select class="select" id="set-sound"><option value="1">On</option><option value="0">Off</option></select></div>
         <div class="field"><label class="field-label" for="set-haptics">Haptics</label><select class="select" id="set-haptics"><option value="1">On</option><option value="0">Off</option></select></div>
+      </div>
+
+      <h3 style="font-size:11px;text-transform:uppercase;letter-spacing:0.18em;color:var(--ink-faint);font-weight:600;margin:24px 0 10px">Gameplay</h3>
+      <div class="settings-grid">
+        <div class="field"><label class="field-label" for="set-handsort">Hand sort</label><select class="select" id="set-handsort"><option value="asc">A → K</option><option value="desc">K → A</option><option value="used-last">Used last</option></select></div>
+        <div class="field"><label class="field-label" for="set-animspeed">Animation</label><select class="select" id="set-animspeed"><option value="0.5">Fast</option><option value="1" selected>Normal</option><option value="1.5">Slow</option></select></div>
+        <div class="field"><label class="field-label" for="set-coach">Coach insights</label><select class="select" id="set-coach"><option value="1">On</option><option value="0">Off</option></select></div>
+        <div class="field"><label class="field-label" for="set-cbsafe">CB-safe palette</label><select class="select" id="set-cbsafe"><option value="0">Off</option><option value="1">On</option></select></div>
+      </div>
+
+      <h3 style="font-size:11px;text-transform:uppercase;letter-spacing:0.18em;color:var(--ink-faint);font-weight:600;margin:24px 0 10px">Custom theme</h3>
+      <div class="settings-grid">
+        <div class="field"><label class="field-label" for="set-accent">Your accent</label><input class="input" type="color" id="set-accent" value="#fafafa"></div>
+        <div class="field"><label class="field-label" for="set-opp">Opponent</label><input class="input" type="color" id="set-opp" value="#a1a1aa"></div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:10px">
+        <button class="btn btn-ghost btn-sm" id="apply-custom-btn">Apply custom</button>
+        <button class="btn btn-ghost btn-sm" id="clear-custom-btn">Clear custom</button>
       </div>
 
       <h3 style="font-size:11px;text-transform:uppercase;letter-spacing:0.18em;color:var(--ink-faint);font-weight:600;margin:24px 0 10px">Data</h3>

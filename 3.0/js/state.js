@@ -57,6 +57,7 @@ export const S = {
   currentPuzzle: null,
   currentTournamentAI: null,
   ghostMoves: null,    // array of bids for ghost mode
+  battlePersonA: null, battlePersonB: null, // AI battle personalities
 
   // Timer
   timerId: null, timerStart: 0, timerDuration: 0, lastTickSec: null,
@@ -68,6 +69,10 @@ export const S = {
   theme: 'mono', cardBack: 'mono',
   mode_light: false,
   themesTried: new Set(),
+  handSort: 'asc',       // 'asc' | 'desc' | 'used-last'
+  animSpeed: 1,          // 0.5 .. 1.5
+  coachMode: true,
+  customTheme: null,     // {accent, opp} or null
 
   // Chat
   chatMsgs: [],
