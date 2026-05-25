@@ -243,7 +243,10 @@ function handleMsg(data) {
           pot: S.pot, history: S.history,
           myGames: S.theirGames, theirGames: S.myGames,
         });
-        // Don't begin a new match — we're resuming this one
+        // Host's own state is already in S (loaded from snapshot) — jump into the game view.
+        S.myPick = null; S.theirPick = null; S.pendingPick = null; S.busy = false;
+        import('./game.js').then(g => { g.attachAndResume(); });
+        onGameStart();
         return;
       }
       beginHostedMatch();
