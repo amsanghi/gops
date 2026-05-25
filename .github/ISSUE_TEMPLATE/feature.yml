@@ -1,0 +1,41 @@
+name: 💡 Feature request
+description: Suggest a new mode, variant, UI improvement, etc.
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What's the idea?
+      placeholder: "A timer that speeds up each round to add pressure..."
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does it matter?
+      description: What problem does it solve, or what makes the game more fun?
+  - type: textarea
+    id: how
+    attributes:
+      label: How would it work?
+      description: User flow, UI changes, edge cases. Mockups welcome.
+  - type: dropdown
+    id: scope
+    attributes:
+      label: How big do you think it is?
+      options:
+        - Tiny (string change, color tweak)
+        - Small (one new button or setting)
+        - Medium (a mode or new modal)
+        - Large (multiplayer protocol, big refactor)
+        - Not sure
+    validations:
+      required: true
+  - type: checkboxes
+    id: backend
+    attributes:
+      label: Constraint check
+      options:
+        - label: This can be done without a backend (we host on GitHub Pages)
+          required: true

@@ -9,7 +9,22 @@ export const S = {
   currentMode: null,    // 'multi' | 'solo' | 'daily' | 'puzzle' | 'endless' | 'tournament' | 'tutorial' | 'hotseat' | 'ghost'
   roomCode: '',
 
-  // Players
+  // N-player support
+  // players: ordered roster. Each = { id, name, avatar, score, hand, pick, used, spectator, connected }
+  // For 2-player games and solo, players is length 2 (me + opponent).
+  // For multi-N, players is the full roster.
+  players: [],
+  myId: null,
+  hostId: null,
+  conns: null,            // host only: Map(id → DataConnection); created on demand
+  mediaConns: null,       // Map(id → MediaConnection)
+  localStream: null,
+  remoteStreams: null,    // Map(id → MediaStream)
+  micOn: false,
+  camOn: false,
+  gameStarted: false,     // for multi-N: distinguishes lobby phase
+
+  // Players (legacy 2-player view — kept synced from players[])
   myName: 'You',
   theirName: 'Them',
   myAvatar: '😎',
