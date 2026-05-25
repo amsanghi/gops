@@ -203,8 +203,13 @@ export function sendChat(sendMsg) {
   inp.value = '';
 }
 on('game-attached', () => {
-  // Show chat button only in true multiplayer
-  if (S.currentMode === 'multi') show('chat-btn'); else hide('chat-btn');
+  // Show chat + voice/video controls only in real multiplayer (duel or party).
+  const isMulti = S.currentMode === 'multi' || S.currentMode === 'multi-n';
+  ['chat-btn', 'game-mic-btn', 'game-cam-btn'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (isMulti) el.removeAttribute('hidden'); else el.setAttribute('hidden', '');
+  });
   renderChatMsgs();
 });
 

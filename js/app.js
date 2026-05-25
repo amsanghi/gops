@@ -486,15 +486,24 @@ function init() {
       if (hint) { const old = hint.textContent; hint.textContent = '✓ Copied!'; setTimeout(() => hint.textContent = old, 1200); }
     });
   };
-  const micBtn = $('mic-btn');
-  if (micBtn) micBtn.onclick = async () => {
+  // Mic/cam buttons — same handlers wired to both the party lobby toolbar
+  // and the in-game toolbar (game-mic-btn / game-cam-btn).
+  const toggleMic = async () => {
     if (S.micOn) stopMic(); else await startMic(S.camOn);
+    syncMediaBtns();
   };
-  const camBtn = $('cam-btn');
-  if (camBtn) camBtn.onclick = async () => {
-    if (S.camOn) { stopMic(); }
+  const toggleCam = async () => {
+    if (S.camOn) stopMic();
     else await startMic(true);
+    syncMediaBtns();
   };
+  ['mic-btn', 'game-mic-btn'].forEach(id => { const b = $(id); if (b) b.onclick = toggleMic; });
+  ['cam-btn', 'game-cam-btn'].forEach(id => { const b = $(id); if (b) b.onclick = toggleCam; });
+
+  function syncMediaBtns() {
+    ['mic-btn', 'game-mic-btn'].forEach(id => $(id)?.classList.toggle('on', S.micOn));
+    ['cam-btn', 'game-cam-btn'].forEach(id => $(id)?.classList.toggle('on', S.camOn));
+  }
   configureMultiN({
     onError: msg => { $('lobby-err').textContent = msg; },
     onReturnToLobby: showLobby,
