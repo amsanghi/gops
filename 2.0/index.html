@@ -818,7 +818,8 @@ function loadPrefs() {
     if (p.themesTried) S.themesTried = new Set(p.themesTried);
     if (p.lastSettings) {
       const ls = p.lastSettings;
-      ['deck','bestOf','tieRule','direction','winCondition','timeLimit'].forEach(k => {
+      // bestOf is intentionally NOT restored - always default to 1 (single game)
+      ['deck','tieRule','direction','winCondition','timeLimit'].forEach(k => {
         const el = $('host' + k.charAt(0).toUpperCase() + k.slice(1));
         if (el && ls[k] !== undefined) el.value = ls[k];
       });
@@ -834,8 +835,9 @@ function savePrefs(extras = {}) {
   } catch (e) {}
 }
 function saveHostSettings() {
+  // Don't persist bestOf - always default to 1 (single game) for new sessions
   savePrefs({ lastSettings: {
-    deck: $('hostDeck').value, bestOf: $('hostBestOf').value, tieRule: $('hostTieRule').value,
+    deck: $('hostDeck').value, tieRule: $('hostTieRule').value,
     direction: $('hostDirection').value, winCondition: $('hostWinCondition').value, timeLimit: $('hostTimeLimit').value
   }});
 }
@@ -1286,9 +1288,8 @@ function attachGameUI() {
   $('totalRounds').textContent = S.totalRounds;
   if (S.settings.bestOf > 1) {
     show('seriesPill');
-    const goal = Math.ceil(S.settings.bestOf / 2);
-    $('seriesPill').textContent = `Series ${S.myGames}–${S.theirGames} · first to ${goal}`;
-  } else hide('seriesPill');
+    $('seriesPill').textContent = `Best of ${S.settings.bestOf} · ${S.myGames}–${S.theirGames}`;
+  } else { hide('seriesPill'); $('seriesPill').textContent = ''; }
   // Mode pill
   if (S.currentMode && S.currentMode !== 'multi' && S.currentMode !== 'solo') {
     show('modePill');
@@ -1495,7 +1496,7 @@ function endGame() {
     if (seriesOver && S.myGames !== S.theirGames) {
       const champ = S.myGames > S.theirGames ? S.myName : S.theirName;
       $('seriesDisplay').innerHTML = `Series: <b>${escapeHtml(champ)}</b> wins ${S.myGames}–${S.theirGames}`;
-    } else $('seriesDisplay').innerHTML = `Series: <b>${S.myGames}–${S.theirGames}</b> · first to ${seriesGoal}`;
+    } else $('seriesDisplay').innerHTML = `Best of ${S.settings.bestOf}: <b>${S.myGames}–${S.theirGames}</b>`;
   } else hide('seriesDisplay');
 
   // Record + stats
@@ -2261,6 +2262,14 @@ function resumeGame() {
 
 // === INIT ===
 function init() {
+  // One-time cleanup: clear any stale bestOf in saved prefs so it always starts at 1
+  try {
+    const p = getJSON('gops2-prefs', {});
+    if (p.lastSettings && p.lastSettings.bestOf !== undefined) {
+      delete p.lastSettings.bestOf;
+      setJSON('gops2-prefs', p);
+    }
+  } catch (e) {}
   buildThemePicker();
   buildAvatarPicker();
   buildCardBackPicker();
