@@ -7,7 +7,10 @@ import {
 } from './constants.js';
 import {
   getAchievements, getStats, getDailyState, getSolvedPuzzles, getTournament, getPrefs, savePrefs, totalH2H,
+  getHeatmap, getRecords, getCustomTheme, saveCustomTheme,
 } from './storage.js';
+import { drawHeatmap, drawScoreCurve } from './charts.js';
+import { analyze as coachAnalyze } from './coach.js';
 import { sfx, floatReaction, haptic } from './effects.js';
 import { renderHistory, buildReplay, renderReplayStep } from './render.js';
 import { compareScores } from './game.js';
@@ -248,6 +251,30 @@ export function renderEnd({ didIWin, seriesOver, cmp }) {
   buildReplay();
   $('replay-track').oninput = (e) => renderReplayStep(parseInt(e.target.value, 10));
 
+  // Score curve
+  if (S.history.length >= 3) {
+    $('score-curve-wrap').hidden = false;
+    requestAnimationFrame(() => drawScoreCurve($('score-curve'), S.history, S.theirName, S.myName));
+  } else $('score-curve-wrap').hidden = true;
+
+  // Coach insights (vsAI only, sufficient history, and coach setting on)
+  const coachOn = (getPrefs().coachMode !== false);
+  if (S.vsAI && S.history.length >= 5 && coachOn) {
+    const insights = coachAnalyze(S.history, S.settings.deckSize);
+    const list = $('coach-list'); list.innerHTML = '';
+    if (insights.length === 0) {
+      list.innerHTML = '<div class="coach-item"><div class="coach-why">No major mistakes spotted — solid bidding!</div></div>';
+    } else {
+      insights.forEach(i => {
+        const div = document.createElement('div');
+        div.className = 'coach-item ' + i.kind;
+        div.innerHTML = `<div class="coach-round">Round ${i.round}</div><div class="coach-kind">${i.kind}</div><div class="coach-why">${escapeHtml(i.why)}</div>`;
+        list.appendChild(div);
+      });
+    }
+    $('coach').hidden = false;
+  } else $('coach').hidden = true;
+
   // Rematch button label
   const rb = $('rematch-btn');
   rb.disabled = false;
@@ -342,8 +369,20 @@ export function openStatsModal() {
   const ach = getAchievements();
   const tournament = getTournament();
   const puzzles = getSolvedPuzzles();
+  const records = getRecords();
   const winRate = s.gamesPlayed ? Math.round(100 * s.gamesWon / s.gamesPlayed) : 0;
   const avgScore = s.gamesPlayed ? Math.round(s.totalScore / s.gamesPlayed) : 0;
+
+  const modeName = (m) => ({
+    solo: 'Vs AI', daily: 'Daily', bullet: 'Bullet', endless: 'Endless',
+    tournament: 'Tournament', ghost: 'Ghost', hotseat: 'Hot seat',
+    battle: 'AI Battle', puzzle: 'Puzzles', multi: 'Multiplayer',
+  })[m] || m;
+  const recordRows = Object.entries(records)
+    .filter(([_, r]) => (r.score || 0) > 0 || (r.wins || 0) > 0)
+    .sort((a, b) => (b[1].score || 0) - (a[1].score || 0))
+    .map(([m, r]) => `<div class="bar-row"><div class="bar-name">${escapeHtml(modeName(m))}</div><div class="bar-text" style="margin-left:auto">${r.wins || 0} wins · best ${r.score}</div></div>`)
+    .join('');
 
   $('stats-body').innerHTML = `
     <div class="stats-grid">
@@ -355,9 +394,13 @@ export function openStatsModal() {
       <div class="stat"><div class="stat-value">${ach.length}</div><div class="stat-label">Badges</div></div>
     </div>
     <div class="stats-section">
-      <h3>Breakdown</h3>
+      <h3>Solo vs multi</h3>
       <div class="bar-row"><div class="bar-name">Solo</div><div class="bar-track"><div class="bar-fill" style="width:${s.soloGames ? (100 * s.soloWon / s.soloGames) : 0}%"></div></div><div class="bar-text">${s.soloWon}/${s.soloGames}</div></div>
       <div class="bar-row"><div class="bar-name">Multi</div><div class="bar-track"><div class="bar-fill" style="width:${s.multiGames ? (100 * s.multiWon / s.multiGames) : 0}%"></div></div><div class="bar-text">${s.multiWon}/${s.multiGames}</div></div>
+    </div>
+    <div class="stats-section">
+      <h3>Per-mode records</h3>
+      ${recordRows || '<div class="bar-row"><div class="bar-text" style="margin-left:auto;color:var(--ink-faint)">Play a game to start your record book.</div></div>'}
     </div>
     <div class="stats-section">
       <h3>Modes</h3>
@@ -365,8 +408,70 @@ export function openStatsModal() {
       <div class="bar-row"><div class="bar-name">Puzzles</div><div class="bar-text" style="margin-left:auto">${puzzles.length}/${PUZZLES.length} solved</div></div>
       <div class="bar-row"><div class="bar-name">Tournament</div><div class="bar-text" style="margin-left:auto">Level ${tournament.level}/${TOURNAMENT_AIS.length}</div></div>
     </div>
+    <div class="stats-section">
+      <h3>Bid heatmap</h3>
+      <p class="modal-desc" style="margin-bottom:8px">How often you bid each card against each prize rank (full-deck games).</p>
+      <div class="heatmap-wrap"><canvas id="heatmap-canvas"></canvas></div>
+    </div>
   `;
   openModal('modal-stats');
+  const heat = getHeatmap();
+  if (heat) requestAnimationFrame(() => drawHeatmap($('heatmap-canvas'), heat));
+}
+
+// ---- Daily archive modal ----
+export function openArchiveModal() {
+  const st = getDailyState();
+  const hist = st.history || {};
+  const days = Object.keys(hist).sort((a, b) => a < b ? 1 : -1);
+  if (!days.length) {
+    $('archive-body').innerHTML = '<p class="modal-desc">No daily challenges completed yet. Try today\'s!</p>';
+    openModal('modal-archive'); return;
+  }
+  // Group by year-month
+  const byMonth = new Map();
+  days.forEach(d => {
+    const ym = d.slice(0, 7);
+    if (!byMonth.has(ym)) byMonth.set(ym, []);
+    byMonth.get(ym).push(d);
+  });
+  const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  let html = '';
+  for (const [ym, list] of byMonth) {
+    const [yy, mm] = ym.split('-').map(Number);
+    const monthLabel = `${monthNames[mm - 1]} ${yy}`;
+    html += `<div class="arc-month">${monthLabel}</div>`;
+    html += `<div class="arc-dows"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>`;
+    // Build a calendar grid for that month
+    const firstDay = new Date(yy, mm - 1, 1);
+    const daysInMonth = new Date(yy, mm, 0).getDate();
+    const offset = firstDay.getDay();
+    const today = new Date().toISOString().slice(0, 10);
+    html += '<div class="archive-grid">';
+    for (let i = 0; i < offset; i++) html += '<div></div>';
+    for (let d = 1; d <= daysInMonth; d++) {
+      const k = `${yy}-${String(mm).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      const rec = hist[k];
+      const cls = 'arc-day' + (rec ? ' done' : '') + (k === today ? ' today' : '');
+      const result = rec ? `<div class="arc-result">${rec.won ? 'W' : 'L'} ${rec.myScore}-${rec.theirScore}</div>` : '';
+      html += `<div class="${cls}" data-date="${k}"><div>${d}</div>${result}</div>`;
+    }
+    html += '</div>';
+  }
+  $('archive-body').innerHTML = html;
+  openModal('modal-archive');
+}
+
+// ---- AI Battle modal ----
+export function openBattleModal(onStart) {
+  openModal('modal-battle');
+  $('battle-start-btn').onclick = () => {
+    const a = $('battle-a').value;
+    const b = $('battle-b').value;
+    const d = $('battle-diff').value;
+    hide('modal-battle');
+    onStart(a, b, d);
+  };
 }
 
 // ---- Puzzle list modal ----
@@ -491,6 +596,54 @@ export function showResumeBanner(saved, onResume, onDiscard) {
   banner.hidden = false;
   $('resume-go').onclick = onResume;
   $('resume-discard').onclick = () => { onDiscard(); banner.hidden = true; };
+}
+
+// ---- Streak avatar frame ----
+// Adds gold halo to avatar based on current daily streak.
+export function applyStreakFrame() {
+  const st = getDailyState();
+  const s = st.streak || 0;
+  const tier = s >= 100 ? 100 : s >= 30 ? 30 : s >= 7 ? 7 : 0;
+  const apply = (el) => {
+    if (!el) return;
+    el.classList.remove('streak-7', 'streak-30', 'streak-100');
+    if (tier) el.classList.add('streak-' + tier);
+  };
+  apply($('avatar-btn'));
+  apply($('me-av'));
+}
+
+// ---- Custom theme application ----
+export function applyCustomTheme(t) {
+  const root = document.documentElement;
+  if (!t || !t.accent) {
+    root.style.removeProperty('--me');
+    root.style.removeProperty('--me-soft');
+    root.style.removeProperty('--me-glow');
+    root.style.removeProperty('--opp');
+    root.style.removeProperty('--opp-soft');
+    root.style.removeProperty('--opp-glow');
+    return;
+  }
+  const me = t.accent;
+  const opp = t.opp || '#a1a1aa';
+  root.style.setProperty('--me', me);
+  root.style.setProperty('--me-soft', alpha(me, 0.14));
+  root.style.setProperty('--me-glow', alpha(me, 0.30));
+  root.style.setProperty('--opp', opp);
+  root.style.setProperty('--opp-soft', alpha(opp, 0.14));
+  root.style.setProperty('--opp-glow', alpha(opp, 0.28));
+}
+function alpha(hex, a) {
+  const m = /^#?([0-9a-f]{6})$/i.exec((hex || '').trim());
+  if (!m) return hex;
+  const v = parseInt(m[1], 16);
+  return `rgba(${(v >> 16) & 255},${(v >> 8) & 255},${v & 255},${a})`;
+}
+
+// ---- Animation speed ----
+export function applyAnimSpeed(scale) {
+  document.documentElement.style.setProperty('--anim-scale', String(scale));
 }
 
 // ---- Quick lookup ----

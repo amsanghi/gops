@@ -50,3 +50,19 @@ export function clearTimer() {
   S.lastTickSec = null;
   hide('timer');
 }
+
+// Pause/resume on tab visibility change — preserves remaining time.
+document.addEventListener('visibilitychange', () => {
+  if (!S.settings?.timeLimit || S.settings.timeLimit <= 0) return;
+  if (document.hidden) {
+    if (S.timerId) {
+      clearInterval(S.timerId); S.timerId = null;
+      S._pausedRemaining = Math.max(0, S.timerDuration - (Date.now() - S.timerStart));
+    }
+  } else if (S._pausedRemaining !== undefined && S._pausedRemaining > 0 && S.myPick === null && !document.getElementById('game').hidden) {
+    S.timerDuration = S._pausedRemaining;
+    S.timerStart = Date.now();
+    delete S._pausedRemaining;
+    S.timerId = setInterval(tick, 100);
+  }
+});

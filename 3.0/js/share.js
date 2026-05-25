@@ -185,6 +185,60 @@ export function importData(file, onDone) {
   reader.readAsText(file);
 }
 
+// Replay URL: encode prizes + bids into a compact URL hash, so others can
+// open the replay scrubber against this exact game.
+// Format: #replay=<deckSize>:<prizes>:<myBids>:<theirBids>:<dir><goal><tie>:<myName>:<theirName>
+// Bid arrays are joined as hex chars '1'..'D' for 1-13.
+const HEX = '0123456789ABCDEF';
+function encArr(arr) { return arr.map(n => HEX[n]).join(''); }
+function decArr(s) { return [...s].map(c => HEX.indexOf(c)).filter(n => n >= 0); }
+
+export function buildReplayURL(state) {
+  const deck = state.settings.deckSize;
+  const prizes = encArr(state.prizes.slice(0, deck));
+  const mine = encArr(state.history.map(h => h.mine));
+  const theirs = encArr(state.history.map(h => h.theirs));
+  const rule = (state.settings.direction === 'low' ? 'L' : 'H')
+             + (state.settings.winCondition === 'fewest' ? 'F' : 'M')
+             + (state.settings.tieRule === 'burn' ? 'B' : 'C');
+  const me = encodeURIComponent((state.myName || 'You').slice(0, 14));
+  const them = encodeURIComponent((state.theirName || 'Them').slice(0, 14));
+  const payload = [deck, prizes, mine, theirs, rule, me, them].join('~');
+  return location.origin + location.pathname + '#replay=' + payload;
+}
+
+export async function copyReplayURL(state) {
+  const url = buildReplayURL(state);
+  if (await copyToClipboard(url)) {
+    const btn = $('share-replay-btn');
+    if (btn) { const old = btn.textContent; btn.textContent = '✓ Replay copied'; setTimeout(() => btn.textContent = old, 1500); }
+  }
+}
+
+// Returns parsed replay or null. Side-effect: clears the hash from URL.
+export function parseReplayLink() {
+  const h = location.hash;
+  if (!h.startsWith('#replay=')) return null;
+  try {
+    const payload = h.slice('#replay='.length);
+    const [deckStr, prizes, mine, theirs, rule, me, them] = payload.split('~');
+    const deck = parseInt(deckStr, 10);
+    if (!deck || deck < 3 || deck > 21) return null;
+    history.replaceState(null, '', location.pathname);
+    return {
+      deckSize: deck,
+      prizes: decArr(prizes),
+      myBids: decArr(mine),
+      theirBids: decArr(theirs),
+      direction: rule[0] === 'L' ? 'low' : 'high',
+      winCondition: rule[1] === 'F' ? 'fewest' : 'most',
+      tieRule: rule[2] === 'B' ? 'burn' : 'carry',
+      myName: decodeURIComponent(me || 'You'),
+      theirName: decodeURIComponent(them || 'Them'),
+    };
+  } catch { return null; }
+}
+
 // CSV export — round-by-round results from the current game's history.
 export function exportHistoryCSV() {
   if (!S.history.length) return;
