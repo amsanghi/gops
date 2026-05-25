@@ -11,12 +11,223 @@ function buildResultGrid() {
   return S.history.map(h => h.winner === 'me' ? '🟩' : h.winner === 'them' ? '🟥' : '🟨').join('');
 }
 
+// Render the user's stats as a shareable PNG (no html2canvas — direct canvas drawing).
+export async function shareStatsImage() {
+  const { getStats, getDailyState, getAchievements, getRecords, getTournament, getSolvedPuzzles, getMastery } = await import('./storage.js');
+  const { PUZZLES, TOURNAMENT_AIS } = await import('./constants.js');
+  const s = getStats();
+  const ach = getAchievements();
+  const tour = getTournament();
+  const puz = getSolvedPuzzles();
+  const records = getRecords();
+  const dailyState = getDailyState();
+  const mastery = getMastery();
+
+  const w = 1080, h = 1350;
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const ctx = c.getContext('2d');
+  const root = getComputedStyle(document.documentElement);
+  const bg = root.getPropertyValue('--bg').trim() || '#0a0a0b';
+  const ink = root.getPropertyValue('--ink').trim() || '#f4f4f5';
+  const dim = root.getPropertyValue('--ink-dim').trim() || '#9a9aa3';
+  const me = root.getPropertyValue('--me').trim() || '#f4f4f5';
+  const gold = root.getPropertyValue('--gold').trim() || '#f5d062';
+
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+  // Header
+  ctx.fillStyle = ink;
+  ctx.font = '500 56px Fraunces, Georgia, serif';
+  ctx.fillText('GOPS — stats', 60, 110);
+  ctx.font = '500 18px Inter, sans-serif';
+  ctx.fillStyle = dim;
+  ctx.fillText((S.myAvatar || '😎') + ' ' + (S.myName || 'You'), 60, 144);
+
+  // 4-card stat block
+  const stats = [
+    { label: 'Games', value: s.gamesPlayed },
+    { label: 'Win rate', value: s.gamesPlayed ? Math.round(100 * s.gamesWon / s.gamesPlayed) + '%' : '0%' },
+    { label: 'High score', value: s.highScore },
+    { label: 'Rounds', value: s.rounds || 0 },
+  ];
+  const cellW = (w - 120 - 30) / 4;
+  stats.forEach((stat, i) => {
+    const x = 60 + i * (cellW + 10);
+    const y = 200;
+    ctx.fillStyle = 'rgba(255,255,255,0.04)';
+    ctx.fillRect(x, y, cellW, 140);
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.strokeRect(x, y, cellW, 140);
+    ctx.fillStyle = me;
+    ctx.font = '500 56px Fraunces, Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(String(stat.value), x + cellW / 2, y + 78);
+    ctx.fillStyle = dim;
+    ctx.font = '500 14px Inter, sans-serif';
+    ctx.fillText(stat.label.toUpperCase(), x + cellW / 2, y + 110);
+  });
+  ctx.textAlign = 'left';
+
+  // Section: modes
+  ctx.fillStyle = dim;
+  ctx.font = '500 12px Inter, sans-serif';
+  ctx.fillText('MODES', 60, 420);
+  const modeLines = [
+    `Daily — ${dailyState.totalCompleted || 0} done · streak ${dailyState.streak || 0}`,
+    `Puzzles — ${puz.length}/${PUZZLES.length} solved`,
+    `Tournament — Level ${tour.level}/${TOURNAMENT_AIS.length}`,
+    `Achievements — ${ach.length} unlocked`,
+  ];
+  ctx.fillStyle = ink;
+  ctx.font = '400 22px Inter, sans-serif';
+  modeLines.forEach((line, i) => ctx.fillText(line, 60, 460 + i * 36));
+
+  // Section: per-mode records
+  ctx.fillStyle = dim;
+  ctx.font = '500 12px Inter, sans-serif';
+  ctx.fillText('PER-MODE RECORDS', 60, 650);
+  ctx.fillStyle = ink;
+  ctx.font = '400 20px Inter, sans-serif';
+  const recs = Object.entries(records).filter(([, r]) => (r.score || 0) > 0).sort((a, b) => b[1].score - a[1].score).slice(0, 6);
+  recs.forEach(([mode, r], i) => {
+    ctx.fillText(`${mode} — ${r.wins || 0} wins · best ${r.score}`, 60, 690 + i * 32);
+  });
+
+  // Mastery
+  const masteryEntries = Object.entries(mastery).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  if (masteryEntries.length) {
+    ctx.fillStyle = dim;
+    ctx.font = '500 12px Inter, sans-serif';
+    ctx.fillText('AI MASTERY', 60, 920);
+    ctx.fillStyle = gold;
+    ctx.font = '400 20px Inter, sans-serif';
+    masteryEntries.forEach(([name, wins], i) => {
+      ctx.fillText(`★ ${name} — ${wins} wins`, 60, 960 + i * 32);
+    });
+  }
+
+  // Footer
+  ctx.fillStyle = dim;
+  ctx.font = '400 18px Inter, sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('amsanghi.github.io/gops', w - 60, h - 60);
+
+  return new Promise(resolve => {
+    c.toBlob(blob => {
+      if (!blob) return resolve(false);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `gops-stats-${todayKey()}.png`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+      resolve(true);
+    });
+  });
+}
+
+// Record a video of the replay scrubber playing through all rounds.
+// Uses canvas-frame recording + MediaRecorder → WebM blob.
+export async function recordReplayVideo(history, deckSize = 13, opts = {}) {
+  if (!history || !history.length) return false;
+  const w = 720, h = 720;
+  const canvas = document.createElement('canvas');
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  const root = getComputedStyle(document.documentElement);
+  const bg = root.getPropertyValue('--bg').trim() || '#0a0a0b';
+  const ink = root.getPropertyValue('--ink').trim() || '#f4f4f5';
+  const dim = root.getPropertyValue('--ink-dim').trim() || '#9a9aa3';
+  const me = root.getPropertyValue('--me').trim() || '#f4f4f5';
+  const opp = root.getPropertyValue('--opp').trim() || '#a1a1aa';
+  const gold = root.getPropertyValue('--gold').trim() || '#f5d062';
+
+  // Frame renderer
+  function drawFrame(idx) {
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+    const m = history[idx];
+    // Header
+    ctx.fillStyle = dim; ctx.font = '500 16px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`GOPS REPLAY — Round ${m.round} / ${history.length}`, w / 2, 50);
+    // Cards
+    const cy = 200, cardW = 110, cardH = 160, gap = 60;
+    function drawCard(x, y, label, color, sub) {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      const r = 12;
+      ctx.moveTo(x + r, y); ctx.lineTo(x + cardW - r, y); ctx.quadraticCurveTo(x + cardW, y, x + cardW, y + r);
+      ctx.lineTo(x + cardW, y + cardH - r); ctx.quadraticCurveTo(x + cardW, y + cardH, x + cardW - r, y + cardH);
+      ctx.lineTo(x + r, y + cardH); ctx.quadraticCurveTo(x, y + cardH, x, y + cardH - r);
+      ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.fill();
+      ctx.fillStyle = (color === bg) ? ink : '#0a0a0b';
+      ctx.font = '500 60px Fraunces, Georgia, serif';
+      ctx.fillText(label, x + cardW / 2, y + cardH / 2 + 5);
+      if (sub) {
+        ctx.font = '400 12px Inter, sans-serif';
+        ctx.fillText(sub, x + cardW / 2, y + cardH / 2 + 35);
+      }
+    }
+    const rank = (n) => ({ 1: 'A', 11: 'J', 12: 'Q', 13: 'K' })[n] || String(n);
+    // Them | Prize | Me
+    const cx = w / 2;
+    drawCard(cx - cardW / 2, cy, rank(m.prize), gold, 'PRIZE');
+    drawCard(cx - cardW * 1.5 - gap, cy, rank(m.theirs), opp, 'THEM');
+    drawCard(cx + cardW / 2 + gap, cy, rank(m.mine), me, 'YOU');
+    // Outcome
+    ctx.fillStyle = m.winner === 'me' ? '#4ade80' : m.winner === 'them' ? '#f87171' : gold;
+    ctx.font = '400 48px Fraunces, Georgia, serif';
+    const verb = m.winner === 'me' ? `+${m.prizeValue} to you` : m.winner === 'them' ? `+${m.prizeValue} to opponent` : `Tie · ${m.prizeValue} carries`;
+    ctx.fillText(verb, w / 2, cy + cardH + 80);
+    // Footer
+    ctx.fillStyle = dim;
+    ctx.font = '400 14px Inter, sans-serif';
+    ctx.fillText('amsanghi.github.io/gops', w / 2, h - 30);
+  }
+
+  // Capture
+  if (!('MediaRecorder' in window) || !canvas.captureStream) {
+    // Fallback: animated PNG-like by stitching frames is complex. Just download a multi-frame Canvas-based loop as webm if possible, else error.
+    return false;
+  }
+  const stream = canvas.captureStream(8); // 8 fps is fine for a slideshow
+  const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
+  const recorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 1_500_000 });
+  const chunks = [];
+  recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+
+  return new Promise(resolve => {
+    recorder.onstop = () => {
+      const blob = new Blob(chunks, { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `gops-replay-${todayKey()}.webm`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+      resolve(true);
+    };
+    recorder.start();
+    let i = 0;
+    drawFrame(0);
+    const interval = setInterval(() => {
+      i++;
+      if (i >= history.length) {
+        clearInterval(interval);
+        setTimeout(() => recorder.stop(), 800);
+      } else {
+        drawFrame(i);
+      }
+    }, 900);
+  });
+}
+
 // Compact, tweet-friendly: under 240 chars.
 export async function copyCompactShare() {
   const cmp = (S.settings.winCondition === 'fewest') ? S.theirScore - S.myScore : S.myScore - S.theirScore;
   const outcome = cmp > 0 ? '✓ W' : cmp < 0 ? '✗ L' : '~';
   const grid = buildResultGrid();
-  const text = `GOPS ${outcome} ${S.myScore}-${S.theirScore}\n${grid}\namsanghi.github.io/gops/3.0/`;
+  const text = `GOPS ${outcome} ${S.myScore}-${S.theirScore}\n${grid}\namsanghi.github.io/gops/`;
   if (await copyToClipboard(text)) {
     const btn = $('share-text-btn');
     if (btn) { const old = btn.textContent; btn.textContent = '✓ Copied'; setTimeout(() => btn.textContent = old, 1500); }
@@ -26,7 +237,7 @@ export async function copyCompactShare() {
 export async function copyDailyResult() {
   const date = todayKey();
   const grid = buildResultGrid();
-  const text = `GOPS Daily ${date}\nScore: ${S.myScore}–${S.theirScore}\n${grid}\nhttps://amsanghi.github.io/gops/3.0/`;
+  const text = `GOPS Daily ${date}\nScore: ${S.myScore}–${S.theirScore}\n${grid}\nhttps://amsanghi.github.io/gops/`;
   if (await copyToClipboard(text)) {
     const btn = $('share-text-btn');
     if (btn) { const old = btn.textContent; btn.textContent = '✓ Copied'; setTimeout(() => btn.textContent = old, 1500); }
@@ -39,7 +250,7 @@ export async function copyAnyResult() {
   const cmp = compareScores(S.myScore, S.theirScore);
   const outcome = cmp > 0 ? 'Win' : cmp < 0 ? 'Loss' : 'Tie';
   const tag = S.currentMode ? S.currentMode[0].toUpperCase() + S.currentMode.slice(1) : '';
-  const text = `GOPS ${tag} · ${date} · ${outcome}\n${S.myName} ${S.myScore} — ${S.theirScore} ${S.theirName}\n${grid}\nhttps://amsanghi.github.io/gops/3.0/`;
+  const text = `GOPS ${tag} · ${date} · ${outcome}\n${S.myName} ${S.myScore} — ${S.theirScore} ${S.theirName}\n${grid}\nhttps://amsanghi.github.io/gops/`;
   if (await copyToClipboard(text)) {
     const btn = $('share-text-btn');
     if (btn) { const old = btn.textContent; btn.textContent = '✓ Copied'; setTimeout(() => btn.textContent = old, 1500); }
@@ -120,7 +331,7 @@ export function shareImage() {
   ctx.font = '400 20px Inter, sans-serif';
   ctx.fillStyle = dim;
   ctx.textAlign = 'right';
-  ctx.fillText('amsanghi.github.io/gops/3.0', w - 60, h - 80);
+  ctx.fillText('amsanghi.github.io/gops', w - 60, h - 80);
 
   canvas.toBlob(blob => {
     if (!blob) return;

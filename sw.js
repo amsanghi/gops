@@ -5,7 +5,7 @@
 //   - Cross-origin (fonts, PeerJS CDN): cache-first with revalidation
 //   - Versioned cache → bumping `CACHE` forces a one-shot purge across clients.
 
-const CACHE = 'gops-v3-2';
+const CACHE = 'gops-v3-4';
 const PRECACHE = [
   './',
   './index.html',

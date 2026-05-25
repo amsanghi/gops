@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🎮 Try the game
+    url: https://amsanghi.github.io/gops
+    about: Click "play" and bid wisely.
+  - name: 💬 Discussion
+    url: https://github.com/amsanghi/gops/discussions
+    about: Open-ended chat, ideas, screenshots, brag posts.

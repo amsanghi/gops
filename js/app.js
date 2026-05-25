@@ -23,6 +23,10 @@ import {
 } from './game.js';
 import { configureMulti, startHost, joinGame, sendQuit, cleanup as cleanupMulti, beginHostedMatch, setRematchHook } from './multi.js';
 import {
+  configureMultiN, startPartyHost, joinPartyRoom, startPartyGame, cleanupParty,
+  startMic, stopMic,
+} from './multiN.js';
+import {
   startSolo, startDaily, startEndless, startTournamentMatch, startNextTournamentMatch,
   progressTournament, progressEndless, progressPuzzle, progressDaily, startNextEndlessRound,
   startTutorial, startHotSeat, startGhost, startBullet, startBattle,
@@ -31,6 +35,7 @@ import {
 import {
   copyDailyResult, copyAnyResult, shareImage, copyChallengeLink, parseChallengeLink,
   exportData, importData, exportHistoryCSV, copyReplayURL, parseReplayLink,
+  shareStatsImage, recordReplayVideo,
 } from './share.js';
 
 // ---- Net sender (defined here to mediate between game.js and multi.js) ----
@@ -151,6 +156,9 @@ function showLobby() {
   show('lobby');
   show('lobby-default');
   hide('host-info'); hide('join-info');
+  const partyInfo = document.getElementById('party-info');
+  if (partyInfo) partyInfo.hidden = true;
+  document.body.classList.remove('in-game', 'bullet');
   $('lobby-err').textContent = '';
   S.mode = null; S.currentMode = null;
   S.scriptedAI = null;
@@ -372,12 +380,55 @@ function init() {
   };
 
   // Multiplayer
-  $('create-btn').onclick = startHost;
-  $('join-btn').onclick = joinGame;
-  $('join-code').addEventListener('keypress', e => { if (e.key === 'Enter') joinGame(); });
+  let mpMode = 'duel'; // or 'party'
+  $$('.mp-mode-btn').forEach(btn => {
+    btn.onclick = () => {
+      mpMode = btn.dataset.mode;
+      $$('.mp-mode-btn').forEach(b => b.classList.toggle('active', b === btn));
+    };
+  });
+  $('create-btn').onclick = () => {
+    if (mpMode === 'party') startPartyHost(); else startHost();
+  };
+  $('join-btn').onclick = () => {
+    const code = ($('join-code').value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (mpMode === 'party') joinPartyRoom(code); else joinGame();
+  };
+  $('join-code').addEventListener('keypress', e => {
+    if (e.key === 'Enter') {
+      const code = ($('join-code').value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+      if (mpMode === 'party') joinPartyRoom(code); else joinGame();
+    }
+  });
   $('host-cancel').onclick = () => { cleanupMulti(); showLobby(); };
   $('join-cancel').onclick = () => { cleanupMulti(); showLobby(); };
   $('copy-challenge-btn').onclick = copyChallengeLink;
+
+  // Party controls
+  const partyStartBtn = $('party-start-btn');
+  if (partyStartBtn) partyStartBtn.onclick = startPartyGame;
+  const partyCancel = $('party-cancel');
+  if (partyCancel) partyCancel.onclick = () => { cleanupParty(); showLobby(); };
+  const partyCode = $('party-code');
+  if (partyCode) partyCode.onclick = () => {
+    navigator.clipboard?.writeText(partyCode.textContent).then(() => {
+      const hint = $('party-copy-hint');
+      if (hint) { const old = hint.textContent; hint.textContent = '✓ Copied!'; setTimeout(() => hint.textContent = old, 1200); }
+    });
+  };
+  const micBtn = $('mic-btn');
+  if (micBtn) micBtn.onclick = async () => {
+    if (S.micOn) stopMic(); else await startMic(S.camOn);
+  };
+  const camBtn = $('cam-btn');
+  if (camBtn) camBtn.onclick = async () => {
+    if (S.camOn) { stopMic(); }
+    else await startMic(true);
+  };
+  configureMultiN({
+    onError: msg => { $('lobby-err').textContent = msg; },
+    onReturnToLobby: showLobby,
+  });
 
   // Top bar
   $('mode-toggle-btn').onclick = () => {
@@ -386,7 +437,14 @@ function init() {
     if (isLight) document.documentElement.removeAttribute('data-mode'); // back to auto/dark
   };
   $('achievements-btn').onclick = openAchievementsModal;
-  $('stats-btn').onclick = openStatsModal;
+  $('stats-btn').onclick = () => {
+    openStatsModal();
+    const snapBtn = $('snapshot-stats-btn');
+    if (snapBtn && !snapBtn._wired) {
+      snapBtn._wired = true;
+      snapBtn.onclick = () => shareStatsImage();
+    }
+  };
   $('settings-btn').onclick = () => {
     buildCardBackPicker();
     $('set-sound').value = S.sound ? '1' : '0';
@@ -470,6 +528,14 @@ function init() {
   $('share-img-btn').onclick = shareImage;
   $('share-text-btn').onclick = () => { S.currentMode === 'daily' ? copyDailyResult() : copyAnyResult(); };
   $('share-replay-btn').onclick = () => copyReplayURL(S);
+  $('share-video-btn').onclick = async () => {
+    const btn = $('share-video-btn');
+    btn.disabled = true; btn.textContent = '⏺ Recording...';
+    const ok = await recordReplayVideo(S.history, S.settings.deckSize);
+    btn.disabled = false;
+    btn.textContent = ok ? '✓ Saved' : '✗ Not supported';
+    setTimeout(() => btn.textContent = '▶ Replay video', 1500);
+  };
   $('coach-toggle').onclick = () => {
     const c = $('coach');
     const list = $('coach-list');

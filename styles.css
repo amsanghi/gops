@@ -148,6 +148,105 @@ img, svg { display: block; max-width: 100%; }
   min-height: 100dvh;
 }
 
+/* ---------- No-scroll game mode ---------- */
+/* When .in-game is on <body>, the whole game fits in the viewport without scrolling.
+   This is critical for Bullet mode where every second counts. */
+body.in-game {
+  overflow: hidden;
+  height: 100dvh;
+}
+body.in-game .app {
+  padding: 12px 16px;
+  height: 100dvh;
+  max-width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+body.in-game .topbar { display: none; }
+body.in-game #game {
+  flex: 1 1 0;
+  display: flex !important;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+}
+body.in-game .game-head { margin-bottom: 0; padding: 8px 14px; flex-shrink: 0; }
+body.in-game .series-bar { margin-bottom: 0; flex-shrink: 0; }
+body.in-game .game-actions { margin-bottom: 0; padding: 0 4px; flex-shrink: 0; }
+body.in-game .board {
+  flex: 1 1 0;
+  min-height: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+}
+body.in-game .zone { padding: 10px 12px; min-height: 0; overflow: hidden; }
+body.in-game .center-stack { gap: 8px; min-height: 0; }
+body.in-game .center-stack > .zone { min-height: 0; }
+body.in-game .prize-area { min-height: 80px; flex-shrink: 0; }
+body.in-game .bid-area { min-height: 80px; }
+body.in-game .hand-zone {
+  flex-shrink: 0;
+  padding: 10px 14px;
+}
+body.in-game .hand { min-height: 0; gap: 4px; flex-wrap: nowrap; overflow-x: auto; padding: 4px 0; }
+body.in-game .hand .card { flex: 0 0 auto; }
+body.in-game .hand .card.in-hand:hover:not(.used):not(.locked) { transform: translateY(-6px) scale(1.03); }
+body.in-game .message { min-height: 20px; font-size: 13px; flex-shrink: 0; }
+body.in-game .reactions { margin-top: 4px; flex-shrink: 0; }
+body.in-game .chat { margin-top: 4px; flex-shrink: 0; }
+
+/* Smaller cards in compact mode */
+body.in-game .card { --w: clamp(36px, 5.5vh, 60px); --h: clamp(50px, 7.5vh, 86px); font-size: clamp(16px, 2.5vh, 26px); }
+body.in-game .card.prize { --w: clamp(56px, 8.5vh, 88px); --h: clamp(78px, 11.5vh, 124px); font-size: clamp(22px, 3.4vh, 36px); }
+body.in-game .card.mini { --w: clamp(24px, 3.4vh, 36px); --h: clamp(34px, 4.5vh, 50px); font-size: clamp(10px, 1.5vh, 14px); }
+body.in-game .mini-grid { gap: 3px; }
+body.in-game .vertical-cards .card { width: 100%; max-width: 38px; }
+body.in-game .bid-divider { font-size: clamp(18px, 2.4vh, 26px); }
+body.in-game .score-num { font-size: clamp(22px, 3.6vh, 36px); }
+body.in-game .game-head { padding: 6px 12px; }
+body.in-game .score-name .av { width: clamp(22px, 3vh, 28px); height: clamp(22px, 3vh, 28px); font-size: clamp(13px, 1.8vh, 16px); }
+body.in-game .pot-chip { font-size: 10px; }
+body.in-game .zone-head { font-size: 10px; letter-spacing: 0.14em; }
+body.in-game .confirm-row { margin-top: 0; min-height: 32px; }
+
+/* Even tighter on short viewports */
+@media (max-height: 720px) {
+  body.in-game .card.prize { --w: 60px; --h: 84px; font-size: 22px; }
+  body.in-game .game-head { padding: 4px 10px; }
+  body.in-game .zone { padding: 8px 10px; }
+  body.in-game .hand-zone { padding: 6px 10px; }
+}
+
+/* Mobile in-game: hide side panels, focus on prize + my hand + bids. */
+@media (max-width: 760px) {
+  body.in-game .board {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  body.in-game .board > .zone:nth-child(1),
+  body.in-game .board > .zone:nth-child(3) {
+    display: none;
+  }
+  body.in-game .center-stack { gap: 6px; }
+  body.in-game .game-head { padding: 6px 8px; gap: 8px; }
+  body.in-game .score-num { font-size: 22px; }
+  body.in-game .card { --w: 38px; --h: 54px; font-size: 17px; }
+  body.in-game .card.prize { --w: 64px; --h: 90px; font-size: 24px; }
+  body.in-game .hand-zone { padding: 6px 8px; }
+  body.in-game .hand .card { --w: 36px; --h: 52px; font-size: 14px; }
+  body.in-game .message { font-size: 12px; min-height: 16px; }
+  body.in-game .bid-area { min-height: 70px; gap: 12px; }
+  body.in-game .bid-slot { min-height: 60px; }
+  body.in-game .reactions { gap: 2px; margin-top: 2px; }
+  body.in-game .react-btn { width: 28px; height: 28px; font-size: 14px; }
+}
+
+/* Bullet mode badge — even tighter, no zone-heads */
+body.in-game.bullet .zone-head .meta { display: none; }
+body.in-game.bullet .hand-zone .zone-head { display: none; }
+body.in-game.bullet .game-actions { display: none; }
+
 /* ---------- Top bar (persistent header) ---------- */
 .topbar {
   display: flex; align-items: center; justify-content: space-between;
@@ -1253,6 +1352,128 @@ details > summary::-webkit-details-marker { display: none; }
   display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
   margin-top: 24px;
 }
+
+/* ---------- Multiplayer mode toggle (Duel / Party) ---------- */
+.mp-mode-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 3px;
+  margin-bottom: 10px;
+}
+.mp-mode-btn {
+  padding: 8px 12px;
+  background: transparent;
+  color: var(--ink-dim);
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+.mp-mode-btn.active { background: var(--ink); color: var(--bg); }
+.mp-mode-btn:not(.active):hover { color: var(--ink); background: var(--surface-hover); }
+
+/* ---------- Party room (N-player lobby) ---------- */
+.party-card {
+  background: var(--bg-elev-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 20px 22px;
+  margin: 16px auto;
+  max-width: 520px;
+}
+.party-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.party-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--ink-faint); margin-bottom: 4px; }
+.party-code-display {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  color: var(--me);
+  cursor: pointer;
+}
+.party-code-display:hover { opacity: 0.8; }
+.party-copy-hint { font-size: 10px; color: var(--ink-faint); margin-top: 4px; }
+.party-controls { display: flex; gap: 6px; }
+.party-status { color: var(--ink-dim); font-size: 13px; margin-bottom: 12px; }
+.party-status .dot {
+  display: inline-block; width: 6px; height: 6px;
+  border-radius: 999px; background: var(--me); margin-right: 6px;
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+.party-roster { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; max-height: 240px; overflow-y: auto; }
+.party-row {
+  display: grid; grid-template-columns: 28px 1fr auto;
+  align-items: center; gap: 10px;
+  padding: 6px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xs);
+  font-size: 13px;
+}
+.party-row .av { font-size: 18px; line-height: 1; }
+.party-row .nm { color: var(--ink); font-weight: 500; }
+.party-row .role { font-size: 11px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.1em; }
+.party-row.offline { opacity: 0.4; }
+.party-row.spectator { border-style: dashed; }
+.party-actions { display: flex; justify-content: flex-end; gap: 6px; }
+
+/* Mic/cam buttons */
+#mic-btn.on, #cam-btn.on { background: var(--me); color: var(--me-ink); border-color: var(--me); }
+
+/* Party game header (N-player) */
+body.in-game.party .game-head {
+  display: block;
+  padding: 6px 10px;
+}
+body.in-game.party .party-scores {
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+  margin-bottom: 4px;
+}
+.party-score {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.party-score.me { border-color: var(--me); background: var(--me-soft); }
+.party-score .rank { font-family: var(--font-mono); font-size: 10px; color: var(--ink-faint); }
+.party-score .av { font-size: 14px; }
+.party-score .nm { color: var(--ink); font-weight: 500; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.party-score .sc { font-family: var(--font-serif); font-weight: 500; color: var(--me); font-size: 14px; min-width: 1ch; }
+
+/* Party game bid grid */
+body.in-game.party #them-bid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: flex-start; }
+.party-bid-slot { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.party-bid-label { font-size: 10px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.1em; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Video tile */
+.remote-video {
+  position: fixed;
+  width: 140px;
+  height: 105px;
+  background: var(--bg-elev-2);
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border-strong);
+  z-index: 90;
+}
+.remote-video:nth-of-type(1) { top: 80px; right: 14px; }
+.remote-video:nth-of-type(2) { top: 200px; right: 14px; }
+.remote-video:nth-of-type(3) { top: 320px; right: 14px; }
+.remote-video:nth-of-type(4) { top: 440px; right: 14px; }
+.remote-video:nth-of-type(5) { top: 560px; right: 14px; }
+.remote-video:nth-of-type(6) { top: 80px; left: 14px; }
+.remote-video:nth-of-type(7) { top: 200px; left: 14px; }
 
 /* ---------- Onboarding toast (first-time visitors) ---------- */
 .onboarding {
