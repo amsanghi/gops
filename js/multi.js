@@ -44,19 +44,22 @@ export function configureMulti(opts) {
   onChatMessage = opts.onChatMessage || onChatMessage;
 }
 
-export async function startHost() {
+export async function startHost({ rejoinExisting = false } = {}) {
   S.isHost = true; S.vsAI = false; S.mode = 'host'; S.currentMode = 'multi';
-  S.myName = $('name-input').value.trim() || 'Player 1';
-  // Pull host settings
-  S.settings.deckSize = parseInt($('host-deck').value, 10);
-  S.settings.bestOf = Math.max(1, Math.min(99, parseInt($('host-bestof').value, 10) || 1));
-  S.settings.tieRule = $('host-tie').value;
-  S.settings.direction = $('host-dir').value;
-  S.settings.winCondition = $('host-goal').value;
-  S.settings.timeLimit = Math.max(0, parseInt($('host-time').value, 10) || 0);
-  S.settings.stakes = $('host-stakes').value.trim();
-  S.settings.powerCards = $('host-power')?.checked || false;
-  S.totalRounds = S.settings.deckSize;
+  if (!rejoinExisting) {
+    S.myName = $('name-input').value.trim() || 'Player 1';
+    // Pull host settings (fresh game)
+    S.settings.deckSize = parseInt($('host-deck').value, 10);
+    S.settings.bestOf = Math.max(1, Math.min(99, parseInt($('host-bestof').value, 10) || 1));
+    S.settings.tieRule = $('host-tie').value;
+    S.settings.direction = $('host-dir').value;
+    S.settings.winCondition = $('host-goal').value;
+    S.settings.timeLimit = Math.max(0, parseInt($('host-time').value, 10) || 0);
+    S.settings.stakes = $('host-stakes').value.trim();
+    S.settings.powerCards = $('host-power')?.checked || false;
+    S.totalRounds = S.settings.deckSize;
+  }
+  // When rejoining, S.settings / S.totalRounds / S.prizes / etc are already loaded from saved snap.
   savePrefs({
     lastHost: {
       deck: $('host-deck').value, tie: $('host-tie').value,
@@ -171,13 +174,48 @@ function handleMsg(data) {
   if (data.type === 'hello') {
     S.theirName = data.name || 'Opponent';
     S.theirAvatar = data.avatar || '🎭';
-    if (S.isHost) beginHostedMatch();
+    if (S.isHost) {
+      // If we (host) have a mid-game snapshot for this same room, resume from it
+      // instead of starting a new match.
+      if (S.currentMode === 'multi' && S.prizes?.length && S.round < S.totalRounds && S.history) {
+        // Reconnect mid-game — send authoritative state to joiner
+        S.conn.send({
+          type: 'resume',
+          prizes: S.prizes, settings: S.settings, stakes: S.settings.stakes,
+          round: S.round, myScore: S.theirScore, theirScore: S.myScore, // swap! their POV
+          myHand: S.theirHand, theirHand: S.myHand,
+          theirUsedCards: [...new Set(S.history.map(h => h.mine))],
+          pot: S.pot, history: S.history,
+          myGames: S.theirGames, theirGames: S.myGames,
+        });
+        // Don't begin a new match — we're resuming this one
+        return;
+      }
+      beginHostedMatch();
+    }
   } else if (data.type === 'start') {
     S.prizes = data.prizes;
     S.settings = data.settings;
     S.totalRounds = S.settings.deckSize;
     S.theirStakes = data.stakes || '';
     setupGame();
+    onGameStart();
+  } else if (data.type === 'resume') {
+    // Apply host-authoritative mid-game state and jump into the game UI at the saved round.
+    S.prizes = data.prizes;
+    S.settings = data.settings;
+    S.totalRounds = S.settings.deckSize;
+    S.theirStakes = data.stakes || '';
+    S.round = data.round;
+    S.myScore = data.myScore; S.theirScore = data.theirScore;
+    S.myHand = data.myHand; S.theirHand = data.theirHand;
+    S.theirUsedCards = data.theirUsedCards || [];
+    S.pot = data.pot || 0;
+    S.history = data.history || [];
+    S.myGames = data.myGames || 0;
+    S.theirGames = data.theirGames || 0;
+    S.myPick = null; S.theirPick = null; S.pendingPick = null; S.busy = false;
+    import('./game.js').then(g => { g.attachAndResume(); });
     onGameStart();
   } else if (data.type === 'pick') {
     receiveTheirPick(data.card);
