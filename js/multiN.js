@@ -19,6 +19,7 @@
 import { S } from './state.js';
 import { $, $$, show, hide, shuffle } from './util.js';
 import { PROTO_VERSION, PEER_PREFIX } from './constants.js';
+import { PEER_CONFIG } from './multi.js';
 import { sfx, haptic, fireConfetti, floatReaction } from './effects.js';
 import { makeCard, renderHand } from './render.js';
 import { startTimer, clearTimer, setTimerExpireCallback } from './timer.js';
@@ -68,7 +69,7 @@ export async function startPartyHost() {
   try { Peer = await loadPeerJS(); }
   catch { onError('Could not load multiplayer.'); hideParty(); return; }
 
-  try { S.peer = new Peer(HOST_ID_PREFIX + code); }
+  try { S.peer = new Peer(HOST_ID_PREFIX + code, PEER_CONFIG); }
   catch { onError('Failed to init peer.'); hideParty(); return; }
 
   S.peer.on('open', () => {
@@ -105,7 +106,7 @@ export async function joinPartyRoom(code) {
   try { Peer = await loadPeerJS(); }
   catch { onError('Could not load multiplayer.'); hideParty(); return; }
 
-  try { S.peer = new Peer(); }
+  try { S.peer = new Peer(undefined, PEER_CONFIG); }
   catch { onError('Failed to init peer.'); hideParty(); return; }
 
   S.peer.on('open', myId => {

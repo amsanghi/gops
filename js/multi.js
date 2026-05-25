@@ -24,6 +24,24 @@ async function loadPeerJS() {
   return PeerLib;
 }
 
+// ICE config: STUN + free TURN. Without TURN, ~10-20% of connections fail
+// silently when one side is behind strict / symmetric NAT.
+export const PEER_CONFIG = {
+  config: {
+    iceServers: [
+      { urls: ['stun:stun.l.google.com:19302', 'stun:stun.cloudflare.com:3478'] },
+      // Open Relay free TURN — public, rate-limited but works for hobby use
+      { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
+      { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' },
+      { urls: 'turn:openrelay.metered.ca:443?transport=tcp', username: 'openrelayproject', credential: 'openrelayproject' },
+    ],
+  },
+};
+
+// Manual connection timeout — PeerJS doesn't fire an error if the WebRTC
+// handshake silently fails (NAT, ICE timeout). We surface our own.
+const CONNECT_TIMEOUT_MS = 20000;
+
 setNetSender(msg => {
   if (S.conn && S.conn.open) {
     try { S.conn.send(msg); } catch (e) { console.error('send failed', e); }
@@ -88,7 +106,7 @@ export async function startHost({ rejoinExisting = false } = {}) {
     return;
   }
   try {
-    S.peer = new Peer(PEER_PREFIX + code);
+    S.peer = new Peer(PEER_PREFIX + code, PEER_CONFIG);
   } catch (e) {
     onLobbyError('Failed to initialize peer.');
     hide('host-info'); show('lobby-default'); return;
@@ -134,25 +152,53 @@ export async function joinGame() {
     return;
   }
   try {
-    S.peer = new Peer();
+    S.peer = new Peer(undefined, PEER_CONFIG);
   } catch (e) {
     $('lobby-err').textContent = 'Failed to initialize peer.';
     hide('join-info'); show('lobby-default'); return;
   }
+
+  // Surface a timeout if the WebRTC handshake silently hangs (NAT/ICE failures
+  // don't always fire an error event with PeerJS).
+  let connectTimer = null;
+  const cancelTimer = () => { if (connectTimer) { clearTimeout(connectTimer); connectTimer = null; } };
+  const failConnect = (msg) => {
+    cancelTimer();
+    $('lobby-err').textContent = msg;
+    hide('join-info'); show('lobby-default');
+    try { S.conn?.close(); } catch {}
+    try { S.peer?.destroy(); } catch {}
+    S.peer = null; S.conn = null;
+    clearMultiSession();
+  };
+
   S.peer.on('open', () => {
+    $('join-status').innerHTML = '<span class="dot"></span>Reaching host…';
     S.conn = S.peer.connect(PEER_PREFIX + code, { reliable: true });
     bindConn();
+    connectTimer = setTimeout(() => {
+      if (!S.conn || !S.conn.open) {
+        failConnect(`Couldn't reach room "${code}". Check the code or your network and try again.`);
+      }
+    }, CONNECT_TIMEOUT_MS);
     S.conn.on('open', () => {
+      cancelTimer();
       $('join-status').innerHTML = '<span class="dot"></span>Connected. Saying hello…';
       saveMultiSession({ mode: 'duel', role: 'joiner', code, name: S.myName, avatar: S.myAvatar });
       S.conn.send({ type: 'hello', version: PROTO_VERSION, name: S.myName, avatar: S.myAvatar });
     });
   });
   S.peer.on('error', err => {
-    $('lobby-err').textContent = err.type === 'peer-unavailable'
-      ? `No game found with code "${code}".`
-      : 'Connection error: ' + err.type;
-    hide('join-info'); show('lobby-default');
+    cancelTimer();
+    if (err.type === 'peer-unavailable') {
+      failConnect(`No game found with code "${code}".`);
+    } else if (err.type === 'network' || err.type === 'server-error' || err.type === 'socket-error') {
+      failConnect('Network error — broker server unreachable. Try again.');
+    } else if (err.type === 'browser-incompatible') {
+      failConnect('Your browser does not support WebRTC.');
+    } else {
+      failConnect('Connection error: ' + err.type);
+    }
   });
 }
 
