@@ -307,8 +307,10 @@ function resolveRound() {
 }
 
 function buildSaveSnap() {
-  // Don't snapshot modes that aren't usefully resumable.
-  if (['daily','puzzle','endless','tournament','tutorial','hotseat','ghost'].includes(S.currentMode)) return null;
+  // Only snapshot solo Vs-AI games. Multiplayer can't be auto-resumed (the other
+  // peer has gone). Hot-seat / mode-specific runs have their own progression.
+  if (S.currentMode !== 'solo') return null;
+  if (!S.vsAI) return null;
   return {
     timestamp: Date.now(),
     mode: S.mode, currentMode: S.currentMode,
