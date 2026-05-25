@@ -70,6 +70,12 @@ function attachGameUI() {
   emit('game-attached'); // chat & reactions bars react to this
 }
 
+// Used by multi reconnect: skip setupGame (state is already in S), just re-render and resume.
+export function attachAndResume() {
+  attachGameUI();
+  nextRound();
+}
+
 export function nextRound() {
   S.myPick = null; S.theirPick = null; S.pendingPick = null; S.busy = false;
   $('round-n').textContent = S.round + 1;
@@ -131,21 +137,22 @@ export function selectCard(n) {
 }
 
 function renderConfirm() {
-  const row = $('confirm-row');
-  row.innerHTML = '';
-  if (S.pendingPick === null || S.myPick !== null) return;
-  const prompt = document.createElement('span');
-  prompt.className = 'confirm-prompt';
-  prompt.textContent = `Lock in ${rankText(S.pendingPick, S.settings.deckSize)}?`;
-  const yes = document.createElement('button');
-  yes.className = 'btn btn-primary btn-sm';
-  yes.textContent = 'Lock in';
-  yes.onclick = confirmPick;
-  const no = document.createElement('button');
-  no.className = 'btn btn-ghost btn-sm';
-  no.textContent = 'Cancel';
-  no.onclick = () => { S.pendingPick = null; renderHand(selectCard); renderConfirm(); };
-  row.append(prompt, yes, no);
+  // The lifted card itself is the primary visual cue. The message line below the
+  // hand turns into the instruction "Tap again to lock in" while pending.
+  $('confirm-row').innerHTML = '';
+  const msg = $('message');
+  if (!msg) return;
+  if (S.pendingPick === null || S.myPick !== null) {
+    msg.classList.remove('pending-prompt');
+    // Restore the default message
+    const winLabel = S.settings.winCondition === 'fewest' ? 'Fewest wins' : 'Most wins';
+    const bidLabel = S.settings.direction === 'low' ? 'Low bid' : 'High bid';
+    msg.textContent = `${bidLabel} wins each prize · ${winLabel} overall`;
+    return;
+  }
+  const label = S.pendingPick === 99 ? '★' : rankText(S.pendingPick, S.settings.deckSize);
+  msg.innerHTML = `Bid <b>${label}</b> — tap again to lock in`;
+  msg.classList.add('pending-prompt');
 }
 
 export function confirmPick() {
@@ -307,10 +314,10 @@ function resolveRound() {
 }
 
 function buildSaveSnap() {
-  // Only snapshot solo Vs-AI games. Multiplayer can't be auto-resumed (the other
-  // peer has gone). Hot-seat / mode-specific runs have their own progression.
-  if (S.currentMode !== 'solo') return null;
-  if (!S.vsAI) return null;
+  // Snapshot solo Vs-AI for full resume; snapshot multi for mid-game state restore.
+  // Skip hot-seat / mode-specific runs (their progression is owned elsewhere).
+  if (S.currentMode === 'solo' && !S.vsAI) return null;
+  if (S.currentMode && !['solo', 'multi'].includes(S.currentMode)) return null;
   return {
     timestamp: Date.now(),
     mode: S.mode, currentMode: S.currentMode,

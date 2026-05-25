@@ -671,21 +671,13 @@ function selectCardN(n) {
   renderConfirmRowN();
 }
 function renderConfirmRowN() {
-  const row = $('confirm-row');
-  row.innerHTML = '';
+  $('confirm-row').innerHTML = '';
+  const msg = $('message');
+  if (!msg) return;
   if (S.pendingPick == null || S.myPick != null) return;
-  const prompt = document.createElement('span');
-  prompt.className = 'confirm-prompt';
-  prompt.textContent = `Lock in ${S.pendingPick === 99 ? '★' : S.pendingPick}?`;
-  const yes = document.createElement('button');
-  yes.className = 'btn btn-primary btn-sm';
-  yes.textContent = 'Lock in';
-  yes.onclick = confirmPickN;
-  const no = document.createElement('button');
-  no.className = 'btn btn-ghost btn-sm';
-  no.textContent = 'Cancel';
-  no.onclick = () => { S.pendingPick = null; renderHand(selectCardN); renderConfirmRowN(); };
-  row.append(prompt, yes, no);
+  const label = S.pendingPick === 99 ? '★' : S.pendingPick;
+  msg.innerHTML = `Bid <b>${label}</b> — tap again to lock in`;
+  msg.classList.add('pending-prompt');
 }
 function confirmPickN() {
   if (S.pendingPick == null || S.myPick != null) return;

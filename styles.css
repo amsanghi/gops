@@ -802,14 +802,24 @@ details > summary::-webkit-details-marker { display: none; }
 }
 .bid-slot { min-height: 96px; display: grid; place-items: center; }
 
-/* Confirm row */
+/* Confirm prompt — just a label now (tap-to-confirm pattern, no button) */
 .confirm-row {
   display: flex; justify-content: center; gap: 8px;
-  min-height: 36px; align-items: center;
+  min-height: 28px; align-items: center;
   margin-top: 4px;
   animation: fade-in 0.2s;
 }
-.confirm-prompt { color: var(--ink-dim); font-size: 13px; align-self: center; }
+.confirm-prompt {
+  color: var(--ink-dim);
+  font-size: 13px;
+  letter-spacing: -0.005em;
+  align-self: center;
+  padding: 6px 14px;
+  background: var(--me-soft);
+  border: 1px solid var(--me);
+  border-radius: 999px;
+}
+.confirm-prompt b { color: var(--me); font-weight: 600; font-family: var(--font-serif); font-size: 16px; margin: 0 2px; }
 
 /* Timer */
 .timer {
@@ -897,11 +907,17 @@ details > summary::-webkit-details-marker { display: none; }
 .card.in-hand:hover:not(.used):not(.locked) {
   transform: translateY(-10px) scale(1.04);
   box-shadow: 0 1px 0 rgba(255,255,255,0.4) inset, 0 -1px 0 rgba(0,0,0,0.08) inset, 0 16px 32px var(--me-glow), 0 4px 10px rgba(0,0,0,0.35);
+  z-index: 5;
 }
 .card.in-hand.pending {
   transform: translateY(-12px) scale(1.05);
   box-shadow: 0 0 0 2px var(--me), 0 12px 32px var(--me-glow), 0 4px 10px rgba(0,0,0,0.4);
+  z-index: 100;
+  position: relative;
 }
+/* The hand stays above the board so lifted cards aren't covered by the bid area above. */
+.hand-zone { position: relative; z-index: 5; }
+.hand { position: relative; z-index: 5; }
 .card.in-hand.used { opacity: 0.12; cursor: default; }
 .card.in-hand.locked { cursor: default; }
 .card.in-hand.locked:hover { transform: none; }
@@ -1013,6 +1029,17 @@ details > summary::-webkit-details-marker { display: none; }
   margin-top: 10px;
   min-height: 22px;
   animation: fade-in 0.25s;
+  transition: color 0.2s, transform 0.2s;
+}
+.message.pending-prompt {
+  color: var(--me);
+  font-weight: 500;
+  transform: scale(1.05);
+}
+.message.pending-prompt b {
+  font-family: var(--font-serif);
+  font-size: 1.25em;
+  margin: 0 3px;
 }
 
 /* Reactions */
