@@ -783,11 +783,23 @@ details > summary::-webkit-details-marker { display: none; }
 .bid-area {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
+  grid-template-rows: 124px;
   align-items: center;
+  justify-content: center;
   gap: 20px;
   min-height: 130px;
 }
-.bid-col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+/* DOM order (me, divider, them) matches the header (You on left, Them on right). */
+
+/* Both bid-cols are identical structure: label at top, slot below. Equal height. */
+.bid-col {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  justify-items: center;
+  align-items: start;
+  gap: 8px;
+  height: 124px;
+}
 .bid-col .bid-label {
   font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em;
   color: var(--ink-faint); font-weight: 600;
@@ -799,8 +811,14 @@ details > summary::-webkit-details-marker { display: none; }
   font-style: italic;
   font-size: 28px;
   color: var(--ink-faint);
+  align-self: center;
 }
-.bid-slot { min-height: 96px; display: grid; place-items: center; }
+.bid-slot {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
 
 /* Confirm prompt — just a label now (tap-to-confirm pattern, no button) */
 .confirm-row {
