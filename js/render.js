@@ -210,7 +210,9 @@ export function renderModePill() {
 }
 
 export function renderMessage(text) {
-  $('message').textContent = text;
+  const el = $('message');
+  el.textContent = text;
+  el.classList.remove('pending-prompt');
 }
 
 // Replay scrubber (end screen)

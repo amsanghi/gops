@@ -241,11 +241,22 @@ function showRejoinBanner(s) {
     banner.hidden = true;
     if (s.name) { S.myName = s.name; document.getElementById('name-input').value = s.name; }
     if (s.avatar) { S.myAvatar = s.avatar; document.getElementById('avatar-btn').textContent = s.avatar; }
+
+    // For HOST role: load the saved mid-game state so we can send it on reconnect.
+    // The joiner doesn't need to load — they'll receive authoritative state from host.
+    let midGameRejoin = false;
+    if (s.role === 'host' && s.mode === 'duel') {
+      const saved = getSavedGame();
+      if (saved && saved.mode === 'host' && saved.currentMode === 'multi') {
+        applySaveSnap(saved);
+        S.isHost = true; S.currentMode = 'multi'; S.mode = 'host'; S.vsAI = false;
+        midGameRejoin = true;
+      }
+    }
+
     if (s.mode === 'party') {
       if (s.role === 'host') {
-        // Re-create the same host room with the same code
         document.getElementById('host-code').value = s.code;
-        // Switch UI to party mode
         document.querySelector('.mp-mode-btn[data-mode="party"]')?.click();
         startPartyHost();
       } else {
@@ -256,7 +267,7 @@ function showRejoinBanner(s) {
       document.getElementById('host-code').value = s.code;
       if (s.role === 'host') {
         document.querySelector('.mp-mode-btn[data-mode="duel"]')?.click();
-        startHost();
+        startHost({ rejoinExisting: midGameRejoin });
       } else {
         document.getElementById('join-code').value = s.code;
         joinGame();
