@@ -1,0 +1,54 @@
+name: 🧩 Submit a puzzle
+description: Propose a new scripted puzzle for the Puzzles mode.
+title: "[Puzzle] "
+labels: ["puzzle", "content"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Puzzles live in [`js/constants.js`](../../js/constants.js) under `PUZZLES`. A puzzle locks the AI's bids and the prize order so it always plays out the same way. You can submit a JSON-ish blob here and we'll add it (or open a PR yourself!).
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      placeholder: "Hoard the King"
+    validations:
+      required: true
+  - type: textarea
+    id: desc
+    attributes:
+      label: Description (shown to player)
+      placeholder: "AI saves her K for last. Can you bait it out?"
+    validations:
+      required: true
+  - type: input
+    id: deck
+    attributes:
+      label: Deck size
+      placeholder: "7 or 13"
+      value: "13"
+    validations:
+      required: true
+  - type: textarea
+    id: script
+    attributes:
+      label: Scripted moves (round by round)
+      description: |
+        Provide AI bid + prize for each round. Format:
+        `[ {ai: 13, prize: 1}, {ai: 12, prize: 2}, ... ]`
+        The number of moves must equal deck size.
+      render: javascript
+    validations:
+      required: true
+  - type: input
+    id: goal
+    attributes:
+      label: Player's goal
+      placeholder: "Win at least 4 of the prizes."
+    validations:
+      required: true
+  - type: textarea
+    id: rules
+    attributes:
+      label: Special rules (optional)
+      description: "e.g. direction: 'low', tieRule: 'burn', winCondition: 'fewest', timeLimit: 15"
