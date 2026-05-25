@@ -673,11 +673,26 @@ function selectCardN(n) {
 function renderConfirmRowN() {
   $('confirm-row').innerHTML = '';
   const msg = $('message');
-  if (!msg) return;
-  if (S.pendingPick == null || S.myPick != null) return;
+  const myBid = $('me-bid');
+  if (!msg || !myBid) return;
+  if (S.pendingPick == null || S.myPick != null) {
+    msg.classList.remove('pending-prompt');
+    myBid.classList.remove('drop-zone-active');
+    return;
+  }
   const label = S.pendingPick === 99 ? '★' : S.pendingPick;
-  msg.innerHTML = `Bid <b>${label}</b> — tap again to lock in`;
+  msg.innerHTML = `Bid <b>${label}</b> — tap the card or slot to confirm`;
   msg.classList.add('pending-prompt');
+  // Drop-zone in the bid slot
+  myBid.innerHTML = '';
+  myBid.classList.add('drop-zone-active');
+  const dropCard = document.createElement('button');
+  dropCard.type = 'button';
+  dropCard.className = 'card in-hand drop-zone-card';
+  dropCard.setAttribute('aria-label', `Confirm bid ${label}`);
+  dropCard.innerHTML = `<span class="drop-check">✓</span><span>${label}</span><span class="drop-sub">Tap to confirm</span>`;
+  dropCard.onclick = confirmPickN;
+  myBid.appendChild(dropCard);
 }
 function confirmPickN() {
   if (S.pendingPick == null || S.myPick != null) return;
