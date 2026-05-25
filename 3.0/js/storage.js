@@ -137,6 +137,15 @@ export function updateRecord(mode, score, didWin) {
 export function getCustomTheme() { return getJSON(STORAGE.CUSTOM_THEME, null); }
 export function saveCustomTheme(t) { setJSON(STORAGE.CUSTOM_THEME, t); }
 
+// ---- AI mastery — wins per tournament AI ----
+const MASTERY_KEY = 'gops3-mastery';
+export function getMastery() { return getJSON(MASTERY_KEY, {}); }
+export function recordMasteryWin(aiName) {
+  const m = getMastery();
+  m[aiName] = (m[aiName] || 0) + 1;
+  setJSON(MASTERY_KEY, m);
+}
+
 // ---- Saved game (in-progress) ----
 export function getSavedGame() { return getJSON(STORAGE.SAVE, null); }
 export function saveGame(snap) { setJSON(STORAGE.SAVE, snap); }

@@ -13,7 +13,7 @@ import { sfx, haptic, fireConfetti, catchphrase } from './effects.js';
 import {
   saveGame, clearSavedGame, getGhost, saveGhost,
   updateStats, getStats, saveH2H, getH2H,
-  updateHeatmap, updateRecord,
+  updateHeatmap, updateRecord, recordMasteryWin,
 } from './storage.js';
 import { AI_CATCHPHRASES } from './constants.js';
 import { aiBid } from './ai.js';
@@ -383,6 +383,10 @@ export function endGame() {
     });
     // Per-mode high score
     updateRecord(S.currentMode || (S.vsAI ? 'solo' : 'multi'), S.myScore, didIWin);
+    // Mastery (tournament/battle AIs)
+    if (didIWin && S.vsAI && S.theirName && ['tournament','battle','solo','random'].includes(S.currentMode)) {
+      recordMasteryWin(S.theirName);
+    }
     // Heatmap (only full-deck games for consistency)
     if (S.settings.deckSize === 13) updateHeatmap(S.history, 13);
     clearSavedGame();

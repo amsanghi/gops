@@ -26,7 +26,7 @@ import {
   startSolo, startDaily, startEndless, startTournamentMatch, startNextTournamentMatch,
   progressTournament, progressEndless, progressPuzzle, progressDaily, startNextEndlessRound,
   startTutorial, startHotSeat, startGhost, startBullet, startBattle,
-  startPractice, startSeeded, startWeekly, startBracket,
+  startPractice, startSeeded, startWeekly, startBracket, startRandomRule,
 } from './modes.js';
 import {
   copyDailyResult, copyAnyResult, shareImage, copyChallengeLink, parseChallengeLink,
@@ -351,6 +351,7 @@ function init() {
   $('battle-tile').onclick = () => openBattleModal((a, b, d) => startBattle(a, b, d));
   $('archive-tile').onclick = openArchiveModal;
   $('bracket-tile').onclick = openBracketModal;
+  $('random-tile').onclick = startRandomRule;
   $('practice-tile').onclick = startPractice;
   $('weekly-tile').onclick = startWeekly;
   $('seed-go-btn').onclick = () => {
