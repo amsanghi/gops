@@ -57,13 +57,13 @@
 
   h1 {
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 5em; font-weight: 300; letter-spacing: 0.18em; margin-bottom: 0;
+    font-size: 3.5em; font-weight: 300; letter-spacing: 0.18em; margin-bottom: 0;
     background: linear-gradient(135deg, var(--primary-soft), var(--primary), var(--primary-end));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     text-shadow: 0 0 80px var(--primary-glow); line-height: 1;
   }
-  .ver { font-size: 0.22em; vertical-align: super; opacity: 0.55; letter-spacing: 0.1em; font-family: 'Inter', sans-serif; font-weight: 400; }
-  .subtitle { color: var(--text-dim); margin-bottom: 1.6em; letter-spacing: 0.32em; font-size: 0.78em; text-transform: uppercase; font-weight: 400; }
+  .ver { font-size: 0.25em; vertical-align: super; opacity: 0.55; letter-spacing: 0.1em; font-family: 'Inter', sans-serif; font-weight: 400; }
+  .subtitle { color: var(--text-dim); margin-bottom: 0.9em; letter-spacing: 0.3em; font-size: 0.72em; text-transform: uppercase; font-weight: 400; }
 
   button {
     background: linear-gradient(135deg, var(--primary), var(--primary-end));
@@ -85,11 +85,11 @@
   button.tiny { padding: 4px 9px; font-size: 0.75em; }
   button.icon-btn { background: rgba(255,255,255,0.04); border: 1px solid var(--panel-border); padding: 8px 11px; box-shadow: none; font-size: 1em; color: var(--text-dim); }
   button.icon-btn:hover { background: rgba(255,255,255,0.1); color: var(--text); transform: none; }
-  button.mode-card { background: var(--panel-strong); border: 1px solid var(--panel-border); color: var(--text); padding: 16px 14px; display: flex; flex-direction: column; align-items: center; gap: 6px; box-shadow: none; min-width: 130px; min-height: 110px; }
+  button.mode-card { background: var(--panel-strong); border: 1px solid var(--panel-border); color: var(--text); padding: 10px 8px; display: flex; flex-direction: column; align-items: center; gap: 3px; box-shadow: none; min-width: 100px; min-height: 84px; margin: 2px; }
   button.mode-card:hover:not(:disabled) { background: var(--panel-border-bright); border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 8px 20px var(--primary-glow); }
-  button.mode-card .mc-icon { font-size: 2em; }
-  button.mode-card .mc-label { font-size: 0.9em; font-weight: 500; }
-  button.mode-card .mc-sub { font-size: 0.7em; color: var(--text-dim); }
+  button.mode-card .mc-icon { font-size: 1.5em; }
+  button.mode-card .mc-label { font-size: 0.85em; font-weight: 500; }
+  button.mode-card .mc-sub { font-size: 0.65em; color: var(--text-dim); }
   .badge { display: inline-block; background: var(--gold); color: #3a2700; padding: 2px 7px; border-radius: 10px; font-size: 0.65em; font-weight: 600; margin-left: 4px; vertical-align: middle; }
 
   input, select, textarea {
@@ -110,10 +110,22 @@
   .code-display:hover { background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06)); transform: scale(1.02); }
   .hint { color: var(--text-faint); font-size: 0.8em; margin-top: 1.4em; line-height: 1.6; max-width: 480px; margin-left: auto; margin-right: auto; }
 
-  .lobby-section { background: var(--panel); backdrop-filter: blur(12px) saturate(140%); -webkit-backdrop-filter: blur(12px) saturate(140%); border: 1px solid var(--panel-border); border-radius: 20px; padding: 20px; margin: 14px 0; transition: border-color 0.3s; }
+  .lobby-section { background: var(--panel); backdrop-filter: blur(12px) saturate(140%); -webkit-backdrop-filter: blur(12px) saturate(140%); border: 1px solid var(--panel-border); border-radius: 16px; padding: 16px; margin: 10px 0; transition: border-color 0.3s; }
   .lobby-section:hover { border-color: var(--panel-border-bright); }
-  .lobby-section h3 { font-size: 0.7em; text-transform: uppercase; letter-spacing: 0.3em; color: var(--text-faint); font-weight: 500; margin-bottom: 14px; }
-  .modes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 8px; }
+  .lobby-section h3 { font-size: 0.68em; text-transform: uppercase; letter-spacing: 0.3em; color: var(--text-faint); font-weight: 500; margin-bottom: 10px; }
+  .lobby-main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: stretch; margin: 10px 0; }
+  .lobby-main-grid > .lobby-section { margin: 0; display: flex; flex-direction: column; }
+  .profile-compact { padding: 12px 16px; text-align: left; }
+  .profile-compact .profile-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between; }
+  .profile-compact .profile-name-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .profile-compact .avatar-picker { gap: 3px; max-width: 100%; justify-content: flex-end; }
+  .profile-compact .avatar-opt { width: 30px; height: 30px; font-size: 1.1em; }
+  .profile-compact .head-to-head { margin-top: 8px; font-size: 0.78em; }
+  .progress-row { padding: 10px 14px; }
+  .progress-row-inner { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; align-items: center; }
+  .progress-row-inner h3 { margin: 0 8px 0 0; }
+  .modes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 6px; }
+  @media (max-width: 760px) { .lobby-main-grid { grid-template-columns: 1fr; } }
   .resume-banner { background: linear-gradient(135deg, var(--panel-strong), var(--panel)); border: 1px solid var(--primary); box-shadow: 0 0 30px var(--primary-glow); border-radius: 16px; padding: 16px 20px; margin: 14px 0; text-align: left; display: flex; flex-direction: column; gap: 8px; }
   .resume-banner-title { font-weight: 600; color: var(--primary); font-size: 0.95em; }
   .resume-banner-text { color: var(--text-dim); font-size: 0.85em; }
@@ -360,86 +372,88 @@
     </div>
   </div>
 
-  <div class="lobby-section">
-    <h3>Profile</h3>
-    <div class="name-row">
-      <input id="nameInput" type="text" placeholder="Name" maxlength="14" aria-label="Your name">
-      <div class="theme-picker" id="themePicker" role="group" aria-label="Theme"></div>
-    </div>
-    <div style="margin-top: 12px;">
-      <div style="font-size: 0.7em; text-transform: uppercase; letter-spacing: 0.25em; color: var(--text-faint); margin-bottom: 8px;">Avatar</div>
+  <div class="lobby-section profile-compact">
+    <div class="profile-row">
+      <div class="profile-name-row">
+        <input id="nameInput" type="text" placeholder="Name" maxlength="14" aria-label="Your name" style="width: 140px;">
+        <div class="theme-picker" id="themePicker" role="group" aria-label="Theme"></div>
+      </div>
       <div class="avatar-picker" id="avatarPicker" role="group" aria-label="Avatar"></div>
     </div>
     <div class="head-to-head" id="headToHead"></div>
   </div>
 
   <div id="initialOptions">
-    <div class="lobby-section">
-      <h3>Play solo</h3>
-      <div class="modes-grid">
-        <button class="mode-card" id="dailyBtn"><span class="mc-icon">📅</span><span class="mc-label">Daily</span><span class="mc-sub" id="dailySubtitle">Today's challenge</span></button>
-        <button class="mode-card" id="puzzleBtn"><span class="mc-icon">🧩</span><span class="mc-label">Puzzles</span><span class="mc-sub" id="puzzleSubtitle">Solve scenarios</span></button>
-        <button class="mode-card" id="endlessBtn"><span class="mc-icon">♾️</span><span class="mc-label">Endless</span><span class="mc-sub" id="endlessSubtitle">Survival mode</span></button>
-        <button class="mode-card" id="tournamentBtn"><span class="mc-icon">🏆</span><span class="mc-label">Tournament</span><span class="mc-sub" id="tournamentSubtitle">Ladder of 8</span></button>
-        <button class="mode-card" id="soloBtn"><span class="mc-icon">🤖</span><span class="mc-label">vs AI</span><span class="mc-sub">Practice</span></button>
-        <button class="mode-card" id="tutorialBtn"><span class="mc-icon">🎓</span><span class="mc-label">Tutorial</span><span class="mc-sub">How to play</span></button>
-      </div>
-      <details style="margin-top: 14px;">
-        <summary style="cursor: pointer; color: var(--text-dim); font-size: 0.82em; letter-spacing: 0.1em;">⚙ AI settings</summary>
-        <div class="settings-grid" style="margin-top: 12px;">
-          <div class="setting-item">
-            <span class="setting-label">Deck</span>
-            <select id="soloDeck"><option value="13">13 cards</option><option value="7">7 cards (quick)</option></select>
-          </div>
-          <div class="setting-item">
-            <span class="setting-label">Difficulty</span>
-            <select id="soloDifficulty"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option></select>
-          </div>
-          <div class="setting-item">
-            <span class="setting-label">Personality</span>
-            <select id="soloPersonality"><option value="balanced">Balanced</option><option value="aggressive">Aggressive</option><option value="defensive">Defensive</option><option value="bluffer">Bluffer</option><option value="mirror">Mirror</option></select>
-          </div>
+    <div class="lobby-main-grid">
+      <div class="lobby-section">
+        <h3>Play solo</h3>
+        <div class="modes-grid">
+          <button class="mode-card" id="dailyBtn"><span class="mc-icon">📅</span><span class="mc-label">Daily</span><span class="mc-sub" id="dailySubtitle">Today</span></button>
+          <button class="mode-card" id="puzzleBtn"><span class="mc-icon">🧩</span><span class="mc-label">Puzzles</span><span class="mc-sub" id="puzzleSubtitle">Solve</span></button>
+          <button class="mode-card" id="endlessBtn"><span class="mc-icon">♾️</span><span class="mc-label">Endless</span><span class="mc-sub" id="endlessSubtitle">Survival</span></button>
+          <button class="mode-card" id="tournamentBtn"><span class="mc-icon">🏆</span><span class="mc-label">Tournament</span><span class="mc-sub" id="tournamentSubtitle">8 ladder</span></button>
+          <button class="mode-card" id="soloBtn"><span class="mc-icon">🤖</span><span class="mc-label">vs AI</span><span class="mc-sub">Practice</span></button>
+          <button class="mode-card" id="tutorialBtn"><span class="mc-icon">🎓</span><span class="mc-label">Tutorial</span><span class="mc-sub">Learn</span></button>
         </div>
-      </details>
+        <details style="margin-top: 10px;">
+          <summary style="cursor: pointer; color: var(--text-dim); font-size: 0.78em; letter-spacing: 0.12em;">⚙ AI settings</summary>
+          <div class="settings-grid" style="margin-top: 10px;">
+            <div class="setting-item">
+              <span class="setting-label">Deck</span>
+              <select id="soloDeck"><option value="13">13 cards</option><option value="7">7 cards</option></select>
+            </div>
+            <div class="setting-item">
+              <span class="setting-label">Difficulty</span>
+              <select id="soloDifficulty"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option></select>
+            </div>
+            <div class="setting-item">
+              <span class="setting-label">Personality</span>
+              <select id="soloPersonality"><option value="balanced">Balanced</option><option value="aggressive">Aggressive</option><option value="defensive">Defensive</option><option value="bluffer">Bluffer</option><option value="mirror">Mirror</option></select>
+            </div>
+            <div class="setting-item">
+              <span class="setting-label">Time/bid (s)</span>
+              <input id="soloTimeLimit" type="number" min="0" max="600" value="0">
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div class="lobby-section">
+        <h3>Multiplayer</h3>
+        <div style="display: flex; flex-direction: column; gap: 6px; align-items: center;">
+          <button id="createBtn">Create game</button>
+          <div class="divider" style="margin: 4px 0;">or</div>
+          <input id="joinCode" class="code-input" type="text" placeholder="CODE" maxlength="12" autocapitalize="characters" autocomplete="off" aria-label="Room code">
+          <button id="joinBtn">Join game</button>
+        </div>
+        <details id="hostSettingsDetails" style="margin-top: 10px;">
+          <summary style="cursor: pointer; color: var(--text-dim); font-size: 0.78em; letter-spacing: 0.12em;">⚙ Host settings</summary>
+          <div style="margin-top: 10px;">
+            <div class="settings-grid">
+              <div class="setting-item"><span class="setting-label">Code</span><input id="customCode" type="text" placeholder="random" maxlength="10" style="width: 90px;"></div>
+              <div class="setting-item"><span class="setting-label">Deck</span><select id="hostDeck"><option value="13">13</option><option value="7">7</option></select></div>
+              <div class="setting-item"><span class="setting-label">Best of</span><input id="hostBestOf" type="number" min="1" max="99" value="1"></div>
+              <div class="setting-item"><span class="setting-label">Round wins</span><select id="hostDirection"><option value="high">High</option><option value="low">Low</option></select></div>
+              <div class="setting-item"><span class="setting-label">Goal</span><select id="hostWinCondition"><option value="most">Most pts</option><option value="fewest">Fewest pts</option></select></div>
+              <div class="setting-item"><span class="setting-label">Tie</span><select id="hostTieRule"><option value="carry">Carry</option><option value="burn">Burn</option></select></div>
+              <div class="setting-item"><span class="setting-label">Time/bid (s)</span><input id="hostTimeLimit" type="number" min="0" max="600" value="0"></div>
+            </div>
+            <input id="hostStakes" class="stakes-input" type="text" placeholder="Stakes (optional)" maxlength="80" style="margin-top: 8px;">
+            <button class="ghost small" id="copyChallengeBtn" style="margin-top: 6px;">Copy challenge link</button>
+          </div>
+        </details>
+      </div>
     </div>
 
-    <div class="lobby-section">
-      <h3>Multiplayer</h3>
-      <button id="createBtn">Create game</button>
-      <div class="divider">or</div>
-      <input id="joinCode" class="code-input" type="text" placeholder="CODE" maxlength="12" autocapitalize="characters" autocomplete="off" aria-label="Room code">
-      <br>
-      <button id="joinBtn">Join game</button>
-    </div>
-
-    <details class="lobby-section" id="hostSettingsDetails">
-      <summary style="cursor: pointer; color: var(--text-dim); font-size: 0.85em; letter-spacing: 0.15em; font-weight: 500;">⚙ Host settings (when creating)</summary>
-      <div style="margin-top: 14px;">
-        <div class="settings-grid">
-          <div class="setting-item"><span class="setting-label">Custom code</span><input id="customCode" type="text" placeholder="random" maxlength="10" style="width: 110px;"></div>
-          <div class="setting-item"><span class="setting-label">Deck</span><select id="hostDeck"><option value="13">13 cards</option><option value="7">7 cards (quick)</option></select></div>
-          <div class="setting-item"><span class="setting-label">Best of</span><input id="hostBestOf" type="number" min="1" max="99" value="1"></div>
-          <div class="setting-item"><span class="setting-label">Round winner</span><select id="hostDirection"><option value="high">High bid</option><option value="low">Low bid</option></select></div>
-          <div class="setting-item"><span class="setting-label">Win goal</span><select id="hostWinCondition"><option value="most">Most points</option><option value="fewest">Fewest points</option></select></div>
-          <div class="setting-item"><span class="setting-label">Tie rule</span><select id="hostTieRule"><option value="carry">Carry pot</option><option value="burn">Burn prize</option></select></div>
-          <div class="setting-item"><span class="setting-label">Time per bid</span><select id="hostTimeLimit"><option value="0">No limit</option><option value="15">15s</option><option value="30">30s</option><option value="60">60s</option></select></div>
-        </div>
-        <input id="hostStakes" class="stakes-input" type="text" placeholder="Stakes (optional, e.g. 'loser picks next movie')" maxlength="80" style="margin-top: 12px;">
-        <button class="ghost small" id="copyChallengeBtn" style="margin-top: 8px;">Copy challenge link</button>
-      </div>
-    </details>
-
-    <div class="lobby-section">
-      <h3>Progress</h3>
-      <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
-        <button class="ghost small" id="achievementsBtn">🏅 Achievements <span id="achCount"></span></button>
+    <div class="lobby-section progress-row">
+      <div class="progress-row-inner">
+        <h3 style="margin: 0;">Progress</h3>
+        <button class="ghost small" id="achievementsBtn">🏅 <span id="achCount"></span></button>
         <button class="ghost small" id="statsBtn">📊 Stats</button>
         <button class="ghost small" id="settingsBtn">⚙ Settings</button>
-        <button class="ghost small" id="exportBtn">⬇ Export data</button>
+        <button class="ghost small" id="exportBtn">⬇ Export</button>
       </div>
     </div>
-
-    <p class="hint">Highest (or lowest) total score wins after all rounds. Open this link on both devices to play together.</p>
   </div>
 
   <div id="hostInfo" class="hidden">
@@ -1152,7 +1166,7 @@ function startHost(prefilled) {
   S.settings.tieRule = $('hostTieRule').value;
   S.settings.direction = $('hostDirection').value;
   S.settings.winCondition = $('hostWinCondition').value;
-  S.settings.timeLimit = parseInt($('hostTimeLimit').value);
+  S.settings.timeLimit = Math.max(0, parseInt($('hostTimeLimit').value) || 0);
   S.settings.stakes = $('hostStakes').value.trim();
   S.totalRounds = S.settings.deckSize;
   saveHostSettings(); savePrefs();
@@ -1714,7 +1728,8 @@ function startSolo() {
   S.settings.deckSize = parseInt($('soloDeck').value);
   S.settings.bestOf = 1; S.settings.tieRule = 'carry';
   S.settings.direction = 'high'; S.settings.winCondition = 'most';
-  S.settings.timeLimit = 0; S.settings.stakes = '';
+  S.settings.timeLimit = Math.max(0, parseInt($('soloTimeLimit').value) || 0);
+  S.settings.stakes = '';
   S.totalRounds = S.settings.deckSize;
   S.scriptedAI = null;
   savePrefs();
