@@ -13,6 +13,9 @@ export const STORAGE = {
   TOURNEY: 'gops3-tournament',
   GHOST: 'gops3-ghost',
   H2H_PREFIX: 'gops3-h2h-',
+  HEATMAP: 'gops3-heatmap',          // per-bid frequency tracking
+  RECORDS: 'gops3-records',          // per-mode high scores
+  CUSTOM_THEME: 'gops3-custom-theme',
 };
 
 export const SAVE_MAX_AGE_MS = 24 * 60 * 60 * 1000;
@@ -47,6 +50,16 @@ export const TOURNAMENT_AIS = [
   { name: 'Sphinx Sam',      avatar: '🦁', personality: 'balanced',   difficulty: 'hard',   description: 'Subtle and patient.' },
   { name: 'Grandmaster Gabe',avatar: '👑', personality: 'balanced',   difficulty: 'hard',   description: 'The final boss.' },
 ];
+
+// AI flavor lines — sometimes shown as floating notes when an AI takes its bid.
+export const AI_CATCHPHRASES = {
+  easy:       ["¯\\_(ツ)_/¯", "this card looks fine", "whatever", "🎲"],
+  aggressive: ["all-in", "go big", "no fear", "I'm taking this one", "watch me"],
+  defensive:  ["saving the good ones", "patience", "not yet", "you bid first", "mine"],
+  bluffer:    ["you'll never guess", "I'm doing what?", "trust me, don't", "what is bidding"],
+  mirror:     ["interesting choice", "I see what you did", "two can play", "copy that"],
+  balanced:   ["calculating…", "weighing options", "fair trade", "expected", "noted"],
+};
 
 // Scripted puzzles: order of prizes is fixed in the order shown (not shuffled).
 export const PUZZLES = [

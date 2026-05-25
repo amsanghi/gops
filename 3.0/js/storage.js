@@ -102,6 +102,41 @@ export function saveTournament(t) { setJSON(STORAGE.TOURNEY, t); }
 export function getGhost() { return getJSON(STORAGE.GHOST, null); }
 export function saveGhost(g) { setJSON(STORAGE.GHOST, g); }
 
+// ---- Heatmap (bid frequency by prize rank) ----
+// 13x13 matrix: rows = prize rank, cols = bid value. Counts occurrences.
+export function getHeatmap() { return getJSON(STORAGE.HEATMAP, null); }
+export function updateHeatmap(history, deckSize = 13) {
+  if (deckSize !== 13) return; // only track full-deck games for consistent heatmap
+  const cur = getHeatmap() || makeBlankHeatmap();
+  for (const h of history) {
+    const row = h.prize - 1, col = h.mine - 1;
+    if (row >= 0 && row < 13 && col >= 0 && col < 13) cur[row][col]++;
+  }
+  setJSON(STORAGE.HEATMAP, cur);
+}
+function makeBlankHeatmap() {
+  return Array.from({ length: 13 }, () => Array.from({ length: 13 }, () => 0));
+}
+
+// ---- Per-mode high scores ----
+const RECORD_MODES = ['solo','daily','bullet','endless','tournament','ghost','hotseat','battle','puzzle','multi'];
+export function getRecords() {
+  const r = getJSON(STORAGE.RECORDS, {});
+  RECORD_MODES.forEach(m => { if (!(m in r)) r[m] = { score: 0, ts: 0, wins: 0 }; });
+  return r;
+}
+export function updateRecord(mode, score, didWin) {
+  const r = getRecords();
+  if (!r[mode]) r[mode] = { score: 0, ts: 0, wins: 0 };
+  if (score > r[mode].score) { r[mode].score = score; r[mode].ts = Date.now(); }
+  if (didWin) r[mode].wins = (r[mode].wins || 0) + 1;
+  setJSON(STORAGE.RECORDS, r);
+}
+
+// ---- Custom theme ----
+export function getCustomTheme() { return getJSON(STORAGE.CUSTOM_THEME, null); }
+export function saveCustomTheme(t) { setJSON(STORAGE.CUSTOM_THEME, t); }
+
 // ---- Saved game (in-progress) ----
 export function getSavedGame() { return getJSON(STORAGE.SAVE, null); }
 export function saveGame(snap) { setJSON(STORAGE.SAVE, snap); }
