@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GOPS tests</title>
+<style>
+  body { font-family: -apple-system, system-ui, sans-serif; background: #0a0a0b; color: #f4f4f5; padding: 30px; margin: 0; }
+  h1 { font-weight: 400; font-size: 24px; letter-spacing: -0.02em; margin-bottom: 16px; }
+  #out { font-family: ui-monospace, monospace; font-size: 13px; white-space: pre-wrap; line-height: 1.7; }
+  .pass { color: #4ade80; }
+  .fail { color: #f87171; }
+  .skip { color: #9a9aa3; }
+  .group { color: #9a9aa3; text-transform: uppercase; letter-spacing: 0.15em; font-size: 11px; margin-top: 14px; padding-top: 10px; border-top: 1px solid #2a2a2f; }
+  .summary { margin-top: 24px; padding: 14px; background: #131316; border-radius: 8px; font-size: 14px; }
+</style>
+</head>
+<body>
+<h1>GOPS test suite</h1>
+<p style="color:#9a9aa3;font-size:13px;margin-bottom:20px">Click <a href="../" style="color:#f4f4f5">← back to the game</a></p>
+<div id="out"></div>
+<div class="summary" id="summary"></div>
+<script type="module" src="./run.js"></script>
+</body>
+</html>

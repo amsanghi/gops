@@ -18,7 +18,118 @@ function readAISettings() {
   return {
     deckSize: parseInt($('ai-deck').value, 10) || 13,
     timeLimit: Math.max(0, parseInt($('ai-time').value, 10) || 0),
+    power: $('ai-power')?.checked || false,
+    practice: $('ai-practice')?.checked || false,
   };
+}
+
+// Practice mode: opponent's hand is visible to the player. Useful for learning.
+export function startPractice() {
+  const a = readAISettings();
+  S.vsAI = true; S.isHost = true; S.mode = 'solo'; S.currentMode = 'practice';
+  S.myName = $('name-input').value.trim() || 'You';
+  S.theirName = 'Coach (peek)'; S.theirAvatar = '👀';
+  S.settings = {
+    deckSize: a.deckSize, bestOf: 1, tieRule: 'carry',
+    direction: 'high', winCondition: 'most', timeLimit: 0, stakes: '',
+    powerCards: a.power, practice: true,
+  };
+  S.totalRounds = a.deckSize;
+  S.scriptedAI = null;
+  S.prizes = shuffle(Array.from({ length: a.deckSize }, (_, i) => i + 1));
+  setupGame();
+}
+
+// Seeded daily replay: open any past day's seed by date string (YYYY-MM-DD)
+export function startSeeded(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const seed = y * 10000 + m * 100 + d;
+  S.vsAI = true; S.isHost = true; S.mode = 'solo'; S.currentMode = 'daily';
+  S.myName = $('name-input').value.trim() || 'You';
+  S.theirName = `AI · ${dateStr}`; S.theirAvatar = '◷';
+  S.settings = { deckSize: 13, bestOf: 1, tieRule: 'carry', direction: 'high', winCondition: 'most', timeLimit: 0, stakes: '' };
+  S.totalRounds = 13;
+  $('ai-diff').value = 'medium';
+  $('ai-persona').value = 'balanced';
+  S.scriptedAI = null;
+  S.prizes = seededShuffle(Array.from({ length: 13 }, (_, i) => i + 1), seed);
+  setupGame();
+}
+
+// Weekly puzzle: seeded by ISO week. Anyone playing this week gets the same.
+export function startWeekly() {
+  const d = new Date();
+  // ISO week number
+  const target = new Date(d.valueOf());
+  const dayNr = (d.getDay() + 6) % 7;
+  target.setDate(target.getDate() - dayNr + 3);
+  const firstThursday = target.valueOf();
+  target.setMonth(0, 1);
+  if (target.getDay() !== 4) target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
+  const weekNum = 1 + Math.ceil((firstThursday - target) / 604800000);
+  const seed = d.getFullYear() * 100 + weekNum;
+  S.vsAI = true; S.isHost = true; S.mode = 'solo'; S.currentMode = 'weekly';
+  S.myName = $('name-input').value.trim() || 'You';
+  S.theirName = `Weekly · W${weekNum}`; S.theirAvatar = '◴';
+  S.settings = { deckSize: 13, bestOf: 1, tieRule: 'carry', direction: 'high', winCondition: 'most', timeLimit: 0, stakes: '' };
+  S.totalRounds = 13;
+  $('ai-diff').value = 'hard';
+  $('ai-persona').value = 'balanced';
+  S.scriptedAI = null;
+  S.prizes = seededShuffle(Array.from({ length: 13 }, (_, i) => i + 1), seed);
+  setupGame();
+}
+
+// AI Bracket: 8 AIs single-elimination, auto-played. Returns a champion.
+export function startBracket(onResult) {
+  // We don't render a game UI for bracket — it's a quick simulation.
+  const personalities = ['balanced','aggressive','defensive','bluffer','mirror','easy','balanced','aggressive'];
+  // simulate one match between two personalities; returns winner index
+  function simulate(persA, persB, seedOffset = 0) {
+    const deck = 13;
+    const prizes = shuffle(Array.from({ length: deck }, (_, i) => i + 1));
+    const handA = Array.from({ length: deck }, (_, i) => i + 1);
+    const handB = Array.from({ length: deck }, (_, i) => i + 1);
+    let sA = 0, sB = 0, pot = 0;
+    // very simple sim — both AIs pick using a basic rule
+    for (let r = 0; r < deck; r++) {
+      const sortedA = handA.slice().sort((x,y) => y-x);
+      const sortedB = handB.slice().sort((x,y) => y-x);
+      // rank of current prize among remaining
+      const rem = prizes.slice(r).sort((x,y) => y-x);
+      const rank = rem.indexOf(prizes[r]);
+      let pickA, pickB;
+      if (persA === 'aggressive') pickA = sortedA[Math.min(2, sortedA.length-1)];
+      else if (persA === 'defensive') pickA = sortedA[sortedA.length-1-Math.min(2, sortedA.length-1)];
+      else if (persA === 'bluffer') pickA = sortedA[Math.floor(Math.random()*sortedA.length)];
+      else if (persA === 'mirror') pickA = sortedA[rank] ?? sortedA[0];
+      else pickA = sortedA[Math.max(0, Math.min(sortedA.length-1, rank))];
+      if (persB === 'aggressive') pickB = sortedB[Math.min(2, sortedB.length-1)];
+      else if (persB === 'defensive') pickB = sortedB[sortedB.length-1-Math.min(2, sortedB.length-1)];
+      else if (persB === 'bluffer') pickB = sortedB[Math.floor(Math.random()*sortedB.length)];
+      else if (persB === 'mirror') pickB = sortedB[rank] ?? sortedB[0];
+      else pickB = sortedB[Math.max(0, Math.min(sortedB.length-1, rank))];
+      const value = prizes[r] + pot;
+      if (pickA > pickB) { sA += value; pot = 0; }
+      else if (pickB > pickA) { sB += value; pot = 0; }
+      else { pot = value; }
+      handA.splice(handA.indexOf(pickA), 1);
+      handB.splice(handB.indexOf(pickB), 1);
+    }
+    return { winnerIdx: sA > sB ? 0 : sB > sA ? 1 : (Math.random() < 0.5 ? 0 : 1), sA, sB };
+  }
+  let bracket = personalities.slice();
+  const log = [{ round: 'Quarterfinals', matches: [] }, { round: 'Semifinals', matches: [] }, { round: 'Final', matches: [] }];
+  for (let stage = 0; stage < 3; stage++) {
+    const next = [];
+    for (let i = 0; i < bracket.length; i += 2) {
+      const res = simulate(bracket[i], bracket[i+1]);
+      log[stage].matches.push({ a: bracket[i], b: bracket[i+1], sA: res.sA, sB: res.sB, winner: res.winnerIdx === 0 ? bracket[i] : bracket[i+1] });
+      next.push(res.winnerIdx === 0 ? bracket[i] : bracket[i+1]);
+    }
+    bracket = next;
+  }
+  onResult({ champion: bracket[0], log });
 }
 
 export function startSolo() {
