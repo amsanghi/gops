@@ -26,6 +26,7 @@ import {
   startSolo, startDaily, startEndless, startTournamentMatch, startNextTournamentMatch,
   progressTournament, progressEndless, progressPuzzle, progressDaily, startNextEndlessRound,
   startTutorial, startHotSeat, startGhost, startBullet, startBattle,
+  startPractice, startSeeded, startWeekly, startBracket,
 } from './modes.js';
 import {
   copyDailyResult, copyAnyResult, shareImage, copyChallengeLink, parseChallengeLink,
@@ -109,6 +110,39 @@ function openSharedReplay(r) {
   // Mark this isn't a real game played; disable rematch and update label
   $('rematch-btn').textContent = '← Back to lobby';
   $('rematch-btn').onclick = () => { hide('end'); show('lobby'); };
+}
+
+// ---- Onboarding (first visit) ----
+function setupOnboarding() {
+  const p = getPrefs();
+  if (p.seen) return;
+  const onb = $('onboarding');
+  onb.hidden = false;
+  $('onb-dismiss').onclick = () => { onb.hidden = true; savePrefs({ seen: true }); };
+  $('onb-tutorial').onclick = () => { onb.hidden = true; savePrefs({ seen: true }); startTutorial(startSolo); };
+}
+
+// ---- AI Bracket ----
+function openBracketModal() {
+  show('modal-bracket');
+  $('bracket-results').innerHTML = '';
+  $('bracket-run-btn').onclick = () => {
+    startBracket(({ champion, log }) => {
+      const html = log.map(stage => `
+        <div class="bracket-stage">
+          <div class="bracket-stage-name">${stage.round}</div>
+          ${stage.matches.map(m => `
+            <div class="bracket-match">
+              <div class="bm-a ${m.winner === m.a ? 'win' : ''}">${m.a}</div>
+              <div class="bm-score">${m.sA} – ${m.sB}</div>
+              <div class="bm-b ${m.winner === m.b ? 'win' : ''}">${m.b}</div>
+            </div>
+          `).join('')}
+        </div>
+      `).join('');
+      $('bracket-results').innerHTML = html + `<div class="bracket-champion">👑 Champion: ${champion}</div>`;
+    });
+  };
 }
 
 // ---- Lobby helpers ----
@@ -235,8 +269,12 @@ function updateSoundBtn() {
 // ---- Keyboard shortcuts ----
 function bindKeys() {
   window.addEventListener('keydown', e => {
-    if ($('game').hidden) return;
     if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+    // Quick rematch from end screen
+    if (!$('end').hidden && e.key === 'Enter' && !$('rematch-btn').disabled) {
+      e.preventDefault(); $('rematch-btn').click(); return;
+    }
+    if ($('game').hidden) return;
     if (S.myPick !== null) return;
     let n = null;
     if (e.key >= '1' && e.key <= '9') n = parseInt(e.key, 10);
@@ -245,6 +283,11 @@ function bindKeys() {
     else if (e.key.toLowerCase() === 'q') n = 12;
     else if (e.key.toLowerCase() === 'k') n = 13;
     else if (e.key.toLowerCase() === 'a') n = 1;
+    else if (e.key === '*' || e.key === 'p' || e.key === 'P') {
+      // Power card shortcut
+      if (S.settings.powerCards && S.myHand.includes(99)) selectCard(99);
+      return;
+    }
     else if (e.key === 'Enter' && S.pendingPick !== null) { confirmPick(); return; }
     else if (e.key === 'Escape' && S.pendingPick !== null) {
       S.pendingPick = null;
@@ -307,6 +350,17 @@ function init() {
   $('bullet-tile').onclick = startBullet;
   $('battle-tile').onclick = () => openBattleModal((a, b, d) => startBattle(a, b, d));
   $('archive-tile').onclick = openArchiveModal;
+  $('bracket-tile').onclick = openBracketModal;
+  $('practice-tile').onclick = startPractice;
+  $('weekly-tile').onclick = startWeekly;
+  $('seed-go-btn').onclick = () => {
+    const v = $('seed-date').value;
+    if (!v) return;
+    hide('modal-archive');
+    startSeeded(v);
+  };
+  // Onboarding for first-time visitors
+  setupOnboarding();
 
   // AI settings panel
   $('ghost-tile').onclick = () => {

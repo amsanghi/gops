@@ -40,27 +40,26 @@ export function analyze(history, deckSize = 13) {
     // Find the highest losing bid (best "throw away" if winning impossible).
     let lowestAvail = Math.min(...myAvail);
 
-    let kind = null, why = '';
+    let kind = null, why = '', cost = 0;
     if (smallestWinner != null && h.mine > smallestWinner + 1 && h.winner === 'me') {
-      // Won, but overpaid by 2+. Lost value = h.mine - smallestWinner (in card units).
       kind = 'overpaid';
-      why = `You won the ${rankText(h.prize, deckSize)} with ${rankText(h.mine, deckSize)}, but ${rankText(smallestWinner, deckSize)} would have done the job — saving ${h.mine - smallestWinner} card-rank for later.`;
+      cost = h.mine - smallestWinner;
+      why = `You won the ${rankText(h.prize, deckSize)} with ${rankText(h.mine, deckSize)}, but ${rankText(smallestWinner, deckSize)} would have done the job — saving ${cost} card-rank for later.`;
+    } else if (h.winner === 'me' && (h.mine - h.prize) >= 5) {
+      kind = 'overpaid';
+      cost = h.mine - h.prize;
+      why = `You won the ${rankText(h.prize, deckSize)} (worth ${h.prize}) with ${rankText(h.mine, deckSize)} — consider folding small prizes with low cards next time.`;
     } else if (smallestWinner != null && h.winner !== 'me') {
-      // Could have won but chose otherwise.
       kind = 'missed';
+      cost = h.prizeValue;
       why = `You could have taken the ${rankText(h.prize, deckSize)} (worth ${h.prizeValue}) by bidding ${rankText(smallestWinner, deckSize)} instead of ${rankText(h.mine, deckSize)}.`;
     } else if (smallestWinner == null && h.mine > lowestAvail && h.winner !== 'me') {
-      // Already lost — should have dumped a small card.
       kind = 'wasted';
+      cost = h.mine - lowestAvail;
       why = `Couldn't win this round — bidding ${rankText(lowestAvail, deckSize)} instead of ${rankText(h.mine, deckSize)} would have preserved your high cards.`;
     }
 
-    if (kind) {
-      const cost = kind === 'missed' ? h.prizeValue
-                 : kind === 'overpaid' ? (h.mine - smallestWinner)
-                 : (h.mine - lowestAvail);
-      insights.push({ round: h.round, kind, why, cost });
-    }
+    if (kind) insights.push({ round: h.round, kind, why, cost });
 
     myUsed.add(h.mine);
     theirUsed.add(h.theirs);
