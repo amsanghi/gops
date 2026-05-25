@@ -10,22 +10,24 @@ A static, zero-build progressive web app. No backend. No accounts. No tracking. 
 
 ## Highlights
 
-- **11 solo modes** — Daily Challenge, Vs AI, Hot Seat, Puzzles, Endless, Tournament, Bullet (3s/bid), AI Battle (spectate), Daily Archive, AI Bracket, Random Rule.
-- **Multiplayer** — Duel (1v1) **and** Party rooms (2–8 players) with text chat, emoji reactions, voice & video chat (when enabled).
+- **14 solo modes** — Daily Challenge, Vs AI, Hot Seat, Puzzles, Endless, Tournament, Bullet (3s/bid), AI Battle (spectate), Daily Archive, AI Bracket, Random Rule, Ghost, Practice, Weekly Puzzle.
+- **Multiplayer** — Duel (1v1) **and** Party rooms (2–8 players) with text chat, emoji reactions, voice & video chat (when enabled). Mid-game refresh just works — both sides reconnect to the saved round automatically.
+- **Power cards variant** — Optional wildcard `★` worth the average prize value.
 - **Coach mode** — Post-game analysis flags the rounds where you misplayed, with reasoning.
 - **Replay tools** — Scrub through any past game; share replays via URL; download as `webm` video.
 - **Stats & heatmaps** — Per-mode records, bid heatmap (what cards you favor against which prizes), score curves, AI mastery.
 - **Customization** — 6 accent themes + custom color picker, dark/light, 4 card-back patterns, 22 avatars, animation speed, color-blind safe palette.
 - **No-scroll game UI** — Fits any viewport, optimized for Bullet rounds where every second matters.
+- **Tap-to-confirm bidding** — Tap a card to stage it, tap again (or the drop-zone) to lock in. Keyboard shortcuts work too.
 - **PWA** — Installable, offline-capable, share-target enabled.
 
 ## Tech
 
 - Pure browser ESM — no build, no bundler, no transpile. Just open `index.html`.
-- ~5000 lines across 17 small modules in [`js/`](./js/).
+- ~5200 lines across 18 small modules in [`js/`](./js/).
 - Service worker with network-first HTML + stale-while-revalidate assets.
 - In-browser test suite at [`/tests/`](./tests/).
-- Uses PeerJS at runtime for multiplayer; lazy-loaded only when needed.
+- Uses PeerJS at runtime for multiplayer; lazy-loaded only when needed. WebRTC ICE with STUN + Open Relay TURN for NAT traversal.
 
 ## How to play
 
@@ -45,6 +47,7 @@ That's it. There's no randomness in your hand. It's all about prediction, bluffi
 | Daily Challenge | Same seeded shuffle for everyone today. Compare scores. |
 | Vs AI | Quick game against the AI with picked difficulty + personality. |
 | Hot Seat | Two people pass one device, secret bids each round. |
+| Duel | 1v1 over PeerJS with text/voice/video chat. Refresh-safe. |
 | Party Room | 2–8 players over PeerJS with text/voice/video chat. |
 | Puzzles | Scripted scenarios with specific objectives. |
 | Endless | Survival ladder of escalating difficulty. |
