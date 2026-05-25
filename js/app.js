@@ -21,11 +21,12 @@ import {
   setupGame, applySaveSnap, setNetSender, setEndHook, compareScores,
   confirmPick, selectCard,
 } from './game.js';
-import { configureMulti, startHost, joinGame, sendQuit, cleanup as cleanupMulti, beginHostedMatch, setRematchHook } from './multi.js';
+import { configureMulti, startHost, joinGame, sendQuit, cleanup as cleanupMulti, cleanupIntentional as cleanupMultiIntentional, beginHostedMatch, setRematchHook } from './multi.js';
 import {
   configureMultiN, startPartyHost, joinPartyRoom, startPartyGame, cleanupParty,
   startMic, stopMic,
 } from './multiN.js';
+import { getMultiSession, clearMultiSession, migrateStorage } from './storage.js';
 import {
   startSolo, startDaily, startEndless, startTournamentMatch, startNextTournamentMatch,
   progressTournament, progressEndless, progressPuzzle, progressDaily, startNextEndlessRound,
@@ -201,8 +202,67 @@ async function quitGame() {
   if (!ok) return;
   if (!S.vsAI && S.currentMode === 'multi') sendQuit();
   clearSavedGame();
-  cleanupMulti();
+  cleanupMultiIntentional();
   showLobby();
+}
+
+// ---- Multi refresh-rejoin ----
+// If the player was in a multiplayer session within the last 10 minutes, offer to reconnect.
+function tryRejoinMulti() {
+  const s = getMultiSession();
+  if (!s) return;
+  if (Date.now() - (s.ts || 0) > 10 * 60 * 1000) { clearMultiSession(); return; }
+  showRejoinBanner(s);
+}
+
+function showRejoinBanner(s) {
+  let banner = document.getElementById('rejoin-banner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'rejoin-banner';
+    banner.className = 'resume';
+    const resumeEl = document.getElementById('resume');
+    resumeEl.parentNode.insertBefore(banner, resumeEl.nextSibling);
+  }
+  const ago = Math.round((Date.now() - s.ts) / 1000);
+  const agoText = ago < 60 ? `${ago}s ago` : `${Math.round(ago / 60)}m ago`;
+  banner.hidden = false;
+  banner.innerHTML = `
+    <div class="resume-text"><b>Rejoin ${s.mode === 'party' ? 'party' : 'duel'}?</b><span>Room <code>${s.code}</code> · as ${s.role} · ${agoText}</span></div>
+    <div class="resume-actions">
+      <button class="btn btn-ghost btn-sm" id="rejoin-discard">Discard</button>
+      <button class="btn btn-primary btn-sm" id="rejoin-go">Rejoin</button>
+    </div>
+  `;
+  document.getElementById('rejoin-discard').onclick = () => {
+    banner.hidden = true; clearMultiSession();
+  };
+  document.getElementById('rejoin-go').onclick = () => {
+    banner.hidden = true;
+    if (s.name) { S.myName = s.name; document.getElementById('name-input').value = s.name; }
+    if (s.avatar) { S.myAvatar = s.avatar; document.getElementById('avatar-btn').textContent = s.avatar; }
+    if (s.mode === 'party') {
+      if (s.role === 'host') {
+        // Re-create the same host room with the same code
+        document.getElementById('host-code').value = s.code;
+        // Switch UI to party mode
+        document.querySelector('.mp-mode-btn[data-mode="party"]')?.click();
+        startPartyHost();
+      } else {
+        joinPartyRoom(s.code);
+      }
+    } else {
+      // duel
+      document.getElementById('host-code').value = s.code;
+      if (s.role === 'host') {
+        document.querySelector('.mp-mode-btn[data-mode="duel"]')?.click();
+        startHost();
+      } else {
+        document.getElementById('join-code').value = s.code;
+        joinGame();
+      }
+    }
+  };
 }
 
 // ---- Resume ----
@@ -319,6 +379,9 @@ function registerSW() {
 
 // ---- Wire everything ----
 function init() {
+  // One-shot: rename old gops3-* keys → gops-* (preserves user data).
+  migrateStorage();
+
   // Pickers / theme
   buildThemePicker();
   setupAvatarPicker();
@@ -331,6 +394,7 @@ function init() {
   refreshLobbySubtitles();
   updateH2H();
   tryResume();
+  tryRejoinMulti();
 
   // Replay link: if URL has #replay=..., open the end-screen scrubber on it.
   const replay = parseReplayLink();
@@ -395,15 +459,15 @@ function init() {
       if (mpMode === 'party') joinPartyRoom(code); else joinGame();
     }
   });
-  $('host-cancel').onclick = () => { cleanupMulti(); showLobby(); };
-  $('join-cancel').onclick = () => { cleanupMulti(); showLobby(); };
+  $('host-cancel').onclick = () => { cleanupMultiIntentional(); showLobby(); };
+  $('join-cancel').onclick = () => { cleanupMultiIntentional(); showLobby(); };
   $('copy-challenge-btn').onclick = copyChallengeLink;
 
   // Party controls
   const partyStartBtn = $('party-start-btn');
   if (partyStartBtn) partyStartBtn.onclick = startPartyGame;
   const partyCancel = $('party-cancel');
-  if (partyCancel) partyCancel.onclick = () => { cleanupParty(); showLobby(); };
+  if (partyCancel) partyCancel.onclick = () => { cleanupParty(true); showLobby(); };
   const partyCode = $('party-code');
   if (partyCode) partyCode.onclick = () => {
     navigator.clipboard?.writeText(partyCode.textContent).then(() => {

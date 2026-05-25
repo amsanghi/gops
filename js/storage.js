@@ -138,7 +138,7 @@ export function getCustomTheme() { return getJSON(STORAGE.CUSTOM_THEME, null); }
 export function saveCustomTheme(t) { setJSON(STORAGE.CUSTOM_THEME, t); }
 
 // ---- AI mastery — wins per tournament AI ----
-const MASTERY_KEY = 'gops3-mastery';
+const MASTERY_KEY = 'gops-mastery';
 export function getMastery() { return getJSON(MASTERY_KEY, {}); }
 export function recordMasteryWin(aiName) {
   const m = getMastery();
@@ -146,30 +146,78 @@ export function recordMasteryWin(aiName) {
   setJSON(MASTERY_KEY, m);
 }
 
+// ---- Multi-session (for refresh-rejoin) ----
+export function getMultiSession() { return getJSON(STORAGE.MULTI_SESSION, null); }
+export function saveMultiSession(s) { setJSON(STORAGE.MULTI_SESSION, { ...s, ts: Date.now() }); }
+export function clearMultiSession() { delKey(STORAGE.MULTI_SESSION); }
+
 // ---- Saved game (in-progress) ----
 export function getSavedGame() { return getJSON(STORAGE.SAVE, null); }
 export function saveGame(snap) { setJSON(STORAGE.SAVE, snap); }
 export function clearSavedGame() { delKey(STORAGE.SAVE); }
+
+// ---- One-shot migration from old gops3-* keys to new gops-* keys ----
+// Runs on init. If user has existing data under old keys, copy & clean up.
+const MIGRATION_FLAG = 'gops-migrated-v1';
+export function migrateStorage() {
+  try {
+    if (localStorage.getItem(MIGRATION_FLAG)) return;
+    const renames = {
+      'gops3-prefs': 'gops-prefs',
+      'gops3-saved-game': 'gops-saved-game',
+      'gops3-stats': 'gops-stats',
+      'gops3-achievements': 'gops-achievements',
+      'gops3-daily': 'gops-daily',
+      'gops3-puzzles': 'gops-puzzles',
+      'gops3-tournament': 'gops-tournament',
+      'gops3-ghost': 'gops-ghost',
+      'gops3-heatmap': 'gops-heatmap',
+      'gops3-records': 'gops-records',
+      'gops3-custom-theme': 'gops-custom-theme',
+      'gops3-mastery': 'gops-mastery',
+    };
+    for (const [oldK, newK] of Object.entries(renames)) {
+      const v = localStorage.getItem(oldK);
+      if (v != null && localStorage.getItem(newK) == null) {
+        localStorage.setItem(newK, v);
+      }
+      localStorage.removeItem(oldK);
+    }
+    // H2H prefix: gops3-h2h-X → gops-h2h-X
+    const toMove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('gops3-h2h-')) toMove.push(k);
+    }
+    for (const oldK of toMove) {
+      const newK = 'gops-h2h-' + oldK.slice('gops3-h2h-'.length);
+      const v = localStorage.getItem(oldK);
+      if (v != null && localStorage.getItem(newK) == null) localStorage.setItem(newK, v);
+      localStorage.removeItem(oldK);
+    }
+    localStorage.setItem(MIGRATION_FLAG, '1');
+  } catch { /* ignore */ }
+}
 
 // ---- Bulk export/import ----
 export function exportAll() {
   const out = {};
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
-    if (k && k.startsWith('gops3-')) out[k] = localStorage.getItem(k);
+    if (k && k.startsWith('gops-')) out[k] = localStorage.getItem(k);
   }
   return out;
 }
 export function importAll(obj) {
   Object.entries(obj || {}).forEach(([k, v]) => {
-    if (k.startsWith('gops3-')) localStorage.setItem(k, v);
+    if (k.startsWith('gops-')) localStorage.setItem(k, v);
   });
 }
 export function wipeAll() {
   const keys = [];
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
-    if (k && k.startsWith('gops3-')) keys.push(k);
+    if (k && k.startsWith('gops-')) keys.push(k);
   }
   keys.forEach(k => localStorage.removeItem(k));
 }

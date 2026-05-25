@@ -248,16 +248,31 @@ body.in-game .confirm-row { margin-top: 4px; min-height: 38px; }
   body.in-game .game-head { padding: 8px 10px; gap: 8px; }
   body.in-game .score-num { font-size: 28px; }
   body.in-game .card { --w: 44px; --h: 62px; font-size: 19px; }
-  body.in-game .hand .card { --w: 44px; --h: 62px; font-size: 19px; }
   body.in-game .card.prize { --w: 84px; --h: 118px; font-size: 32px; }
   body.in-game .card.mini { --w: 30px; --h: 42px; font-size: 12px; }
   body.in-game .hand-zone { padding: 8px 10px; }
+  /* Mobile hand: wrap to 2 rows so ALL cards are visible at a glance. */
+  body.in-game .hand {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    gap: 4px;
+    justify-content: center;
+    align-content: center;
+    padding: 2px 0;
+  }
+  body.in-game .hand .card {
+    --w: clamp(38px, calc((100vw - 80px) / 7), 50px);
+    --h: calc(var(--w) * 1.4);
+    font-size: clamp(15px, calc(var(--w) * 0.45), 22px);
+    flex: 0 0 auto;
+  }
+  body.in-game .hand .card.in-hand:hover:not(.used):not(.locked) { transform: translateY(-4px) scale(1.04); }
   body.in-game .message { font-size: 13px; min-height: 18px; }
   body.in-game .bid-area { min-height: 88px; gap: 14px; }
   body.in-game .bid-slot { min-height: 70px; }
   body.in-game .reactions { gap: 3px; margin-top: 3px; }
   body.in-game .react-btn { width: 30px; height: 30px; font-size: 15px; }
-  /* Side panels show as a compact grid so a quick scroll reveals them */
+  /* Side panels show as a compact grid */
   body.in-game .mini-grid { grid-template-columns: repeat(7, 1fr); }
 }
 
