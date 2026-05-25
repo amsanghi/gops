@@ -181,15 +181,22 @@ body.in-game .board {
   overflow: hidden;
 }
 body.in-game .zone { padding: 14px 16px; min-height: 0; overflow: hidden; }
-/* The bids zone (center-stack child 2) MUST allow its content to overflow visibly
-   so the drop-zone card never clips when reactions/chat squeeze available height. */
-body.in-game .center-stack > .zone:nth-child(2) { overflow: visible; }
 body.in-game .center-stack { gap: 10px; min-height: 0; height: 100%; }
-/* Center stack zones grow to fill — the bid area should expand into the leftover space */
-body.in-game .center-stack > .zone:nth-child(1) { flex: 0 0 auto; min-height: clamp(140px, 28vh, 260px); }
-body.in-game .center-stack > .zone:nth-child(2) { flex: 1 1 0; min-height: 0; }
-body.in-game .prize-area { min-height: clamp(110px, 22vh, 220px); flex-shrink: 0; }
-body.in-game .bid-area { height: 100%; min-height: 110px; }
+/* Prize zone: can shrink in tight conditions to give bids enough room. */
+body.in-game .center-stack > .zone:nth-child(1) {
+  flex: 0 1 auto;
+  min-height: 140px;
+  max-height: clamp(180px, 28vh, 280px);
+}
+/* Bids zone: HARD min-height that guarantees the bid-col (~135px) + zone-head
+   (~25px) + padding (~28px) = ~190px always fits. */
+body.in-game .center-stack > .zone:nth-child(2) {
+  flex: 1 1 200px;
+  min-height: 200px;
+  overflow: visible;
+}
+body.in-game .prize-area { min-height: 90px; flex: 1 1 auto; }
+body.in-game .bid-area { height: auto; min-height: 130px; }
 body.in-game .hand-zone {
   flex-shrink: 0;
   padding: 14px 18px;
