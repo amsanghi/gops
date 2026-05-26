@@ -1035,14 +1035,28 @@ details > summary::-webkit-details-marker { display: none; }
 }
 .confirm-prompt b { color: var(--me); font-weight: 600; font-family: var(--font-serif); font-size: 16px; margin: 0 2px; }
 
-/* Timer */
-.timer {
+/* Timer — seconds number above a thin progress bar, both right-aligned */
+.timer-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  margin-top: 8px;
+}
+.timer-text {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-dim);
+  font-variant-numeric: tabular-nums;
+  align-self: flex-end;
+  line-height: 1;
+}
+.timer-text.urgent { color: var(--lose); font-weight: 700; }
+.timer-bar-track {
   height: 3px;
   background: var(--ink-ghost);
   border-radius: 999px;
   overflow: hidden;
-  position: relative;
-  margin-top: 8px;
 }
 .timer-bar {
   height: 100%;
@@ -1054,8 +1068,6 @@ details > summary::-webkit-details-marker { display: none; }
 .timer-bar.warn { background: var(--gold); }
 .timer-bar.urgent { background: var(--lose); animation: timer-pulse 0.5s ease-in-out infinite alternate; }
 @keyframes timer-pulse { from { opacity: 0.65; } to { opacity: 1; } }
-.timer-text { font-family: var(--font-mono); font-size: 11px; color: var(--ink-dim); font-variant-numeric: tabular-nums; }
-.timer-text.urgent { color: var(--lose); }
 
 /* Mini-card grid (prizes left, opponent's hand) */
 .mini-grid {
