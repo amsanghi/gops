@@ -270,6 +270,13 @@
 
     <div class="series-bar" id="series-bar" hidden></div>
 
+    <!-- Post-tutorial guidance: shown for the first few rounds after the tutorial -->
+    <div class="guided-banner" id="guided-banner" hidden role="status" aria-live="polite">
+      <span class="guided-icon">💡</span>
+      <span class="guided-text" id="guided-text"></span>
+      <button class="guided-close" id="guided-close" type="button" aria-label="Dismiss guidance">×</button>
+    </div>
+
     <div class="game-actions" style="display:flex;justify-content:flex-end;gap:6px;margin-bottom:8px">
       <button class="btn-icon" id="chat-btn" title="Chat" aria-label="Chat" hidden>✎</button>
       <button class="btn-icon" id="game-mic-btn" title="Toggle microphone" aria-label="Toggle mic" hidden>🎤</button>

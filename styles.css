@@ -486,6 +486,42 @@ body.in-game.bullet .chat { display: none; }
   margin-top: 2px;
 }
 
+/* Post-tutorial guided banner — shows for first few rounds after tutorial */
+.guided-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--me-soft), transparent);
+  border: 1px solid var(--me);
+  border-radius: var(--r-sm);
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.4;
+  animation: fade-in 0.3s var(--ease-out);
+}
+.guided-banner[hidden] { display: none; }
+.guided-icon { font-size: 16px; line-height: 1; flex-shrink: 0; }
+.guided-text { flex: 1; }
+.guided-text b { color: var(--ink); font-weight: 700; }
+.guided-close {
+  background: transparent;
+  border: 0;
+  color: var(--ink-faint);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.guided-close:hover { background: var(--surface-hover); color: var(--ink); }
+@media (max-width: 600px) {
+  .guided-banner { font-size: 12px; padding: 8px 10px; }
+}
+
 /* Profile chip */
 .profile {
   display: flex; align-items: center; gap: 12px;

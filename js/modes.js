@@ -395,6 +395,8 @@ export function startTutorial(onDone) {
       $('ai-diff').value = 'easy';
       $('ai-persona').value = 'balanced';
       $('ai-deck').value = '7';
+      // Turn on the in-game guidance banner for the next solo game.
+      S.guidedMode = true;
       onDone();
     } else renderTutorialStep();
   };
