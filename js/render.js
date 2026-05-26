@@ -157,8 +157,8 @@ export function renderScoreboard() {
   $('them-name').textContent = S.theirName;
   $('me-av').textContent = S.myAvatar;
   $('them-av').textContent = S.theirAvatar;
-  $('me-bid-label').textContent = 'Your bid';
-  $('them-bid-label').textContent = 'Their bid';
+  $('me-bid-label').textContent = S.myName;
+  $('them-bid-label').textContent = S.theirName;
   $('them-cards-label').textContent = `${S.theirName}'s cards`;
   $('round-tot').textContent = S.totalRounds;
 }
