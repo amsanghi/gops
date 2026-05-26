@@ -294,18 +294,23 @@
       </div>
 
       <div class="center-stack">
-        <div class="zone">
-          <div class="zone-head"><span>Current prize</span><span class="pot-chip" id="pot-chip" hidden></span></div>
-          <div class="prize-area" id="prize-area"></div>
-        </div>
-        <div class="zone">
-          <div class="zone-head"><span>Bids</span><span class="timer-text" id="timer-text"></span></div>
-          <div class="bid-area">
+        <div class="zone arena">
+          <div class="zone-head">
+            <span>Arena</span>
+            <span class="zone-head-meta">
+              <span class="pot-chip" id="pot-chip" hidden></span>
+              <span class="timer-text" id="timer-text"></span>
+            </span>
+          </div>
+          <div class="arena-row">
             <div class="bid-col me">
               <span class="bid-label" id="me-bid-label">You</span>
               <div class="bid-slot" id="me-bid"></div>
             </div>
-            <div class="bid-divider">vs</div>
+            <div class="prize-col">
+              <span class="bid-label prize-label">Prize</span>
+              <div class="prize-area" id="prize-area"></div>
+            </div>
             <div class="bid-col them">
               <span class="bid-label" id="them-bid-label">Them</span>
               <div class="bid-slot" id="them-bid"></div>

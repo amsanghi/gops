@@ -182,21 +182,19 @@ body.in-game .board {
 }
 body.in-game .zone { padding: 14px 16px; min-height: 0; overflow: hidden; }
 body.in-game .center-stack { gap: 10px; min-height: 0; height: 100%; }
-/* Prize zone sizes to its content (prize card + chrome). Min covers the
-   smallest prize card variant; no max — let it grow on tall viewports. */
-body.in-game .center-stack > .zone:nth-child(1) {
-  flex: 0 0 auto;
-  min-height: 180px;
-}
-/* Bids zone gets a HARD min-height for the bid-col (~135px) + zone-head
-   (~25px) + padding (~28px) = ~190px. flex: 1 means it gets the remainder. */
-body.in-game .center-stack > .zone:nth-child(2) {
-  flex: 1 1 200px;
-  min-height: 200px;
+/* Single Arena zone replaces the old prize+bids stack. Stretches but
+   centers its content so the row sits in the middle of the available space. */
+body.in-game .center-stack > .zone.arena {
+  flex: 1 1 auto;
+  min-height: 220px;
   overflow: visible;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
-body.in-game .prize-area { min-height: 110px; flex: 1 1 auto; display: grid; place-items: center; }
-body.in-game .bid-area { height: auto; min-height: 130px; }
+body.in-game .arena .arena-row { min-height: 160px; flex: 0 0 auto; }
+body.in-game .arena .zone-head { flex: 0 0 auto; align-self: stretch; }
+body.in-game .prize-area { min-height: 0; }
 body.in-game .hand-zone {
   flex-shrink: 0;
   padding: 14px 18px;
@@ -252,8 +250,8 @@ body.in-game .confirm-row { margin-top: 4px; min-height: 38px; }
   body.in-game .chat { order: 7; }
   body.in-game .center-stack { gap: 6px; height: auto; }
   body.in-game .center-stack > .zone { flex: 0 0 auto; }
-  body.in-game .center-stack > .zone:nth-child(1) { min-height: 140px; }
-  body.in-game .center-stack > .zone:nth-child(2) { min-height: 110px; }
+  body.in-game .center-stack > .zone.arena { min-height: 180px; }
+  body.in-game .arena .arena-row { min-height: 130px; gap: 8px; padding: 4px 0; }
   body.in-game .zone { overflow: visible; }
   body.in-game .game-head { padding: 8px 10px; gap: 8px; }
   body.in-game .score-num { font-size: 28px; }
@@ -929,10 +927,11 @@ details > summary::-webkit-details-marker { display: none; }
 .prize-area {
   display: flex; align-items: center; justify-content: center;
   min-height: 140px;
-  position: relative;
+}
+.zone-head-meta {
+  display: flex; align-items: center; gap: 8px;
 }
 .pot-chip {
-  position: absolute; top: 0; right: 0;
   font-family: var(--font-mono);
   font-size: 11px;
   color: var(--gold);
@@ -940,6 +939,29 @@ details > summary::-webkit-details-marker { display: none; }
   border: 1px solid rgba(245,208,98,0.3);
   padding: 4px 8px;
   border-radius: 999px;
+}
+
+/* Arena: merged prize + bids — three columns (YOU | PRIZE | THEM) */
+.arena .arena-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  justify-items: center;
+  gap: clamp(16px, 4vw, 40px);
+  min-height: 180px;
+  padding: 8px 0;
+}
+.prize-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.prize-col .prize-label {
+  color: var(--gold);
+}
+.prize-col .prize-area {
+  min-height: 0;
 }
 
 /* Bid area */
