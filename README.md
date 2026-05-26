@@ -4,7 +4,7 @@
 
 🎮 **Play now → [amsanghi.github.io/gops](https://amsanghi.github.io/gops)**
 
-A static, zero-build progressive web app. No backend. No accounts. All state lives in your browser's `localStorage`. Multiplayer uses peer-to-peer WebRTC (via [PeerJS](https://peerjs.com/)) so games happen directly between players' devices. Anonymous page-view counts only — no cookies, no IP storage, no PII — via [GoatCounter](https://www.goatcounter.com/).
+A static, zero-build progressive web app. No backend. No accounts. All state lives in your browser's `localStorage`. Multiplayer uses peer-to-peer WebRTC (via [PeerJS](https://peerjs.com/)) so games happen directly between players' devices. A single anonymous page-view counter ticks up in the lobby footer — no cookies, no IP storage, no PII.
 
 ---
 
