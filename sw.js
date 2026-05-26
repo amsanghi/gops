@@ -5,7 +5,7 @@
 //   - Cross-origin (fonts, PeerJS CDN): cache-first with revalidation
 //   - Versioned cache → bumping `CACHE` forces a one-shot purge across clients.
 
-const CACHE = 'gops-cache-v11';
+const CACHE = 'gops-cache-v12';
 const PRECACHE = [
   './',
   './index.html',
@@ -49,9 +49,8 @@ self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
 
-  // Counters: never cache or intercept. Every hit must reach the network.
+  // Counter API: never cache or intercept. Every hit must reach the network.
   if (url.hostname === 'api.counterapi.dev') return;
-  if (url.hostname.endsWith('goatcounter.com')) return;
 
   // For HTML navigation requests: network-first to pick up new deploys.
   if (e.request.mode === 'navigate' || (e.request.destination === 'document')) {

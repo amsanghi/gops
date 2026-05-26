@@ -25,57 +25,20 @@
 
 <link rel="stylesheet" href="styles.css">
 
-<!-- Anonymous, cookie-free page-view counts. Auto-skips localhost. -->
-<script data-goatcounter="https://gops.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
+<!-- Page-view counter (counterapi.dev — every call increments, returns new count). -->
 <script>
-  // Lobby badge — renders "N visitors · M hits" using whichever endpoints
-  // succeed. GoatCounter is sometimes blocked by mobile tracking protection
-  // (Safari ITP, Brave Shields); in that case we silently show hits only.
-  //   • Visitors: GoatCounter (unique sessions, dedup-per-path within 8h)
-  //   • Hits: counterapi.dev (increments on every page load, no dedup)
   (function () {
     if (['localhost', '127.0.0.1', ''].includes(location.hostname)) return;
-    var VISITOR_TTL = 60 * 60 * 1000; // 1h
-    var KEY = 'gops-visitor-cache';
-    var fmt = function (n) { return n.toLocaleString('en-US'); };
-
-    var state = { visitors: null, hits: null };
-    var render = function () {
-      var el = document.getElementById('visit-counter');
-      if (!el) return;
-      var parts = [];
-      if (state.visitors != null) parts.push(fmt(state.visitors) + ' visitors');
-      if (state.hits != null)     parts.push(fmt(state.hits) + ' hits');
-      if (parts.length) el.textContent = parts.join(' · ');
-    };
-
-    // Initial paint from cached visitor count (refreshes in background)
-    try {
-      var c = JSON.parse(localStorage.getItem(KEY) || 'null');
-      if (c && Date.now() - c.ts < VISITOR_TTL) { state.visitors = c.visitors; render(); }
-    } catch {}
-
-    // Visitors — may fail silently on mobile due to tracker blocking
-    fetch('https://gops.goatcounter.com/counter/' + encodeURIComponent(location.pathname) + '.json')
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (d) {
-        if (!d || d.count == null) return;
-        state.visitors = parseInt(String(d.count).replace(/\D/g, ''), 10);
-        render();
-        try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), visitors: state.visitors })); } catch {}
-      })
-      .catch(function () {});
-
-    // Hits — every call increments and returns the new count
     fetch('https://api.counterapi.dev/v1/gops/hits/up')
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (d) {
         if (!d || typeof d.count !== 'number') return;
-        state.hits = d.count;
-        render();
+        var el = document.getElementById('visit-counter');
+        if (el) el.textContent = d.count.toLocaleString('en-US') + ' hits';
       })
       .catch(function () {});
+    // Clean up stale GoatCounter visitor cache from earlier versions
+    try { localStorage.removeItem('gops-visitor-cache'); } catch {}
   })();
 </script>
 </head>
