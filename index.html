@@ -67,8 +67,7 @@
       <h1>Game of <em>Pure</em> Strategy</h1>
       <p class="tagline">No luck. Just nerve. Bid <kbd>A</kbd>–<kbd>K</kbd> to win prizes — high total wins.</p>
       <button class="hero-learn" id="hero-learn-btn" type="button">
-        <span class="hero-learn-icon">▶</span>
-        <span>New to GOPS? <b>Watch the 90-second intro →</b></span>
+        <span>New to GOPS? <b>Learn about the game →</b></span>
       </button>
     </div>
 
@@ -137,11 +136,6 @@
               <span class="tile-icon">▤</span>
               <span class="tile-label">Daily archive</span>
               <span class="tile-sub" id="archive-sub">Past dailies</span>
-            </button>
-            <button class="tile" id="bracket-tile">
-              <span class="tile-icon">▦</span>
-              <span class="tile-label">AI Bracket</span>
-              <span class="tile-sub">Sim 8 AIs</span>
             </button>
             <button class="tile" id="random-tile">
               <span class="tile-icon">🎲</span>
@@ -492,15 +486,6 @@
         <div class="field" style="align-self:flex-end"><button class="btn btn-primary btn-sm" id="seed-go-btn" type="button">Replay this date</button></div>
       </div>
       <div id="archive-body"></div>
-    </div>
-  </div>
-
-  <div class="scrim" id="modal-bracket" hidden role="dialog" aria-modal="true" aria-labelledby="modal-bracket-title">
-    <div class="modal">
-      <div class="modal-head"><h2 id="modal-bracket-title">AI Bracket</h2><button class="modal-close" data-close="modal-bracket" aria-label="Close">×</button></div>
-      <p class="modal-desc">8 personalities, single-elimination. Click run to simulate.</p>
-      <div style="display:flex;justify-content:center;margin-bottom:14px"><button class="btn btn-primary btn-sm" id="bracket-run-btn">▷ Run bracket</button></div>
-      <div id="bracket-results"></div>
     </div>
   </div>
 

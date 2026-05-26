@@ -116,58 +116,6 @@ export function startWeekly() {
   setupGame();
 }
 
-// AI Bracket: 8 AIs single-elimination, auto-played. Returns a champion.
-export function startBracket(onResult) {
-  // We don't render a game UI for bracket — it's a quick simulation.
-  const personalities = ['balanced','aggressive','defensive','bluffer','mirror','easy','balanced','aggressive'];
-  // simulate one match between two personalities; returns winner index
-  function simulate(persA, persB, seedOffset = 0) {
-    const deck = 13;
-    const prizes = shuffle(Array.from({ length: deck }, (_, i) => i + 1));
-    const handA = Array.from({ length: deck }, (_, i) => i + 1);
-    const handB = Array.from({ length: deck }, (_, i) => i + 1);
-    let sA = 0, sB = 0, pot = 0;
-    // very simple sim — both AIs pick using a basic rule
-    for (let r = 0; r < deck; r++) {
-      const sortedA = handA.slice().sort((x,y) => y-x);
-      const sortedB = handB.slice().sort((x,y) => y-x);
-      // rank of current prize among remaining
-      const rem = prizes.slice(r).sort((x,y) => y-x);
-      const rank = rem.indexOf(prizes[r]);
-      let pickA, pickB;
-      if (persA === 'aggressive') pickA = sortedA[Math.min(2, sortedA.length-1)];
-      else if (persA === 'defensive') pickA = sortedA[sortedA.length-1-Math.min(2, sortedA.length-1)];
-      else if (persA === 'bluffer') pickA = sortedA[Math.floor(Math.random()*sortedA.length)];
-      else if (persA === 'mirror') pickA = sortedA[rank] ?? sortedA[0];
-      else pickA = sortedA[Math.max(0, Math.min(sortedA.length-1, rank))];
-      if (persB === 'aggressive') pickB = sortedB[Math.min(2, sortedB.length-1)];
-      else if (persB === 'defensive') pickB = sortedB[sortedB.length-1-Math.min(2, sortedB.length-1)];
-      else if (persB === 'bluffer') pickB = sortedB[Math.floor(Math.random()*sortedB.length)];
-      else if (persB === 'mirror') pickB = sortedB[rank] ?? sortedB[0];
-      else pickB = sortedB[Math.max(0, Math.min(sortedB.length-1, rank))];
-      const value = prizes[r] + pot;
-      if (pickA > pickB) { sA += value; pot = 0; }
-      else if (pickB > pickA) { sB += value; pot = 0; }
-      else { pot = value; }
-      handA.splice(handA.indexOf(pickA), 1);
-      handB.splice(handB.indexOf(pickB), 1);
-    }
-    return { winnerIdx: sA > sB ? 0 : sB > sA ? 1 : (Math.random() < 0.5 ? 0 : 1), sA, sB };
-  }
-  let bracket = personalities.slice();
-  const log = [{ round: 'Quarterfinals', matches: [] }, { round: 'Semifinals', matches: [] }, { round: 'Final', matches: [] }];
-  for (let stage = 0; stage < 3; stage++) {
-    const next = [];
-    for (let i = 0; i < bracket.length; i += 2) {
-      const res = simulate(bracket[i], bracket[i+1]);
-      log[stage].matches.push({ a: bracket[i], b: bracket[i+1], sA: res.sA, sB: res.sB, winner: res.winnerIdx === 0 ? bracket[i] : bracket[i+1] });
-      next.push(res.winnerIdx === 0 ? bracket[i] : bracket[i+1]);
-    }
-    bracket = next;
-  }
-  onResult({ champion: bracket[0], log });
-}
-
 export function startSolo() {
   const a = readAISettings();
   S.vsAI = true; S.isHost = true; S.mode = 'solo'; S.currentMode = 'solo';

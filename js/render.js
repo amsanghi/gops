@@ -21,12 +21,10 @@ export function makeCard(n, classes = 'in-hand', { size } = {}) {
   return el;
 }
 
-function pipFor(n, deckSize) {
-  // Only face cards in a 13-card deck get a written-out pip label.
-  // For numeric cards (any deck size) the rank itself is the number, so a
-  // pip would just duplicate it — return '' and let the card show one value.
-  if (deckSize === 13) return ({ 1: 'ace', 11: 'jack', 12: 'queen', 13: 'king' })[n] || '';
-  return '';
+function pipFor(n /*, deckSize */) {
+  // Face cards (A/J/Q/K) get a written-out pip label regardless of deck size.
+  // Numeric cards get no pip — the rank itself is already the number.
+  return ({ 1: 'ace', 11: 'jack', 12: 'queen', 13: 'king' })[n] || '';
 }
 
 // ---- Game zones ----
