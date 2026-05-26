@@ -31,7 +31,7 @@ import {
   startSolo, startDaily, startEndless, startTournamentMatch, startNextTournamentMatch,
   progressTournament, progressEndless, progressPuzzle, progressDaily, startNextEndlessRound,
   startTutorial, startHotSeat, startGhost, startBullet, startBattle,
-  startPractice, startSeeded, startWeekly, startBracket, startRandomRule,
+  startPractice, startSeeded, startWeekly, startRandomRule,
 } from './modes.js';
 import {
   copyDailyResult, copyAnyResult, shareImage, copyChallengeLink, parseChallengeLink,
@@ -129,28 +129,6 @@ function setupOnboarding() {
   $('onb-about').onclick = () => { onb.hidden = true; savePrefs({ seen: true }); show('modal-about'); };
 }
 
-// ---- AI Bracket ----
-function openBracketModal() {
-  show('modal-bracket');
-  $('bracket-results').innerHTML = '';
-  $('bracket-run-btn').onclick = () => {
-    startBracket(({ champion, log }) => {
-      const html = log.map(stage => `
-        <div class="bracket-stage">
-          <div class="bracket-stage-name">${stage.round}</div>
-          ${stage.matches.map(m => `
-            <div class="bracket-match">
-              <div class="bm-a ${m.winner === m.a ? 'win' : ''}">${m.a}</div>
-              <div class="bm-score">${m.sA} – ${m.sB}</div>
-              <div class="bm-b ${m.winner === m.b ? 'win' : ''}">${m.b}</div>
-            </div>
-          `).join('')}
-        </div>
-      `).join('');
-      $('bracket-results').innerHTML = html + `<div class="bracket-champion">👑 Champion: ${champion}</div>`;
-    });
-  };
-}
 
 // ---- Lobby helpers ----
 function showLobby() {
@@ -401,7 +379,6 @@ function init() {
   $('bullet-tile').onclick = startBullet;
   $('battle-tile').onclick = () => openBattleModal((a, b, d) => startBattle(a, b, d));
   $('archive-tile').onclick = openArchiveModal;
-  $('bracket-tile').onclick = openBracketModal;
   $('random-tile').onclick = startRandomRule;
   $('practice-tile').onclick = startPractice;
   $('weekly-tile').onclick = startWeekly;

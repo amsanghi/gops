@@ -1845,37 +1845,6 @@ body.in-game.party #them-bid { display: flex; flex-wrap: wrap; gap: 8px; justify
 .onboarding-actions { display: flex; justify-content: flex-end; gap: 6px; }
 @media (max-width: 600px) { .onboarding { left: 12px; right: 12px; bottom: 12px; } .onboarding-card { max-width: none; } }
 
-/* Bracket result */
-.bracket-stage { margin-bottom: 14px; }
-.bracket-stage-name { font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--ink-faint); margin-bottom: 6px; }
-.bracket-match {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 12px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-sm);
-  margin-bottom: 4px;
-  font-size: 13px;
-}
-.bracket-match .bm-a, .bracket-match .bm-b { color: var(--ink-dim); text-transform: capitalize; }
-.bracket-match .bm-a.win, .bracket-match .bm-b.win { color: var(--ink); font-weight: 600; }
-.bracket-match .bm-score { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
-.bracket-champion {
-  text-align: center;
-  padding: 16px;
-  background: linear-gradient(135deg, var(--gold), color-mix(in oklab, var(--gold) 60%, #b58400));
-  color: var(--gold-ink);
-  border-radius: var(--r-md);
-  margin-top: 12px;
-  font-family: var(--font-serif);
-  font-size: 22px;
-  font-weight: 500;
-  text-transform: capitalize;
-}
-
 /* ---------- Power card ---------- */
 .card.power {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f1e 100%);
