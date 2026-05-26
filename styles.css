@@ -1014,8 +1014,10 @@ details > summary::-webkit-details-marker { display: none; }
   font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em;
   color: var(--ink-faint); font-weight: 600;
 }
-.bid-col.me .bid-label { color: var(--me); }
-.bid-col.them .bid-label { color: var(--opp); }
+/* Use ink-dim so the labels stay readable in both light and dark mode
+   (the accent --me is white in mono theme — disappears on white bg). */
+.bid-col.me .bid-label { color: var(--ink-dim); }
+.bid-col.them .bid-label { color: var(--ink-dim); }
 .bid-divider {
   font-family: var(--font-serif);
   font-style: italic;
@@ -1028,6 +1030,13 @@ details > summary::-webkit-details-marker { display: none; }
   height: 112px;
   display: grid;
   place-items: center;
+  border-radius: 10px;
+  transition: border-color 0.2s, background 0.2s;
+}
+/* Empty slot: dashed placeholder so the user can see where the bid will land. */
+.bid-slot:empty {
+  border: 2px dashed var(--border-strong);
+  background: var(--surface);
 }
 /* All cards inside the bid-slot — played, opp, face-down, drop-zone — use a
    fixed size that matches the slot. They never overflow. */
