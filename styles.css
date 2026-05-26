@@ -581,6 +581,14 @@ details > summary::-webkit-details-marker { display: none; }
   margin-top: 16px;
   display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
 }
+.visit-counter {
+  margin-top: 12px;
+  display: flex; justify-content: center;
+  opacity: 0.75;
+  transition: opacity 0.2s;
+}
+.visit-counter:hover { opacity: 1; }
+.visit-counter:empty { display: none; }
 
 /* Theme picker */
 .theme-row { display: flex; gap: 6px; align-items: center; }
