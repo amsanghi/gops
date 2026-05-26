@@ -11,23 +11,25 @@ A static, zero-build progressive web app. No backend. No accounts. All state liv
 ## Highlights
 
 - **14 solo modes** — Daily Challenge, Vs AI, Hot Seat, Puzzles, Endless, Tournament, Bullet (3s/bid), AI Battle (spectate), Daily Archive, AI Bracket, Random Rule, Ghost, Practice, Weekly Puzzle.
-- **Multiplayer** — Duel (1v1) **and** Party rooms (2–8 players) with text chat, emoji reactions, voice & video chat (when enabled). Mid-game refresh just works — both sides reconnect to the saved round automatically.
+- **Multiplayer** — Duel (1v1) **and** Party rooms (2–8 players) with text chat, emoji reactions, voice & video chat (when enabled). Mid-game refresh just works — both sides reconnect to the saved round automatically. Duel supports best-of 1/3/5/7/9 **and an indefinite series** that keeps a running tally.
 - **Power cards variant** — Optional wildcard `★` worth the average prize value.
 - **Coach mode** — Post-game analysis flags the rounds where you misplayed, with reasoning.
 - **Replay tools** — Scrub through any past game; share replays via URL; download as `webm` video.
 - **Stats & heatmaps** — Per-mode records, bid heatmap (what cards you favor against which prizes), score curves, AI mastery.
-- **Customization** — 6 accent themes + custom color picker, dark/light, 4 card-back patterns, 22 avatars, animation speed, color-blind safe palette.
-- **No-scroll game UI** — Fits any viewport, optimized for Bullet rounds where every second matters.
+- **Customization** — 6 accent themes + custom color picker, 4 card-back patterns, 22 avatars, animation speed, color-blind safe palette.
+- **Onboarding** — In-game tutorial; post-tutorial guided first match with inline hints; built-in **About GOPS** modal with curated YouTube + text rules so newcomers can grok the game in 90 seconds.
+- **Feedback hub** — One-tap deep links from the lobby to file bugs, suggest features, submit puzzles, or open a Discussion on GitHub.
 - **Tap-to-confirm bidding** — Tap a card to stage it, tap again (or the drop-zone) to lock in. Keyboard shortcuts work too.
 - **PWA** — Installable, offline-capable, share-target enabled.
 
 ## Tech
 
 - Pure browser ESM — no build, no bundler, no transpile. Just open `index.html`.
-- ~5200 lines across 18 small modules in [`js/`](./js/).
+- ~5300 lines across 18 small modules in [`js/`](./js/).
 - Service worker with network-first HTML + stale-while-revalidate assets.
 - In-browser test suite at [`/tests/`](./tests/).
 - Uses PeerJS at runtime for multiplayer; lazy-loaded only when needed. WebRTC ICE with STUN + Open Relay TURN for NAT traversal.
+- Dark-only theme. (Light mode was removed — see `[data-theme]` tokens in `styles.css` for accent customization.)
 
 ## How to play
 
