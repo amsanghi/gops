@@ -592,8 +592,9 @@ function init() {
   // Tutorial
   $('tutorial-btn').onclick = () => startTutorial(startSolo);
 
-  // About modal (curated external resources)
+  // About modal (curated external resources) — also surfaced as a hero CTA
   $('about-btn').onclick = () => show('modal-about');
+  $('hero-learn-btn').onclick = () => show('modal-about');
   $('about-tutorial-btn').onclick = () => { hide('modal-about'); startTutorial(startSolo); };
 
   // Game toolbar

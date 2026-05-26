@@ -445,6 +445,47 @@ body.in-game.bullet .chat { display: none; }
   color: var(--ink);
 }
 
+/* "New to GOPS? Watch the intro" CTA — visible to every visitor but unobtrusive */
+.hero-learn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 10px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--ink-dim);
+  font-size: 13px;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s var(--ease-out);
+}
+.hero-learn:hover {
+  background: var(--surface-hover);
+  border-color: var(--me);
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+.hero-learn b { color: var(--ink); font-weight: 600; }
+.hero-learn-icon {
+  width: 22px; height: 22px;
+  display: grid; place-items: center;
+  border-radius: 999px;
+  background: var(--me-soft);
+  color: var(--me);
+  font-size: 10px;
+}
+
+/* About modal — pull metadata under the link title (used by the inspiration row) */
+.about-meta {
+  font-size: 11px;
+  color: var(--ink-faint);
+  font-weight: 400;
+  display: block;
+  margin-top: 2px;
+}
+
 /* Profile chip */
 .profile {
   display: flex; align-items: center; gap: 12px;
@@ -1930,6 +1971,10 @@ body.in-game.party #them-bid { display: flex; flex-wrap: wrap; gap: 8px; justify
 @media (max-width: 600px) {
   .app { padding: 16px 14px 60px; }
   .topbar { margin-bottom: 20px; }
+  /* Topbar overflowed by ~60px on mobile, pushing settings/mode buttons offscreen.
+     Hide the accent-color row + divider in the topbar — still reachable from Settings. */
+  .topbar #theme-row, .topbar .divider-y { display: none; }
+  .topbar-actions { gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
   .hero { padding: 24px 0 20px; }
   .game-head { grid-template-columns: 1fr 1fr 1fr; padding: 10px 12px; }
   .score-name .av { width: 24px; height: 24px; font-size: 14px; }
