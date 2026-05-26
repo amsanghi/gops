@@ -597,6 +597,9 @@ function init() {
   $('hero-learn-btn').onclick = () => show('modal-about');
   $('about-tutorial-btn').onclick = () => { hide('modal-about'); startTutorial(startSolo); };
 
+  // Feedback modal — bug/feature/puzzle/discussion deep-links to GitHub
+  $('feedback-btn').onclick = () => show('modal-feedback');
+
   // Game toolbar
   $('history-btn').onclick = () => { renderHistory(); show('modal-history'); };
   $('history-btn-2').onclick = () => { renderHistory(); show('modal-history'); };
