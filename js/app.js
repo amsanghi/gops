@@ -7,14 +7,14 @@ import {
   getPrefs, savePrefs, getSavedGame, clearSavedGame,
 } from './storage.js';
 import {
-  setTheme, buildThemePicker, setupAvatarPicker, buildCardBackPicker,
+  setTheme, buildThemePicker, setupAvatarPicker,
   updateH2H, refreshLobbySubtitles, setupModals, openAchievementsModal, openStatsModal,
   openPuzzleModal, openTournamentModal, openHotSeatPrompt, showResumeBanner,
   openArchiveModal, openBattleModal,
   renderEnd, buildReactionsBar, toggleChat, sendChat, renderChatMsgs,
-  applyStreakFrame, applyCustomTheme, applyAnimSpeed,
+  applyStreakFrame,
 } from './ui.js';
-import { getCustomTheme, saveCustomTheme, getDailyState } from './storage.js';
+import { getDailyState } from './storage.js';
 import { renderHistory } from './render.js';
 import { sfx, haptic } from './effects.js';
 import {
@@ -298,19 +298,10 @@ function loadPrefs() {
   if (p.name) { S.myName = p.name; $('name-input').value = p.name; }
   if (p.theme) S.theme = p.theme;
   if (p.avatar) S.myAvatar = p.avatar;
-  if (p.cardBack) S.cardBack = p.cardBack;
   if (p.sound !== undefined) S.sound = !!p.sound;
-  if (p.haptics !== undefined) S.haptics = !!p.haptics;
   if (Array.isArray(p.themesTried)) S.themesTried = new Set(p.themesTried);
-  if (p.handSort) S.handSort = p.handSort;
-  if (p.animSpeed) S.animSpeed = p.animSpeed;
   if (p.coachMode !== undefined) S.coachMode = !!p.coachMode;
   setTheme(S.theme || 'mono');
-  if (p.cbSafe) document.documentElement.setAttribute('data-cb', '1');
-  applyAnimSpeed(S.animSpeed || 1);
-  // Custom theme
-  const ct = getCustomTheme();
-  if (ct) applyCustomTheme(ct);
   if (p.lastHost) {
     const ls = p.lastHost;
     ['deck','tie','dir','goal','time'].forEach(k => {
@@ -320,14 +311,7 @@ function loadPrefs() {
   }
   $('avatar-btn').textContent = S.myAvatar;
   // Reflect prefs in settings controls
-  if ($('set-handsort')) $('set-handsort').value = S.handSort;
-  if ($('set-animspeed')) $('set-animspeed').value = String(S.animSpeed || 1);
   if ($('set-coach')) $('set-coach').value = S.coachMode === false ? '0' : '1';
-  if ($('set-cbsafe')) $('set-cbsafe').value = p.cbSafe ? '1' : '0';
-  if (ct) {
-    if ($('set-accent')) $('set-accent').value = ct.accent || '#fafafa';
-    if ($('set-opp')) $('set-opp').value = ct.opp || '#a1a1aa';
-  }
   updateSoundBtn();
   applyStreakFrame();
 }
@@ -336,7 +320,6 @@ function updateSoundBtn() {
   const btn = $('sound-btn');
   if (btn) btn.textContent = S.sound ? '♪' : '♪̸';
   $('set-sound').value = S.sound ? '1' : '0';
-  $('set-haptics').value = S.haptics ? '1' : '0';
 }
 
 // ---- Keyboard shortcuts ----
@@ -372,14 +355,6 @@ function bindKeys() {
   });
 }
 
-// ---- PWA install ----
-let deferredInstall = null;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredInstall = e;
-  show('install-area');
-});
-
 // ---- Service worker ----
 function registerSW() {
   if ('serviceWorker' in navigator) {
@@ -395,7 +370,6 @@ function init() {
   // Pickers / theme
   buildThemePicker();
   setupAvatarPicker();
-  buildCardBackPicker();
   loadPrefs();
   setupModals();
 
@@ -519,35 +493,13 @@ function init() {
     }
   };
   $('settings-btn').onclick = () => {
-    buildCardBackPicker();
     $('set-sound').value = S.sound ? '1' : '0';
-    $('set-haptics').value = S.haptics ? '1' : '0';
     show('modal-settings');
   };
 
   // Settings modal controls
   $('set-sound').onchange = e => { S.sound = e.target.value === '1'; savePrefs({ sound: S.sound }); updateSoundBtn(); if (S.sound) sfx.pick(); };
-  $('set-haptics').onchange = e => { S.haptics = e.target.value === '1'; savePrefs({ haptics: S.haptics }); };
-  $('set-handsort').onchange = e => { S.handSort = e.target.value; savePrefs({ handSort: e.target.value }); };
-  $('set-animspeed').onchange = e => { S.animSpeed = parseFloat(e.target.value); applyAnimSpeed(S.animSpeed); savePrefs({ animSpeed: S.animSpeed }); };
   $('set-coach').onchange = e => { S.coachMode = e.target.value === '1'; savePrefs({ coachMode: S.coachMode }); };
-  $('set-cbsafe').onchange = e => {
-    const on = e.target.value === '1';
-    if (on) document.documentElement.setAttribute('data-cb', '1');
-    else document.documentElement.removeAttribute('data-cb');
-    savePrefs({ cbSafe: on });
-  };
-  $('apply-custom-btn').onclick = () => {
-    const accent = $('set-accent').value, opp = $('set-opp').value;
-    saveCustomTheme({ accent, opp });
-    applyCustomTheme({ accent, opp });
-    savePrefs({ customTheme: { accent, opp } });
-  };
-  $('clear-custom-btn').onclick = () => {
-    saveCustomTheme(null);
-    applyCustomTheme(null);
-    savePrefs({ customTheme: null });
-  };
   $('import-btn').onclick = () => $('import-file').click();
   $('import-file').addEventListener('change', e => {
     const f = e.target.files[0];
@@ -575,11 +527,6 @@ function init() {
     });
     if (!ok) return;
     import('./storage.js').then(m => { m.wipeAll(); location.reload(); });
-  };
-  $('install-btn').onclick = () => {
-    if (!deferredInstall) return;
-    deferredInstall.prompt();
-    deferredInstall.userChoice.finally(() => { deferredInstall = null; hide('install-area'); });
   };
 
   // Tutorial

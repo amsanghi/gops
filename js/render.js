@@ -22,10 +22,11 @@ export function makeCard(n, classes = 'in-hand', { size } = {}) {
 }
 
 function pipFor(n, deckSize) {
-  if (deckSize === 7) return String(n);
-  // For 13-card deck: A/J/Q/K get a tiny pip label; numbers show "♦" softly
-  const map = { 1: 'ace', 11: 'jack', 12: 'queen', 13: 'king' };
-  return map[n] || '';
+  // Only face cards in a 13-card deck get a written-out pip label.
+  // For numeric cards (any deck size) the rank itself is the number, so a
+  // pip would just duplicate it — return '' and let the card show one value.
+  if (deckSize === 13) return ({ 1: 'ace', 11: 'jack', 12: 'queen', 13: 'king' })[n] || '';
+  return '';
 }
 
 // ---- Game zones ----
