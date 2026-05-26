@@ -595,6 +595,42 @@ details > summary::-webkit-details-marker { display: none; }
 .visit-counter:hover { color: var(--ink-dim); }
 .visit-counter:empty { display: none; }
 
+/* About-GOPS modal — curated external resources */
+.about-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.about-links li { margin: 0; }
+.about-links a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 14px;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s var(--ease-out);
+}
+.about-links a:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+.about-host {
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+}
+
 /* Theme picker */
 .theme-row { display: flex; gap: 6px; align-items: center; }
 .swatch {

@@ -336,8 +336,8 @@ export function openModal(id) {
 export function closeModal(id) { hide(id); }
 
 export function setupModals() {
-  // [data-close] buttons
-  $$('.modal-close').forEach(btn => {
+  // [data-close] buttons (X-style modal-close AND any other button with data-close)
+  $$('[data-close]').forEach(btn => {
     btn.onclick = () => hide(btn.dataset.close || btn.closest('.scrim')?.id);
   });
   // Scrim click closes the modal

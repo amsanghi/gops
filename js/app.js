@@ -126,6 +126,7 @@ function setupOnboarding() {
   onb.hidden = false;
   $('onb-dismiss').onclick = () => { onb.hidden = true; savePrefs({ seen: true }); };
   $('onb-tutorial').onclick = () => { onb.hidden = true; savePrefs({ seen: true }); startTutorial(startSolo); };
+  $('onb-about').onclick = () => { onb.hidden = true; savePrefs({ seen: true }); show('modal-about'); };
 }
 
 // ---- AI Bracket ----
@@ -590,6 +591,10 @@ function init() {
 
   // Tutorial
   $('tutorial-btn').onclick = () => startTutorial(startSolo);
+
+  // About modal (curated external resources)
+  $('about-btn').onclick = () => show('modal-about');
+  $('about-tutorial-btn').onclick = () => { hide('modal-about'); startTutorial(startSolo); };
 
   // Game toolbar
   $('history-btn').onclick = () => { renderHistory(); show('modal-history'); };

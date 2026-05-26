@@ -239,6 +239,7 @@
 
       <div class="lobby-foot">
         <button class="btn btn-ghost btn-sm" id="tutorial-btn">◵ Tutorial</button>
+        <button class="btn btn-ghost btn-sm" id="about-btn">? About</button>
         <button class="btn btn-ghost btn-sm" id="export-btn">↧ Export data</button>
       </div>
       <div id="visit-counter" class="visit-counter" aria-label="Site visitors"></div>
@@ -423,6 +424,34 @@
     </div>
   </div>
 
+  <div class="scrim" id="modal-about" hidden role="dialog" aria-modal="true" aria-labelledby="modal-about-title">
+    <div class="modal">
+      <div class="modal-head"><h2 id="modal-about-title">About GOPS</h2><button class="modal-close" data-close="modal-about" aria-label="Close">×</button></div>
+      <p class="modal-desc">
+        <b>Game of Pure Strategy</b> (a.k.a. Goofspiel) is a no-luck card game invented at Princeton in the 1930s.
+        Both players have the same hand of A–K. A prize is revealed each round; you each secretly bid one card; the higher bid wins.
+        Spent cards are gone forever. After all 13 rounds, highest total wins.
+      </p>
+      <h3 style="margin:18px 0 8px;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-faint)">Watch</h3>
+      <ul class="about-links">
+        <li><a href="https://www.youtube.com/watch?v=WUTc1AF3a0I" target="_blank" rel="noopener">▶ Rules in 90 seconds <span class="about-host">youtube.com</span></a></li>
+        <li><a href="https://www.youtube.com/watch?v=xVK8R9cGjoY" target="_blank" rel="noopener">▶ Full walkthrough <span class="about-host">youtube.com</span></a></li>
+        <li><a href="https://www.youtube.com/shorts/4KbNZEL81Yo" target="_blank" rel="noopener">▶ Quick short <span class="about-host">youtube.com</span></a></li>
+      </ul>
+      <h3 style="margin:18px 0 8px;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-faint)">Read</h3>
+      <ul class="about-links">
+        <li><a href="https://en.wikipedia.org/wiki/Goofspiel" target="_blank" rel="noopener">≡ Wikipedia — history & strategy <span class="about-host">wikipedia.org</span></a></li>
+        <li><a href="https://www.pagat.com/misc/gops.html" target="_blank" rel="noopener">≡ Pagat — canonical rules <span class="about-host">pagat.com</span></a></li>
+        <li><a href="https://boardgamegeek.com/boardgame/16632/gops" target="_blank" rel="noopener">≡ BoardGameGeek listing <span class="about-host">boardgamegeek.com</span></a></li>
+        <li><a href="https://medium.com/@gaffney.tj/breeding-goofspiel-strategies-408cce283e94" target="_blank" rel="noopener">≡ Breeding Goofspiel strategies <span class="about-host">medium.com</span></a></li>
+      </ul>
+      <div style="margin-top:18px;display:flex;justify-content:flex-end;gap:8px">
+        <button class="btn btn-ghost btn-sm" data-close="modal-about">Close</button>
+        <button class="btn btn-primary btn-sm" id="about-tutorial-btn">Try the in-game tutorial →</button>
+      </div>
+    </div>
+  </div>
+
   <div class="scrim" id="modal-ach" hidden role="dialog" aria-modal="true" aria-labelledby="modal-ach-title">
     <div class="modal">
       <div class="modal-head"><h2 id="modal-ach-title">Achievements</h2><button class="modal-close" data-close="modal-ach" aria-label="Close">×</button></div>
@@ -481,9 +510,10 @@
   <div id="onboarding" class="onboarding" hidden>
     <div class="onboarding-card">
       <h3>Welcome to GOPS</h3>
-      <p>Bid cards <kbd>A</kbd>–<kbd>K</kbd> to win prizes. No luck — only nerve. Try the tutorial or jump straight into the daily challenge.</p>
+      <p>Bid cards <kbd>A</kbd>–<kbd>K</kbd> to win prizes. No luck — only nerve. Try the tutorial, learn the game, or jump straight into the daily challenge.</p>
       <div class="onboarding-actions">
         <button class="btn btn-ghost btn-sm" id="onb-dismiss">Skip</button>
+        <button class="btn btn-ghost btn-sm" id="onb-about">Learn the game</button>
         <button class="btn btn-primary btn-sm" id="onb-tutorial">Tutorial</button>
       </div>
     </div>
