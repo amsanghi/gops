@@ -28,6 +28,27 @@
 <!-- Anonymous, cookie-free page-view counts. Auto-skips localhost. -->
 <script data-goatcounter="https://gops.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
+<script>
+  // Show the GoatCounter visitor count badge in the lobby footer once count.js loads.
+  (function () {
+    var tries = 0;
+    var t = setInterval(function () {
+      if (window.goatcounter && window.goatcounter.visit_count) {
+        clearInterval(t);
+        window.goatcounter.visit_count({
+          append: '#visit-counter',
+          type: 'html',
+          no_branding: true,
+          // Strip query string so cache-bust params (?fresh=…, ?utm_…) don't fragment counts.
+          path: window.location.pathname,
+          style: 'border:1px solid rgba(255,255,255,0.08);border-radius:8px;background:transparent;color:#a1a1aa;font:500 11px/1.4 Inter,system-ui,sans-serif;padding:8px 12px;'
+        });
+      } else if (++tries > 50) {
+        clearInterval(t);
+      }
+    }, 100);
+  })();
+</script>
 </head>
 <body>
 
@@ -191,6 +212,7 @@
         <button class="btn btn-ghost btn-sm" id="tutorial-btn">◵ Tutorial</button>
         <button class="btn btn-ghost btn-sm" id="export-btn">↧ Export data</button>
       </div>
+      <div id="visit-counter" class="visit-counter" aria-label="Site visitors"></div>
     </div>
 
     <!-- Host waiting -->
