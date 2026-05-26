@@ -83,7 +83,7 @@ export const S = {
   // Preferences
   sound: true, haptics: true,
   theme: 'mono', cardBack: 'mono',
-  mode_light: false,
+  // (mode_light removed — site is dark-only)
   themesTried: new Set(),
   handSort: 'asc',       // 'asc' | 'desc' | 'used-last'
   animSpeed: 1,          // 0.5 .. 1.5

@@ -29,12 +29,9 @@ export function setTheme(name) {
   checkThemeAch();
 }
 
-export function setMode(mode /* 'dark' | 'light' | null=auto */) {
-  S.mode_light = mode === 'light';
-  if (mode) document.documentElement.setAttribute('data-mode', mode);
-  else document.documentElement.removeAttribute('data-mode');
-  savePrefs({ modeLight: mode === 'light' });
-}
+// Light/dark mode toggle was removed — GOPS is dark-only.
+// Kept as a no-op so any lingering callers don't break.
+export function setMode() { /* noop */ }
 
 export function buildThemePicker() {
   const row = $('theme-row');

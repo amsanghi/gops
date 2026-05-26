@@ -15,15 +15,15 @@ img, svg { display: block; max-width: 100%; }
 
 /* ---------- Design tokens ---------- */
 :root {
-  /* Surfaces (dark default) */
-  --bg: #0a0a0b;
-  --bg-elev-1: #131316;
-  --bg-elev-2: #1a1a1f;
-  --surface: rgba(255, 255, 255, 0.04);
-  --surface-hover: rgba(255, 255, 255, 0.07);
-  --surface-active: rgba(255, 255, 255, 0.10);
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.16);
+  /* Surfaces (dark only — light mode removed) */
+  --bg: #17171c;          /* softer than near-black; easier on the eyes */
+  --bg-elev-1: #20202a;
+  --bg-elev-2: #2a2a35;
+  --surface: rgba(255, 255, 255, 0.05);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --surface-active: rgba(255, 255, 255, 0.12);
+  --border: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.20);
 
   /* Text */
   --ink: #f4f4f5;
@@ -84,41 +84,7 @@ img, svg { display: block; max-width: 100%; }
 [data-theme="amber"]  { --me: #fbbf24; --me-soft: rgba(251,191,36,0.12); --me-glow: rgba(251,191,36,0.28); }
 [data-theme="violet"] { --me: #a78bfa; --me-soft: rgba(167,139,250,0.14); --me-glow: rgba(167,139,250,0.30); }
 
-/* Light mode */
-[data-mode="light"] {
-  --bg: #fafafa;
-  --bg-elev-1: #ffffff;
-  --bg-elev-2: #f4f4f5;
-  --surface: rgba(0, 0, 0, 0.035);
-  --surface-hover: rgba(0, 0, 0, 0.055);
-  --surface-active: rgba(0, 0, 0, 0.085);
-  --border: rgba(0, 0, 0, 0.08);
-  --border-strong: rgba(0, 0, 0, 0.16);
-  --ink: #0a0a0b;
-  --ink-dim: #52525b;
-  --ink-faint: #a1a1aa;
-  --ink-ghost: #d4d4d8;
-  --card-face: #0a0a0b;
-  --card-face-2: #1a1a1f;
-  --card-ink: #fafafa;
-  --card-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 -1px 0 rgba(0,0,0,0.25) inset, 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08);
-  --opp: #71717a;
-  --opp-soft: rgba(113,113,122,0.10);
-  --opp-glow: rgba(113,113,122,0.18);
-}
-
-/* Auto follow system if user hasn't picked a mode */
-@media (prefers-color-scheme: light) {
-  :root:not([data-mode]) {
-    --bg: #fafafa; --bg-elev-1: #ffffff; --bg-elev-2: #f4f4f5;
-    --surface: rgba(0,0,0,0.035); --surface-hover: rgba(0,0,0,0.055); --surface-active: rgba(0,0,0,0.085);
-    --border: rgba(0,0,0,0.08); --border-strong: rgba(0,0,0,0.16);
-    --ink: #0a0a0b; --ink-dim: #52525b; --ink-faint: #a1a1aa; --ink-ghost: #d4d4d8;
-    --card-face: #0a0a0b; --card-face-2: #1a1a1f; --card-ink: #fafafa;
-    --card-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 -1px 0 rgba(0,0,0,0.25) inset, 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08);
-    --opp: #71717a; --opp-soft: rgba(113,113,122,0.10); --opp-glow: rgba(113,113,122,0.18);
-  }
-}
+/* Light mode + system auto-follow intentionally removed — GOPS is dark-only. */
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
@@ -1151,7 +1117,6 @@ details > summary::-webkit-details-marker { display: none; }
   border: 1px solid rgba(255,255,255,0.25);
   box-shadow: var(--card-shadow);
 }
-[data-mode="light"] .card.in-hand { border-color: rgba(0,0,0,0.1); }
 .card.in-hand:hover:not(.used):not(.locked) {
   transform: translateY(-10px) scale(1.04);
   box-shadow: 0 1px 0 rgba(255,255,255,0.4) inset, 0 -1px 0 rgba(0,0,0,0.08) inset, 0 16px 32px var(--me-glow), 0 4px 10px rgba(0,0,0,0.35);
@@ -1404,7 +1369,6 @@ details > summary::-webkit-details-marker { display: none; }
   padding: 20px;
   animation: fade-in 0.2s;
 }
-[data-mode="light"] .scrim { background: rgba(0,0,0,0.4); }
 .modal {
   background: var(--bg-elev-1);
   border: 1px solid var(--border);
