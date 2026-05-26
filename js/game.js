@@ -394,8 +394,10 @@ export function endGame() {
     maxDeficit = Math.max(maxDeficit, runTheirs - runMine);
   });
 
+  // bestOf === 0 means indefinite — series never ends; players just keep rematching.
+  const isIndefinite = S.settings.bestOf === 0;
   const seriesGoal = Math.ceil(S.settings.bestOf / 2);
-  const seriesOver = S.settings.bestOf === 1 || S.myGames >= seriesGoal || S.theirGames >= seriesGoal;
+  const seriesOver = !isIndefinite && (S.settings.bestOf === 1 || S.myGames >= seriesGoal || S.theirGames >= seriesGoal);
 
   // Stats — only on series end / single game.
   if (seriesOver) {
