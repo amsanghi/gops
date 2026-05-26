@@ -183,7 +183,8 @@ body.in-game .board {
 body.in-game .zone { padding: 14px 16px; min-height: 0; overflow: hidden; }
 body.in-game .center-stack { gap: 10px; min-height: 0; height: 100%; }
 /* Single Arena zone replaces the old prize+bids stack. Stretches but
-   centers its content so the row sits in the middle of the available space. */
+   centers its content so the row sits in the middle of the available space.
+   No border / no surface — the cards are the visual structure. */
 body.in-game .center-stack > .zone.arena {
   flex: 1 1 auto;
   min-height: 220px;
@@ -191,10 +192,33 @@ body.in-game .center-stack > .zone.arena {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background: transparent;
+  border: 0;
+  padding: 8px 12px;
 }
+body.in-game .arena > .zone-head { display: none; }
 body.in-game .arena .arena-row { min-height: 160px; flex: 0 0 auto; }
-body.in-game .arena .zone-head { flex: 0 0 auto; align-self: stretch; }
 body.in-game .prize-area { min-height: 0; }
+
+/* Hand + score header: also borderless in-game */
+body.in-game .hand-zone {
+  background: transparent;
+  border: 0;
+  padding: 10px 8px;
+}
+body.in-game .game-head {
+  background: transparent;
+  border: 0;
+  padding: 8px 4px;
+}
+
+/* Score name labels: use ink color so they stay readable in light mode
+   (the accent --me is white in mono theme — invisible on white bg). */
+body.in-game .score-name.me .label,
+body.in-game .score-name.them .label {
+  color: var(--ink);
+  font-weight: 700;
+}
 body.in-game .hand-zone {
   flex-shrink: 0;
   padding: 14px 18px;
