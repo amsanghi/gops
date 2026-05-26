@@ -7,7 +7,7 @@ import {
   getPrefs, savePrefs, getSavedGame, clearSavedGame,
 } from './storage.js';
 import {
-  setTheme, setMode, buildThemePicker, setupAvatarPicker, buildCardBackPicker,
+  setTheme, buildThemePicker, setupAvatarPicker, buildCardBackPicker,
   updateH2H, refreshLobbySubtitles, setupModals, openAchievementsModal, openStatsModal,
   openPuzzleModal, openTournamentModal, openHotSeatPrompt, showResumeBanner,
   openArchiveModal, openBattleModal,
@@ -302,12 +302,10 @@ function loadPrefs() {
   if (p.sound !== undefined) S.sound = !!p.sound;
   if (p.haptics !== undefined) S.haptics = !!p.haptics;
   if (Array.isArray(p.themesTried)) S.themesTried = new Set(p.themesTried);
-  if (p.modeLight) S.mode_light = true;
   if (p.handSort) S.handSort = p.handSort;
   if (p.animSpeed) S.animSpeed = p.animSpeed;
   if (p.coachMode !== undefined) S.coachMode = !!p.coachMode;
   setTheme(S.theme || 'mono');
-  if (p.modeLight) setMode('light');
   if (p.cbSafe) document.documentElement.setAttribute('data-cb', '1');
   applyAnimSpeed(S.animSpeed || 1);
   // Custom theme
@@ -510,12 +508,7 @@ function init() {
     onReturnToLobby: showLobby,
   });
 
-  // Top bar
-  $('mode-toggle-btn').onclick = () => {
-    const isLight = document.documentElement.getAttribute('data-mode') === 'light';
-    setMode(isLight ? 'dark' : 'light');
-    if (isLight) document.documentElement.removeAttribute('data-mode'); // back to auto/dark
-  };
+  // Top bar — light/dark toggle removed; site is dark-only.
   $('achievements-btn').onclick = openAchievementsModal;
   $('stats-btn').onclick = () => {
     openStatsModal();
