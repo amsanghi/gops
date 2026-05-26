@@ -116,7 +116,8 @@ export const TUTORIAL_STEPS = [
 ];
 
 // vs2.0 — bare-numeric, no suits, monogram-style rank text
-export function rankText(n, size = 13) {
-  if (size === 13) return ({1:'A', 11:'J', 12:'Q', 13:'K'})[n] || String(n);
-  return String(n);
+export function rankText(n /*, size */) {
+  // Always show A/J/Q/K for those ranks. Deck size doesn't matter — in a
+  // 7-card deck only 1 maps (A), and in larger decks J/Q/K kick in too.
+  return ({ 1: 'A', 11: 'J', 12: 'Q', 13: 'K' })[n] || String(n);
 }
