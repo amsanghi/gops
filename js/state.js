@@ -73,6 +73,7 @@ export const S = {
   currentTournamentAI: null,
   ghostMoves: null,    // array of bids for ghost mode
   battlePersonA: null, battlePersonB: null, // AI battle personalities
+  guidedMode: false,   // post-tutorial: show inline guidance banner for first few rounds
 
   // Timer
   timerId: null, timerStart: 0, timerDuration: 0, lastTickSec: null,

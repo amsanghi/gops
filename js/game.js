@@ -92,6 +92,7 @@ export function nextRound() {
   renderPrizesRemaining();
   sfx.reveal();
   saveGame(buildSaveSnap());
+  updateGuided('round-start');
 
   setTimerExpireCallback(autoBidOnTimeout);
   startTimer();
@@ -134,6 +135,7 @@ export function selectCard(n) {
   S.pendingPick = n;
   renderHand(selectCard);
   renderConfirm();
+  updateGuided('picked');
 }
 
 function renderConfirm() {
@@ -187,6 +189,7 @@ export function confirmPick() {
   renderMyBid(n);
   sfx.confirm(); haptic([25]);
   saveGame(buildSaveSnap());
+  updateGuided('confirmed');
 
   if (S.currentMode === 'hotseat') {
     // Hot-seat: advance to P2 phase or resolve if both phases done
@@ -448,6 +451,49 @@ export function endGame() {
   else { setTimeout(sfx.endLose, 180); haptic([200, 100, 200]); }
 
   if (seriesOver) { S.myGames = 0; S.theirGames = 0; }
+  // The guided banner only lives through one game.
+  S.guidedMode = false;
+  const gb = document.getElementById('guided-banner');
+  if (gb) gb.hidden = true;
 
   endHook({ didIWin, seriesOver, cmp });
+}
+
+// ---- Post-tutorial guidance banner ----
+// Shows a friendly explanation for the first 3 rounds after the user
+// finishes the tutorial, then auto-clears. Dismissable any time.
+const GUIDED_COPY = {
+  1: {
+    'round-start': 'Round 1 — A <b>prize card</b> sits at the top. Pick one of your cards to bid on it. Same card from both players = same value, so judge how much the prize is worth.',
+    'picked':       'You picked a card. Tap it again, or tap the <b>highlighted slot</b>, to lock your bid.',
+    'confirmed':    'Bid locked. Watch the AI reveal its card next…',
+  },
+  2: {
+    'round-start': 'Round 2 — Notice the <b>opponent\'s used cards</b> on the right. Knowing what they\'ve spent tells you what they have left.',
+    'picked':       'Spent cards never come back. Make every bid count.',
+    'confirmed':    'Locked in.',
+  },
+  3: {
+    'round-start': 'Round 3 — Strategy tip: <b>bid high on high-value prizes</b>, but mixing in low bids can save bidding power for later. There\'s no perfect strategy — adapt.',
+    'picked':       'Nice pick. Lock it in when ready.',
+    'confirmed':    'Locked in.',
+  },
+};
+function updateGuided(event) {
+  if (!S.guidedMode) return;
+  const banner = document.getElementById('guided-banner');
+  const text = document.getElementById('guided-text');
+  if (!banner || !text) return;
+  const round = S.round + 1; // S.round is 0-indexed
+  if (round > 3) { banner.hidden = true; return; }
+  const copy = GUIDED_COPY[round]?.[event];
+  if (!copy) return;
+  text.innerHTML = copy;
+  banner.hidden = false;
+  // Wire the close button once
+  const close = document.getElementById('guided-close');
+  if (close && !close._wired) {
+    close._wired = true;
+    close.onclick = () => { S.guidedMode = false; banner.hidden = true; };
+  }
 }
