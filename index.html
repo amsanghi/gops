@@ -29,15 +29,48 @@
 <script data-goatcounter="https://gops.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 <script>
-  // Fetch raw count from GoatCounter's JSON endpoint and render in our own typography.
-  // Skip on localhost so dev hits don't show a "(none)" badge.
+  // Render "N visitors · M views" in the lobby footer. Fetches:
+  //   • unique-visitor count from the public counter JSON endpoint
+  //   • total-pageview count from the authenticated stats API
+  // Results are cached in localStorage for 1h so we don't hammer the API
+  // (4 req/sec rate limit on GoatCounter free tier).
   (function () {
     if (['localhost', '127.0.0.1', ''].includes(location.hostname)) return;
-    var url = 'https://gops.goatcounter.com/counter/' + encodeURIComponent(location.pathname) + '.json';
-    fetch(url).then(function (r) { return r.json(); }).then(function (d) {
+    var TOKEN = 'fp72ynhqox4epp9d7axwcpc021mspg2jdqme21lkshzjzpbjpf'; // read-only stats scope
+    var TTL = 60 * 60 * 1000; // 1h
+    var KEY = 'gops-counter-cache';
+    var fmt = function (n) { return n.toLocaleString('en-US'); };
+
+    var render = function (visitors, views) {
       var el = document.getElementById('visit-counter');
-      if (el && d && d.count) el.textContent = d.count + ' visits';
-    }).catch(function () { /* silent — no badge is better than a broken one */ });
+      if (!el) return;
+      var parts = [];
+      if (visitors != null) parts.push(fmt(visitors) + ' visitors');
+      if (views != null) parts.push(fmt(views) + ' views');
+      if (parts.length) el.textContent = parts.join(' · ');
+    };
+
+    // Serve from cache immediately if fresh
+    try {
+      var c = JSON.parse(localStorage.getItem(KEY) || 'null');
+      if (c && Date.now() - c.ts < TTL) render(c.visitors, c.views);
+    } catch {}
+
+    Promise.all([
+      fetch('https://gops.goatcounter.com/counter/' + encodeURIComponent(location.pathname) + '.json')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .catch(function () { return null; }),
+      fetch('https://gops.goatcounter.com/api/v0/stats/total', { headers: { Authorization: 'Bearer ' + TOKEN } })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .catch(function () { return null; }),
+    ]).then(function (results) {
+      var visitors = results[0] && results[0].count != null
+        ? parseInt(String(results[0].count).replace(/\D/g, ''), 10) : null;
+      var views = results[1] && typeof results[1].total === 'number' ? results[1].total : null;
+      if (visitors == null && views == null) return;
+      render(visitors, views);
+      try { localStorage.setItem(KEY, JSON.stringify({ ts: Date.now(), visitors: visitors, views: views })); } catch {}
+    });
   })();
 </script>
 </head>
