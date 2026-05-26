@@ -207,6 +207,7 @@
       <div class="lobby-foot">
         <button class="btn btn-ghost btn-sm" id="tutorial-btn">◵ Tutorial</button>
         <button class="btn btn-ghost btn-sm" id="about-btn">? About</button>
+        <button class="btn btn-ghost btn-sm" id="feedback-btn">✎ Feedback</button>
         <button class="btn btn-ghost btn-sm" id="export-btn">↧ Export data</button>
       </div>
       <div id="visit-counter" class="visit-counter" aria-label="Site visitors"></div>
@@ -423,6 +424,22 @@
       <div style="margin-top:18px;display:flex;justify-content:flex-end;gap:8px">
         <button class="btn btn-ghost btn-sm" data-close="modal-about">Close</button>
         <button class="btn btn-primary btn-sm" id="about-tutorial-btn">Try the in-game tutorial →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="scrim" id="modal-feedback" hidden role="dialog" aria-modal="true" aria-labelledby="modal-feedback-title">
+    <div class="modal">
+      <div class="modal-head"><h2 id="modal-feedback-title">Feedback</h2><button class="modal-close" data-close="modal-feedback" aria-label="Close">×</button></div>
+      <p class="modal-desc">All feedback goes to GitHub. Pick a category — your post lands as a pre-filled issue or discussion. No login required to read; a free GitHub account is needed to submit.</p>
+      <ul class="about-links">
+        <li><a href="https://github.com/amsanghi/gops/issues/new?template=bug.yml" target="_blank" rel="noopener"><span>🐛 <b>Report a bug</b><br><span class="about-meta">Something broken, glitchy, or unexpected</span></span><span class="about-host">github.com</span></a></li>
+        <li><a href="https://github.com/amsanghi/gops/issues/new?template=feature.yml" target="_blank" rel="noopener"><span>💡 <b>Suggest a feature</b><br><span class="about-meta">An idea, improvement, or new mode</span></span><span class="about-host">github.com</span></a></li>
+        <li><a href="https://github.com/amsanghi/gops/issues/new?template=puzzle.yml" target="_blank" rel="noopener"><span>🧩 <b>Submit a puzzle</b><br><span class="about-meta">A scripted scenario for others to solve</span></span><span class="about-host">github.com</span></a></li>
+        <li><a href="https://github.com/amsanghi/gops/discussions/new?category=general" target="_blank" rel="noopener"><span>💬 <b>General feedback / chat</b><br><span class="about-meta">Open-ended thoughts, screenshots, brag posts</span></span><span class="about-host">github.com</span></a></li>
+      </ul>
+      <div style="margin-top:18px;display:flex;justify-content:flex-end">
+        <button class="btn btn-ghost btn-sm" data-close="modal-feedback">Close</button>
       </div>
     </div>
   </div>
