@@ -171,10 +171,21 @@ export function renderMetaCounts() {
 
 export function renderSeries() {
   const bar = $('series-bar');
-  if (S.settings.bestOf > 1) {
+  const bestOf = S.settings.bestOf;
+  if (bestOf === 0) {
+    // Indefinite series — show running tally instead of a fixed pip count
     bar.hidden = false;
+    bar.classList.add('indefinite');
+    bar.innerHTML = `
+      <span class="series-tally me-tally">${S.myGames}</span>
+      <span class="series-label">∞ Indefinite</span>
+      <span class="series-tally them-tally">${S.theirGames}</span>
+    `;
+  } else if (bestOf > 1) {
+    bar.hidden = false;
+    bar.classList.remove('indefinite');
     bar.innerHTML = '';
-    const goal = Math.ceil(S.settings.bestOf / 2);
+    const goal = Math.ceil(bestOf / 2);
     for (let i = 0; i < goal; i++) {
       const me = document.createElement('div');
       me.className = 'series-pip' + (i < S.myGames ? ' me' : '');
@@ -189,6 +200,7 @@ export function renderSeries() {
     }
   } else {
     bar.hidden = true;
+    bar.classList.remove('indefinite');
   }
 }
 

@@ -68,7 +68,9 @@ export async function startHost({ rejoinExisting = false } = {}) {
     S.myName = $('name-input').value.trim() || 'Player 1';
     // Pull host settings (fresh game)
     S.settings.deckSize = parseInt($('host-deck').value, 10);
-    S.settings.bestOf = Math.max(1, Math.min(99, parseInt($('host-bestof').value, 10) || 1));
+    // 0 = indefinite series (no series end); otherwise clamp to 1–99
+    const bo = parseInt($('host-bestof').value, 10);
+    S.settings.bestOf = bo === 0 ? 0 : Math.max(1, Math.min(99, bo || 1));
     S.settings.tieRule = $('host-tie').value;
     S.settings.direction = $('host-dir').value;
     S.settings.winCondition = $('host-goal').value;
