@@ -32,13 +32,14 @@ export const CARD_BACKS = [
 
 export const REACTIONS = ['😘','😤','🔥','😂','💀','❤️','🤔','😎'];
 
+// The felt you play on. Your ivory counters stay ivory on every table.
 export const THEMES = [
-  { name: 'mono',   color: '#fafafa' },
-  { name: 'rose',   color: '#fb7185' },
-  { name: 'sky',    color: '#60a5fa' },
-  { name: 'lime',   color: '#a3e635' },
-  { name: 'amber',  color: '#fbbf24' },
-  { name: 'violet', color: '#a78bfa' },
+  { name: 'emerald',   color: '#174236' },
+  { name: 'claret',    color: '#41191D' },
+  { name: 'midnight',  color: '#1A263F' },
+  { name: 'cognac',    color: '#3B2A1A' },
+  { name: 'slate',     color: '#242C30' },
+  { name: 'aubergine', color: '#311B3E' },
 ];
 
 export const TOURNAMENT_AIS = [
@@ -100,7 +101,7 @@ export const ACHIEVEMENTS = [
   { id: 'reverse',     icon: '🔄', title: 'Reverse master', desc: 'Win in low-bid or fewest-wins.' },
   { id: 'burn',        icon: '🔥', title: 'Burnout',        desc: 'Win with burn-on-tie.' },
   { id: 'high_score',  icon: '💯', title: 'Big spender',    desc: 'Score 60+ in one game.' },
-  { id: 'theme',       icon: '🎨', title: 'Theme explorer', desc: 'Try all 6 themes.' },
+  { id: 'theme',       icon: '🎨', title: 'Table hopper',   desc: 'Sit at all six tables.' },
   { id: 'underdog',    icon: '🐕', title: 'Underdog',       desc: 'Win as the joiner.' },
   { id: 'ghost_beat',  icon: '👻', title: 'Self-defeated',  desc: 'Defeat your own ghost.' },
   { id: 'hotseat',     icon: '🪑', title: 'Pass and play',  desc: 'Finish a hot-seat game.' },

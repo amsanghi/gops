@@ -34,18 +34,24 @@ export function setTheme(name) {
 export function setMode() { /* noop */ }
 
 export function buildThemePicker() {
-  const row = $('theme-row');
-  row.innerHTML = '';
-  THEMES.forEach(t => {
-    const sw = document.createElement('button');
-    sw.className = 'swatch';
-    sw.dataset.theme = t.name;
-    sw.style.setProperty('--swatch', t.color);
-    sw.title = t.name;
-    sw.setAttribute('aria-label', `Accent: ${t.name}`);
-    sw.setAttribute('aria-pressed', S.theme === t.name ? 'true' : 'false');
-    sw.onclick = () => setTheme(t.name);
-    row.appendChild(sw);
+  // Rendered in the top bar and again in Settings — the top-bar row is hidden on
+  // narrow screens, so Settings is the only way in on a phone.
+  ['theme-row', 'theme-row-settings'].forEach(id => {
+    const row = $(id);
+    if (!row) return;
+    row.innerHTML = '';
+    THEMES.forEach(t => {
+      const sw = document.createElement('button');
+      sw.className = 'swatch';
+      sw.type = 'button';
+      sw.dataset.theme = t.name;
+      sw.style.setProperty('--swatch', t.color);
+      sw.title = t.name;
+      sw.setAttribute('aria-label', `${t.name} table`);
+      sw.setAttribute('aria-pressed', S.theme === t.name ? 'true' : 'false');
+      sw.onclick = () => setTheme(t.name);
+      row.appendChild(sw);
+    });
   });
 }
 
@@ -107,10 +113,14 @@ export function buildCardBackPicker() {
     card.style.setProperty('--w', '48px');
     card.style.setProperty('--h', '68px');
     if (cb.id === S.cardBack) {
-      card.style.boxShadow = '0 0 0 2px var(--me), 0 4px 10px rgba(0,0,0,0.4)';
+      card.style.boxShadow = '0 0 0 2px var(--brass-lit), 0 6px 16px rgba(0,0,0,0.45)';
     }
     const lbl = document.createElement('div');
-    lbl.style.fontSize = '11px'; lbl.style.color = 'var(--ink-dim)'; lbl.style.marginTop = '4px';
+    lbl.style.fontSize = '9.5px';
+    lbl.style.letterSpacing = '0.18em';
+    lbl.style.textTransform = 'uppercase';
+    lbl.style.color = cb.id === S.cardBack ? 'var(--brass-lit)' : 'var(--ink-faint)';
+    lbl.style.marginTop = '8px';
     lbl.textContent = cb.label;
     col.append(card, lbl);
     col.onclick = () => { S.cardBack = cb.id; savePrefs({ cardBack: cb.id }); buildCardBackPicker(); };
@@ -135,18 +145,18 @@ export function updateH2H() {
 export function refreshLobbySubtitles() {
   const daily = getDailyState();
   const done = daily.history[new Date().toISOString().slice(0,10)];
-  $('daily-sub').textContent = done ? `✓ Today ${done.myScore}–${done.theirScore}` : (daily.streak ? `Today · 🔥${daily.streak}` : 'Today');
+  $('daily-sub').textContent = done ? `Played ${done.myScore}–${done.theirScore}` : (daily.streak ? `Today · ${daily.streak} in a row` : 'A fresh shuffle');
 
   const t = getTournament();
   $('tournament-sub').textContent = t.level >= TOURNAMENT_AIS.length
-    ? '👑 Champion'
+    ? 'Champion'
     : `Next: ${TOURNAMENT_AIS[t.level].name}`;
   S.tournamentLevel = t.level;
 
   const p = getSolvedPuzzles();
-  $('puzzle-sub').textContent = `${p.length}/${PUZZLES.length} solved`;
+  $('puzzle-sub').textContent = `${p.length} of ${PUZZLES.length} solved`;
 
-  $('endless-sub').textContent = 'Survival';
+  $('endless-sub').textContent = 'Last as long as you can';
 }
 
 // ---- Reactions ----
@@ -213,7 +223,7 @@ on('game-attached', () => {
 // ---- End screen ----
 export function renderEnd({ didIWin, seriesOver, cmp }) {
   document.body.classList.remove('in-game', 'bullet');
-  let resultEl = 'Tied', cls = 'tie';
+  let resultEl = 'Dead even', cls = 'tie';
   if (cmp > 0) { resultEl = 'You won'; cls = 'win'; }
   else if (cmp < 0) { resultEl = `${escapeHtml(S.theirName)} won`; cls = 'lose'; }
   const er = $('end-result');
@@ -266,7 +276,7 @@ export function renderEnd({ didIWin, seriesOver, cmp }) {
     const insights = coachAnalyze(S.history, S.settings.deckSize);
     const list = $('coach-list'); list.innerHTML = '';
     if (insights.length === 0) {
-      list.innerHTML = '<div class="coach-item"><div class="coach-why">No major mistakes spotted — solid bidding!</div></div>';
+      list.innerHTML = '<div class="coach-item"><div class="coach-why">Nothing to flag. That was clean bidding.</div></div>';
     } else {
       insights.forEach(i => {
         const div = document.createElement('div');
@@ -281,9 +291,9 @@ export function renderEnd({ didIWin, seriesOver, cmp }) {
   // Rematch button label
   const rb = $('rematch-btn');
   rb.disabled = false;
-  if (S.currentMode === 'tournament') rb.textContent = 'Next opponent →';
-  else if (S.currentMode === 'endless') rb.textContent = 'Next round →';
-  else if (S.currentMode === 'puzzle') rb.textContent = 'Puzzles ↩';
+  if (S.currentMode === 'tournament') rb.textContent = 'Next opponent';
+  else if (S.currentMode === 'endless') rb.textContent = 'Next round';
+  else if (S.currentMode === 'puzzle') rb.textContent = 'Back to puzzles';
   else if (seriesOver) rb.textContent = 'New game';
   else rb.textContent = 'Next game';
 }
@@ -384,36 +394,36 @@ export function openStatsModal() {
   const recordRows = Object.entries(records)
     .filter(([_, r]) => (r.score || 0) > 0 || (r.wins || 0) > 0)
     .sort((a, b) => (b[1].score || 0) - (a[1].score || 0))
-    .map(([m, r]) => `<div class="bar-row"><div class="bar-name">${escapeHtml(modeName(m))}</div><div class="bar-text" style="margin-left:auto">${r.wins || 0} wins · best ${r.score}</div></div>`)
+    .map(([m, r]) => `<div class="bar-row"><div class="bar-name">${escapeHtml(modeName(m))}</div><div class="bar-text" style="margin-left:auto">${r.wins || 0} ${r.wins === 1 ? 'win' : 'wins'} · best ${r.score}</div></div>`)
     .join('');
 
   $('stats-body').innerHTML = `
     <div class="stats-grid">
       <div class="stat"><div class="stat-value">${s.gamesPlayed}</div><div class="stat-label">Games</div></div>
-      <div class="stat"><div class="stat-value">${winRate}%</div><div class="stat-label">Win rate</div></div>
-      <div class="stat"><div class="stat-value">${s.highScore}</div><div class="stat-label">High score</div></div>
-      <div class="stat"><div class="stat-value">${avgScore}</div><div class="stat-label">Avg score</div></div>
+      <div class="stat"><div class="stat-value">${winRate}%</div><div class="stat-label">Won</div></div>
+      <div class="stat"><div class="stat-value">${s.highScore}</div><div class="stat-label">Best score</div></div>
+      <div class="stat"><div class="stat-value">${avgScore}</div><div class="stat-label">Average</div></div>
       <div class="stat"><div class="stat-value">${s.rounds || 0}</div><div class="stat-label">Rounds</div></div>
       <div class="stat"><div class="stat-value">${ach.length}</div><div class="stat-label">Badges</div></div>
     </div>
     <div class="stats-section">
-      <h3>Solo vs multi</h3>
+      <h3>Alone or against people</h3>
       <div class="bar-row"><div class="bar-name">Solo</div><div class="bar-track"><div class="bar-fill" style="width:${s.soloGames ? (100 * s.soloWon / s.soloGames) : 0}%"></div></div><div class="bar-text">${s.soloWon}/${s.soloGames}</div></div>
-      <div class="bar-row"><div class="bar-name">Multi</div><div class="bar-track"><div class="bar-fill" style="width:${s.multiGames ? (100 * s.multiWon / s.multiGames) : 0}%"></div></div><div class="bar-text">${s.multiWon}/${s.multiGames}</div></div>
+      <div class="bar-row"><div class="bar-name">Friends</div><div class="bar-track"><div class="bar-fill" style="width:${s.multiGames ? (100 * s.multiWon / s.multiGames) : 0}%"></div></div><div class="bar-text">${s.multiWon}/${s.multiGames}</div></div>
     </div>
     <div class="stats-section">
-      <h3>Per-mode records</h3>
-      ${recordRows || '<div class="bar-row"><div class="bar-text" style="margin-left:auto;color:var(--ink-faint)">Play a game to start your record book.</div></div>'}
+      <h3>Best in each mode</h3>
+      ${recordRows || '<div class="bar-row"><div class="bar-text" style="margin-left:auto;color:var(--ink-faint)">Finish a game to open your record book.</div></div>'}
     </div>
     <div class="stats-section">
-      <h3>Modes</h3>
-      <div class="bar-row"><div class="bar-name">Daily</div><div class="bar-text" style="margin-left:auto">${dailyState.totalCompleted || 0} done · streak ${dailyState.streak || 0} 🔥</div></div>
-      <div class="bar-row"><div class="bar-name">Puzzles</div><div class="bar-text" style="margin-left:auto">${puzzles.length}/${PUZZLES.length} solved</div></div>
-      <div class="bar-row"><div class="bar-name">Tournament</div><div class="bar-text" style="margin-left:auto">Level ${tournament.level}/${TOURNAMENT_AIS.length}</div></div>
+      <h3>Progress</h3>
+      <div class="bar-row"><div class="bar-name">Daily</div><div class="bar-text" style="margin-left:auto">${dailyState.totalCompleted || 0} played · ${dailyState.streak || 0} in a row</div></div>
+      <div class="bar-row"><div class="bar-name">Puzzles</div><div class="bar-text" style="margin-left:auto">${puzzles.length} of ${PUZZLES.length} solved</div></div>
+      <div class="bar-row"><div class="bar-name">Ladder</div><div class="bar-text" style="margin-left:auto">${tournament.level} of ${TOURNAMENT_AIS.length} beaten</div></div>
     </div>
     <div class="stats-section">
-      <h3>Bid heatmap</h3>
-      <p class="modal-desc" style="margin-bottom:8px">How often you bid each card against each prize rank (full-deck games).</p>
+      <h3>What you bid, and against what</h3>
+      <p class="modal-desc" style="margin-bottom:8px">Brighter means you play that card against that prize more often. Full-deck games only.</p>
       <div class="heatmap-wrap"><canvas id="heatmap-canvas"></canvas></div>
     </div>
   `;
@@ -520,7 +530,7 @@ export function openTournamentModal() {
         <div class="list-title">${status === 'done' ? '✓ ' : ''}${escapeHtml(ai.name)}${masteryTag}</div>
         <div class="list-desc">${escapeHtml(ai.description)}</div>
       </div>
-      <div class="list-meta">${ai.difficulty} · ${ai.personality}</div>
+      <div class="list-meta">${[...new Set([ai.difficulty, ai.personality])].join(' · ')}</div>
     `;
     if (status === 'current') card.onclick = () => { hide('modal-tournament'); startTournamentMatch(ai); };
     list.appendChild(card);

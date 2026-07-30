@@ -72,8 +72,8 @@ test('rankText labels A/J/Q/K for 13-deck', () => {
   assertEq(rankText(13, 13), 'K');
   assertEq(rankText(7, 13), '7');
 });
-test('rankText for 7-deck is plain numeric', () => {
-  assertEq(rankText(1, 7), '1');
+test('rankText shows the ace as A at every deck size', () => {
+  assertEq(rankText(1, 7), 'A');
   assertEq(rankText(7, 7), '7');
 });
 test('puzzles all have id + title + goal', () => {

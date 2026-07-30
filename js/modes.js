@@ -120,8 +120,14 @@ export function startSolo() {
   const a = readAISettings();
   S.vsAI = true; S.isHost = true; S.mode = 'solo'; S.currentMode = 'solo';
   S.myName = $('name-input').value.trim() || 'You';
-  S.theirName = `AI (${$('ai-diff').value})`;
-  S.theirAvatar = '🤖';
+  // House players rather than "AI (medium)" — reads as a name at display size.
+  const house = {
+    easy:   { name: 'The Novice',  avatar: '🐣' },
+    medium: { name: 'The Regular', avatar: '🎩' },
+    hard:   { name: 'The Sharp',   avatar: '🦅' },
+  }[$('ai-diff').value] || { name: 'The Regular', avatar: '🎩' };
+  S.theirName = house.name;
+  S.theirAvatar = house.avatar;
   const power = $('ai-power')?.checked || false;
   S.settings = {
     deckSize: a.deckSize, bestOf: 1, tieRule: 'carry',

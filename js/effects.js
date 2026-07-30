@@ -65,10 +65,10 @@ export function fireConfetti(opts = {}) {
   ctx.scale(dpr, dpr);
 
   const root = getComputedStyle(document.documentElement);
-  const accent = root.getPropertyValue('--me').trim() || '#f5f5f5';
-  const gold = root.getPropertyValue('--gold').trim() || '#f5d062';
+  const accent = root.getPropertyValue('--me').trim() || '#F4EEE2';
+  const gold = root.getPropertyValue('--gold').trim() || '#C79A3C';
   const ink = root.getPropertyValue('--ink').trim() || '#fff';
-  const opp = root.getPropertyValue('--opp').trim() || '#a1a1aa';
+  const opp = root.getPropertyValue('--opp').trim() || '#D2665A';
   const colors = [accent, accent, gold, ink, opp];
 
   const count = opts.count || 140;
