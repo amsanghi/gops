@@ -16,7 +16,9 @@ export function makeCard(n, classes = 'in-hand', { size } = {}) {
     el.innerHTML = `<span>★</span><span class="pip">power</span>`;
   } else {
     const pip = pipFor(n, deckSize);
-    el.innerHTML = `<span>${rankText(n, deckSize)}</span>${pip ? `<span class="pip">${pip}</span>` : ''}`;
+    const rank = rankText(n, deckSize);
+    el.dataset.rank = rank;
+    el.innerHTML = `<span>${rank}</span>${pip ? `<span class="pip">${pip}</span>` : ''}`;
   }
   return el;
 }

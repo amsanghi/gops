@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="mono">
+<html lang="en" data-theme="emerald">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="color-scheme" content="dark light">
-<meta name="theme-color" content="#17171c">
-<meta name="description" content="GOPS — Game of Pure Strategy. A no-luck card duel. Play solo, vs AI, or with a friend.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0B261F">
+<meta name="description" content="GOPS — Game of Pure Strategy. A sealed-bid card duel with no luck in it. Play the daily deal, take on the AI, or open a table for friends.">
 
 <title>GOPS</title>
 
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;rect width='100' height='100' rx='22' fill='%230a0a0b'/&gt;&lt;text x='50' y='66' font-family='Georgia,serif' font-size='52' font-weight='500' text-anchor='middle' fill='%23f4f4f5'&gt;G&lt;/text&gt;&lt;/svg&gt;">
+<link rel="icon" href="data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;rect width='100' height='100' rx='22' fill='%230E3128'/&gt;&lt;text x='50' y='68' font-family='Didot,Georgia,serif' font-size='56' text-anchor='middle' fill='%23C79A3C'&gt;G&lt;/text&gt;&lt;/svg&gt;">
 
 <meta property="og:title" content="GOPS — Game of Pure Strategy">
-<meta property="og:description" content="A no-luck card duel. Bid wisely. Play solo, vs AI, or with a friend.">
+<meta property="og:description" content="A sealed-bid card duel with no luck in it. Both bids turn at once; the high bid takes the prize.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,30..100&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,30..100&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..700&family=Jost:ital,wght@0,300..700;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..700&family=Jost:ital,wght@0,300..700;1,400&display=swap">
 
 <link rel="stylesheet" href="styles.css">
 
@@ -33,7 +33,7 @@
       .then(function (d) {
         if (!d || typeof d.count !== 'number') return;
         var el = document.getElementById('visit-counter');
-        if (el) el.textContent = d.count.toLocaleString('en-US') + ' hits';
+        if (el) el.textContent = d.count.toLocaleString('en-US') + ' visits';
       })
       .catch(function () {});
     // Clean up stale GoatCounter visitor cache from earlier versions
@@ -51,12 +51,15 @@
 
   <!-- ===== TOP BAR ===== -->
   <header class="topbar">
-    <div class="brand">GOPS</div>
+    <div class="brand">
+      <span class="brand-name">GOPS</span>
+      <span class="brand-sub">a.k.a. Goofspiel</span>
+    </div>
     <div class="topbar-actions">
-      <div class="theme-row" id="theme-row" role="group" aria-label="Accent color"></div>
+      <div class="theme-row" id="theme-row" role="group" aria-label="Table felt"></div>
       <span class="divider-y"></span>
       <button class="btn-icon" id="achievements-btn" title="Achievements" aria-label="Achievements">★</button>
-      <button class="btn-icon" id="stats-btn" title="Statistics" aria-label="Statistics">≣</button>
+      <button class="btn-icon" id="stats-btn" title="Statistics" aria-label="Statistics">▦</button>
       <button class="btn-icon" id="settings-btn" title="Settings" aria-label="Settings">⚙</button>
     </div>
   </header>
@@ -64,22 +67,47 @@
   <!-- ===== LOBBY ===== -->
   <section id="lobby">
     <div class="hero">
-      <h1>Game of <em>Pure</em> Strategy</h1>
-      <p class="tagline">No luck. Just nerve. Bid <kbd>A</kbd>–<kbd>K</kbd> to win prizes — high total wins.</p>
-      <button class="hero-learn" id="hero-learn-btn" type="button">
-        <span>New to GOPS? <b>Learn about the game →</b></span>
-      </button>
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-mark">◆</span>Sealed-bid card duel · Princeton, 1930s</p>
+        <h1>Game of<br><em>Pure</em> Strategy</h1>
+        <p class="tagline">Thirteen prizes. Thirteen cards. You spend each one exactly once — and there is no luck in it anywhere.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="hero-play-btn" type="button">Play today's deal</button>
+          <button class="btn btn-ghost" id="hero-learn-btn" type="button">Learn in 60 seconds</button>
+        </div>
+        <p class="hero-keys">Bid with <kbd>A</kbd>–<kbd>K</kbd> · <kbd>Enter</kbd> locks it in</p>
+      </div>
+
+      <!-- Signature: the sealed bid, turning. Both cards flip on the same beat. -->
+      <div class="hero-stage" aria-hidden="true">
+        <div class="deal">
+          <div class="deal-slot">
+            <span class="deal-lbl">You</span>
+            <div class="deal-card deal-me" data-rank="10"><span class="deal-rank">10</span></div>
+          </div>
+          <div class="deal-slot">
+            <span class="deal-lbl deal-lbl-prize">Prize</span>
+            <div class="deal-card deal-prize" data-rank="9"><span class="deal-rank">9</span></div>
+          </div>
+          <div class="deal-slot">
+            <span class="deal-lbl">Them</span>
+            <div class="deal-card deal-them" data-rank="4"><span class="deal-rank">4</span></div>
+          </div>
+        </div>
+        <p class="deal-caption">Both bids turn at once. The high bid takes the prize — and the card is gone for good.</p>
+      </div>
     </div>
 
     <div class="profile">
+      <span class="profile-label">Your seat</span>
       <button class="avatar" id="avatar-btn" title="Change avatar" aria-label="Change avatar" aria-haspopup="true" aria-expanded="false">😎</button>
-      <input class="name-input" id="name-input" type="text" placeholder="Your name" maxlength="14" aria-label="Your name">
+      <input class="name-input" id="name-input" type="text" placeholder="Add your name" maxlength="14" aria-label="Your name">
       <span class="divider" id="h2h-divider" hidden></span>
       <span class="h2h" id="h2h" aria-live="polite"></span>
     </div>
 
     <div id="resume" class="resume" hidden>
-      <div class="resume-text"><b>Resume game?</b><span id="resume-text"></span></div>
+      <div class="resume-text"><b>You left a game unfinished</b><span id="resume-text"></span></div>
       <div class="resume-actions">
         <button class="btn btn-ghost btn-sm" id="resume-discard">Discard</button>
         <button class="btn btn-primary btn-sm" id="resume-go">Resume</button>
@@ -94,18 +122,18 @@
           <div class="tiles">
             <button class="tile featured" id="daily-tile">
               <span class="tile-icon">◷</span>
-              <span class="tile-label">Daily challenge</span>
+              <span class="tile-label">Daily deal</span>
               <span class="tile-sub" id="daily-sub">Today</span>
             </button>
             <button class="tile" id="solo-tile">
               <span class="tile-icon">◇</span>
               <span class="tile-label">Vs AI</span>
-              <span class="tile-sub">Quick practice</span>
+              <span class="tile-sub">Pick a difficulty</span>
             </button>
             <button class="tile" id="hotseat-tile">
               <span class="tile-icon">◉</span>
               <span class="tile-label">Hot seat</span>
-              <span class="tile-sub">2 on 1 device</span>
+              <span class="tile-sub">Two people, one device</span>
             </button>
             <button class="tile" id="puzzle-tile">
               <span class="tile-icon">◈</span>
@@ -125,118 +153,122 @@
             <button class="tile" id="bullet-tile">
               <span class="tile-icon">⏱</span>
               <span class="tile-label">Bullet</span>
-              <span class="tile-sub">3s per bid</span>
+              <span class="tile-sub">Three seconds a bid</span>
             </button>
             <button class="tile" id="battle-tile">
               <span class="tile-icon">⚔</span>
-              <span class="tile-label">AI Battle</span>
-              <span class="tile-sub">Spectate</span>
+              <span class="tile-label">AI battle</span>
+              <span class="tile-sub">Watch two of them play</span>
             </button>
             <button class="tile" id="archive-tile">
               <span class="tile-icon">▤</span>
-              <span class="tile-label">Daily archive</span>
-              <span class="tile-sub" id="archive-sub">Past dailies</span>
+              <span class="tile-label">Past deals</span>
+              <span class="tile-sub" id="archive-sub">Daily archive</span>
             </button>
             <button class="tile" id="random-tile">
-              <span class="tile-icon">🎲</span>
-              <span class="tile-label">Random rule</span>
-              <span class="tile-sub">Surprise me</span>
+              <span class="tile-icon">⁂</span>
+              <span class="tile-label">Random rules</span>
+              <span class="tile-sub">Rolled fresh each game</span>
             </button>
           </div>
 
           <details class="expander" id="ai-settings">
-            <summary>AI settings</summary>
+            <summary>Opponent &amp; rules</summary>
             <div class="settings-grid">
               <div class="field"><label class="field-label" for="ai-deck">Deck</label><select class="select" id="ai-deck"><option value="5">5 cards</option><option value="7">7 cards</option><option value="9">9 cards</option><option value="11">11 cards</option><option value="13" selected>13 cards</option><option value="15">15 cards</option><option value="17">17 cards</option><option value="19">19 cards</option><option value="21">21 cards</option></select></div>
               <div class="field"><label class="field-label" for="ai-diff">Difficulty</label><select class="select" id="ai-diff"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option></select></div>
               <div class="field"><label class="field-label" for="ai-persona">Personality</label><select class="select" id="ai-persona"><option value="balanced">Balanced</option><option value="aggressive">Aggressive</option><option value="defensive">Defensive</option><option value="bluffer">Bluffer</option><option value="mirror">Mirror</option></select></div>
-              <div class="field"><label class="field-label" for="ai-time">Time/bid (s)</label><input class="input" id="ai-time" type="number" min="0" max="600" value="0" inputmode="numeric"></div>
+              <div class="field"><label class="field-label" for="ai-time">Seconds a bid</label><input class="input" id="ai-time" type="number" min="0" max="600" value="0" inputmode="numeric" placeholder="0 = no clock"></div>
             </div>
-            <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--ink-dim);cursor:pointer">
-              <input type="checkbox" id="ai-power"> Enable Power card (★) — wild card that wins once
+            <label class="check-row">
+              <input type="checkbox" id="ai-power">
+              <span>Add the Power card <b>★</b> — one wild bid, worth the average prize</span>
             </label>
-            <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
-              <button class="btn btn-ghost btn-sm" id="ghost-tile" style="flex:1">▷ Play your ghost</button>
-              <button class="btn btn-ghost btn-sm" id="practice-tile" style="flex:1">◐ Practice (see AI hand)</button>
-              <button class="btn btn-ghost btn-sm" id="weekly-tile" style="flex:1">◴ Weekly puzzle</button>
+            <div class="expander-actions">
+              <button class="btn btn-ghost btn-sm" id="ghost-tile">Play your ghost</button>
+              <button class="btn btn-ghost btn-sm" id="practice-tile">Practice — see their hand</button>
+              <button class="btn btn-ghost btn-sm" id="weekly-tile">Weekly puzzle</button>
             </div>
           </details>
         </div>
 
         <!-- Multiplayer column -->
         <div class="panel">
-          <h3>Multiplayer</h3>
-          <div class="mp-mode-toggle" role="group" aria-label="Multiplayer mode">
+          <h3>With friends</h3>
+          <div class="mp-mode-toggle" role="group" aria-label="Table size">
             <button class="mp-mode-btn active" data-mode="duel" type="button">Duel · 1v1</button>
-            <button class="mp-mode-btn" data-mode="party" type="button">Party · 2-8</button>
+            <button class="mp-mode-btn" data-mode="party" type="button">Party · 2–8</button>
           </div>
-          <button class="btn btn-primary btn-block" id="create-btn">Create game</button>
+          <button class="btn btn-primary btn-block" id="create-btn">Open a table</button>
           <div class="mp-or">or</div>
           <div class="mp-row">
-            <input class="input input-code" id="join-code" type="text" placeholder="CODE" maxlength="12" autocapitalize="characters" autocomplete="off" aria-label="Room code">
+            <input class="input input-code" id="join-code" type="text" placeholder="CODE" maxlength="12" autocapitalize="characters" autocomplete="off" aria-label="Table code">
             <button class="btn btn-ghost" id="join-btn">Join</button>
           </div>
           <details class="expander">
-            <summary>Host settings</summary>
+            <summary>Table rules</summary>
             <div class="settings-grid">
               <div class="field"><label class="field-label" for="host-code">Code</label><input class="input" id="host-code" type="text" placeholder="random" maxlength="10"></div>
-              <div class="field"><label class="field-label" for="host-deck">Deck</label><select class="select" id="host-deck"><option value="13">13</option><option value="7">7</option></select></div>
-              <div class="field"><label class="field-label" for="host-bestof">Best of</label><select class="select" id="host-bestof"><option value="1">1 (single)</option><option value="3">3</option><option value="5">5</option><option value="7">7</option><option value="9">9</option><option value="0">∞ Indefinite</option></select></div>
-              <div class="field"><label class="field-label" for="host-dir">Bid wins</label><select class="select" id="host-dir"><option value="high">High</option><option value="low">Low</option></select></div>
-              <div class="field"><label class="field-label" for="host-goal">Goal</label><select class="select" id="host-goal"><option value="most">Most pts</option><option value="fewest">Fewest pts</option></select></div>
-              <div class="field"><label class="field-label" for="host-tie">On tie</label><select class="select" id="host-tie"><option value="carry">Carry</option><option value="burn">Burn</option></select></div>
-              <div class="field"><label class="field-label" for="host-time">Time/bid (s)</label><input class="input" id="host-time" type="number" min="0" max="600" value="0" inputmode="numeric"></div>
-              <div class="field"><label class="field-label" for="host-stakes">Stakes</label><input class="input" id="host-stakes" type="text" placeholder="(optional)" maxlength="80"></div>
+              <div class="field"><label class="field-label" for="host-deck">Deck</label><select class="select" id="host-deck"><option value="13">13 cards</option><option value="7">7 cards</option></select></div>
+              <div class="field"><label class="field-label" for="host-bestof">Series</label><select class="select" id="host-bestof"><option value="1">Single game</option><option value="3">Best of 3</option><option value="5">Best of 5</option><option value="7">Best of 7</option><option value="9">Best of 9</option><option value="0">∞ Keep a tally</option></select></div>
+              <div class="field"><label class="field-label" for="host-dir">Bid that wins</label><select class="select" id="host-dir"><option value="high">High</option><option value="low">Low</option></select></div>
+              <div class="field"><label class="field-label" for="host-goal">Goal</label><select class="select" id="host-goal"><option value="most">Most points</option><option value="fewest">Fewest points</option></select></div>
+              <div class="field"><label class="field-label" for="host-tie">On a tie</label><select class="select" id="host-tie"><option value="carry">Carry over</option><option value="burn">Burn it</option></select></div>
+              <div class="field"><label class="field-label" for="host-time">Seconds a bid</label><input class="input" id="host-time" type="number" min="0" max="600" value="0" inputmode="numeric" placeholder="0 = no clock"></div>
+              <div class="field"><label class="field-label" for="host-stakes">Stakes</label><input class="input" id="host-stakes" type="text" placeholder="Loser buys coffee" maxlength="80"></div>
             </div>
-            <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--ink-dim);cursor:pointer">
-              <input type="checkbox" id="host-power"> Enable Power card (★)
+            <label class="check-row">
+              <input type="checkbox" id="host-power">
+              <span>Add the Power card <b>★</b></span>
             </label>
-            <button class="btn btn-ghost btn-sm" id="copy-challenge-btn" style="margin-top:10px;width:100%">Copy challenge link</button>
+            <div class="expander-actions">
+              <button class="btn btn-ghost btn-sm" id="copy-challenge-btn" style="flex:1">Copy challenge link</button>
+            </div>
           </details>
         </div>
       </div>
 
       <div class="lobby-foot">
-        <button class="btn btn-ghost btn-sm" id="tutorial-btn">◵ Tutorial</button>
-        <button class="btn btn-ghost btn-sm" id="about-btn">? About</button>
-        <button class="btn btn-ghost btn-sm" id="feedback-btn">✎ Feedback</button>
-        <button class="btn btn-ghost btn-sm" id="export-btn">↧ Export data</button>
+        <button class="btn btn-ghost btn-sm" id="tutorial-btn">Tutorial</button>
+        <button class="btn btn-ghost btn-sm" id="about-btn">About the game</button>
+        <button class="btn btn-ghost btn-sm" id="feedback-btn">Feedback</button>
+        <button class="btn btn-ghost btn-sm" id="export-btn">Export data</button>
       </div>
       <div id="visit-counter" class="visit-counter" aria-label="Site visitors"></div>
     </div>
 
     <!-- Host waiting -->
     <div id="host-info" class="host-card" hidden>
-      <div class="host-label">Share this code</div>
-      <div class="code" id="my-code" role="button" tabindex="0" title="Click to copy"></div>
-      <div class="copy-hint">Click to copy</div>
-      <div class="host-status" id="host-status"><span class="dot"></span>Waiting for them to join...</div>
-      <button class="btn btn-ghost btn-sm" id="host-cancel" style="margin-top:14px">Cancel</button>
+      <div class="host-label">Your table code</div>
+      <div class="code" id="my-code" role="button" tabindex="0" title="Tap to copy"></div>
+      <div class="copy-hint">Tap to copy</div>
+      <div class="host-status" id="host-status"><span class="dot"></span>Waiting for your opponent to sit down…</div>
+      <button class="btn btn-ghost btn-sm" id="host-cancel">Cancel</button>
     </div>
 
     <!-- Joiner waiting -->
     <div id="join-info" class="host-card" hidden>
-      <div class="host-status" id="join-status"><span class="dot"></span>Connecting...</div>
-      <button class="btn btn-ghost btn-sm" id="join-cancel" style="margin-top:14px">Cancel</button>
+      <div class="host-status" id="join-status"><span class="dot"></span>Connecting…</div>
+      <button class="btn btn-ghost btn-sm" id="join-cancel">Cancel</button>
     </div>
 
     <!-- Party room (N-player) lobby -->
     <div id="party-info" class="party-card" hidden>
       <div class="party-head">
         <div>
-          <div class="party-label">Party room</div>
+          <div class="party-label">Party table</div>
           <div class="party-code-display" id="party-code">—</div>
-          <div class="party-copy-hint" id="party-copy-hint">Click to copy</div>
+          <div class="party-copy-hint" id="party-copy-hint">Tap to copy</div>
         </div>
         <div class="party-controls">
-          <button class="btn-icon" id="mic-btn" title="Toggle microphone" aria-label="Toggle mic">🎤</button>
-          <button class="btn-icon" id="cam-btn" title="Toggle camera" aria-label="Toggle cam">🎥</button>
+          <button class="btn-icon" id="mic-btn" title="Turn microphone on" aria-label="Toggle mic">🎤</button>
+          <button class="btn-icon" id="cam-btn" title="Turn camera on" aria-label="Toggle cam">🎥</button>
         </div>
       </div>
-      <div class="party-status" id="party-status"><span class="dot"></span>Setting up...</div>
+      <div class="party-status" id="party-status"><span class="dot"></span>Setting up…</div>
       <div class="party-roster" id="party-roster"></div>
       <div class="party-actions">
-        <button class="btn btn-primary" id="party-start-btn" type="button" hidden>Start game</button>
+        <button class="btn btn-primary" id="party-start-btn" type="button" hidden>Deal the first prize</button>
         <button class="btn btn-ghost btn-sm" id="party-cancel" type="button">Leave</button>
       </div>
     </div>
@@ -252,7 +284,7 @@
         <div class="score-num me" id="me-score">0</div>
       </div>
       <div class="game-center">
-        <div class="round-pill">Round <b id="round-n">1</b> / <b id="round-tot">13</b></div>
+        <div class="round-pill"><span class="rp-word">Round</span><b id="round-n">1</b><span class="rp-of">of</span><b id="round-tot">13</b></div>
         <div class="mode-pill" id="mode-pill" hidden></div>
       </div>
       <div class="score-side them">
@@ -265,16 +297,16 @@
 
     <!-- Post-tutorial guidance: shown for the first few rounds after the tutorial -->
     <div class="guided-banner" id="guided-banner" hidden role="status" aria-live="polite">
-      <span class="guided-icon">💡</span>
+      <span class="guided-icon">◆</span>
       <span class="guided-text" id="guided-text"></span>
-      <button class="guided-close" id="guided-close" type="button" aria-label="Dismiss guidance">×</button>
+      <button class="guided-close" id="guided-close" type="button" aria-label="Dismiss hint">×</button>
     </div>
 
-    <div class="game-actions" style="display:flex;justify-content:flex-end;gap:6px;margin-bottom:8px">
+    <div class="game-actions">
       <button class="btn-icon" id="chat-btn" title="Chat" aria-label="Chat" hidden>✎</button>
-      <button class="btn-icon" id="game-mic-btn" title="Toggle microphone" aria-label="Toggle mic" hidden>🎤</button>
-      <button class="btn-icon" id="game-cam-btn" title="Toggle camera" aria-label="Toggle cam" hidden>🎥</button>
-      <button class="btn-icon" id="history-btn" title="Round history" aria-label="History">≡</button>
+      <button class="btn-icon" id="game-mic-btn" title="Turn microphone on" aria-label="Toggle mic" hidden>🎤</button>
+      <button class="btn-icon" id="game-cam-btn" title="Turn camera on" aria-label="Toggle cam" hidden>🎥</button>
+      <button class="btn-icon" id="history-btn" title="Round history" aria-label="Round history">≡</button>
       <button class="btn-icon" id="sound-btn" title="Sound" aria-label="Toggle sound">♪</button>
       <button class="btn-icon" id="quit-btn" title="Quit" aria-label="Quit game">×</button>
     </div>
@@ -288,7 +320,7 @@
       <div class="center-stack">
         <div class="zone arena">
           <div class="zone-head">
-            <span>Arena</span>
+            <span>The table</span>
           </div>
           <div class="arena-row">
             <div class="bid-col me">
@@ -320,7 +352,7 @@
     </div>
 
     <div class="hand-zone">
-      <div class="zone-head" style="margin-bottom:10px"><span>Your hand</span><span class="meta" id="me-meta"></span></div>
+      <div class="zone-head"><span>Your hand</span><span class="meta" id="me-meta"></span></div>
       <div class="hand" id="hand"></div>
     </div>
 
@@ -331,7 +363,7 @@
     <div class="chat" id="chat" hidden>
       <div class="chat-msgs" id="chat-msgs" aria-live="polite"></div>
       <div class="chat-input-row">
-        <input class="input" id="chat-input" type="text" placeholder="Type a message..." maxlength="200" aria-label="Chat message">
+        <input class="input" id="chat-input" type="text" placeholder="Say something…" maxlength="200" aria-label="Chat message">
         <button class="btn btn-primary btn-sm" id="chat-send">Send</button>
       </div>
     </div>
@@ -352,35 +384,36 @@
 
     <div class="replay" id="replay" hidden>
       <div class="replay-head"><span>Replay</span><span id="replay-step">0 / 0</span></div>
+      <!-- Same seating as the table: you on the left, them on the right. -->
       <div class="replay-body">
-        <div class="replay-side them"><span class="lbl" id="rp-them-name">Them</span><div id="rp-them"></div></div>
-        <div class="replay-prize"><span class="pz-lbl">Prize</span><div id="rp-prize"></div></div>
         <div class="replay-side me"><span class="lbl" id="rp-me-name">You</span><div id="rp-me"></div></div>
+        <div class="replay-prize"><span class="pz-lbl">Prize</span><div id="rp-prize"></div></div>
+        <div class="replay-side them"><span class="lbl" id="rp-them-name">Them</span><div id="rp-them"></div></div>
       </div>
-      <input type="range" class="replay-track" id="replay-track" min="0" max="0" value="0">
+      <input type="range" class="replay-track" id="replay-track" min="0" max="0" value="0" aria-label="Scrub replay">
       <div class="replay-info" id="replay-info"></div>
     </div>
 
     <div class="analysis" id="analysis"></div>
 
     <div class="score-curve" id="score-curve-wrap" hidden>
-      <div class="curve-head">Score over rounds</div>
+      <div class="curve-head">Points banked, round by round</div>
       <canvas id="score-curve" width="560" height="160"></canvas>
     </div>
 
     <div class="coach" id="coach" hidden>
-      <div class="coach-head"><span>◐ Coach insights</span><button class="btn btn-xs btn-ghost" id="coach-toggle" type="button">Hide</button></div>
+      <div class="coach-head"><span>Where it turned</span><button class="btn btn-xs btn-ghost" id="coach-toggle" type="button">Hide</button></div>
       <div class="coach-list" id="coach-list"></div>
     </div>
 
     <div class="end-actions">
       <button class="btn btn-primary" id="rematch-btn">Rematch</button>
-      <button class="btn btn-ghost" id="share-img-btn">↧ Image</button>
-      <button class="btn btn-ghost" id="share-text-btn">⎙ Copy result</button>
-      <button class="btn btn-ghost" id="share-replay-btn">↗ Replay link</button>
-      <button class="btn btn-ghost" id="share-video-btn">▶ Replay video</button>
-      <button class="btn btn-ghost" id="history-btn-2">≡ Rounds</button>
-      <button class="btn btn-ghost" id="back-to-lobby-btn">← Lobby</button>
+      <button class="btn btn-ghost" id="share-img-btn">Save image</button>
+      <button class="btn btn-ghost" id="share-text-btn">Copy result</button>
+      <button class="btn btn-ghost" id="share-replay-btn">Copy replay link</button>
+      <button class="btn btn-ghost" id="share-video-btn">Save replay video</button>
+      <button class="btn btn-ghost" id="history-btn-2">Round history</button>
+      <button class="btn btn-ghost" id="back-to-lobby-btn">Back to lobby</button>
     </div>
     <p class="status" id="rematch-status" aria-live="polite"></p>
   </section>
@@ -390,8 +423,8 @@
     <div class="modal">
       <div class="modal-head"><h2 id="modal-history-title">Round history</h2><button class="modal-close" data-close="modal-history" aria-label="Close">×</button></div>
       <div id="history-body"></div>
-      <div style="margin-top:14px;display:flex;justify-content:flex-end">
-        <button class="btn btn-ghost btn-sm" id="export-csv-btn">↧ Export CSV</button>
+      <div class="modal-foot">
+        <button class="btn btn-ghost btn-sm" id="export-csv-btn">Export CSV</button>
       </div>
     </div>
   </div>
@@ -400,27 +433,28 @@
     <div class="modal">
       <div class="modal-head"><h2 id="modal-about-title">About GOPS</h2><button class="modal-close" data-close="modal-about" aria-label="Close">×</button></div>
       <p class="modal-desc">
-        <b>Game of Pure Strategy</b> (a.k.a. Goofspiel) is a no-luck card game invented at Princeton in the 1930s.
-        Both players have the same hand of A–K. A prize is revealed each round; you each secretly bid one card; the higher bid wins.
-        Spent cards are gone forever. After all 13 rounds, highest total wins.
+        <b>Game of Pure Strategy</b> — Goofspiel to its friends — is a card game with no luck in it, studied at Princeton
+        in the 1930s alongside the birth of game theory. You and your opponent hold the same hand, A–K. A prize turns
+        face up; you each bid one card in secret; both bids reveal at once and the higher one takes the prize. The card
+        you spent never comes back. After thirteen rounds, the bigger pile of points wins.
       </p>
-      <h3 style="margin:18px 0 8px;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-faint)">Watch</h3>
+      <h3 class="modal-section">Watch</h3>
       <ul class="about-links">
-        <li><a href="https://youtu.be/AoKWks5nfCo" target="_blank" rel="noopener"><span>▶ <b>The video that inspired this build</b><br><span class="about-meta">Watch this for the right feel of the game</span></span><span class="about-host">youtube.com</span></a></li>
-        <li><a href="https://www.youtube.com/watch?v=WUTc1AF3a0I" target="_blank" rel="noopener">▶ Rules in 90 seconds <span class="about-host">youtube.com</span></a></li>
-        <li><a href="https://www.youtube.com/watch?v=xVK8R9cGjoY" target="_blank" rel="noopener">▶ Full walkthrough <span class="about-host">youtube.com</span></a></li>
-        <li><a href="https://www.youtube.com/shorts/4KbNZEL81Yo" target="_blank" rel="noopener">▶ Quick short <span class="about-host">youtube.com</span></a></li>
+        <li><a href="https://youtu.be/AoKWks5nfCo" target="_blank" rel="noopener"><span><b>The video that started this build</b><br><span class="about-meta">The clearest feel for how the game actually plays</span></span><span class="about-host">youtube.com</span></a></li>
+        <li><a href="https://www.youtube.com/watch?v=WUTc1AF3a0I" target="_blank" rel="noopener"><span>Rules in 90 seconds</span><span class="about-host">youtube.com</span></a></li>
+        <li><a href="https://www.youtube.com/watch?v=xVK8R9cGjoY" target="_blank" rel="noopener"><span>Full walkthrough</span><span class="about-host">youtube.com</span></a></li>
+        <li><a href="https://www.youtube.com/shorts/4KbNZEL81Yo" target="_blank" rel="noopener"><span>Quick short</span><span class="about-host">youtube.com</span></a></li>
       </ul>
-      <h3 style="margin:18px 0 8px;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-faint)">Read</h3>
+      <h3 class="modal-section">Read</h3>
       <ul class="about-links">
-        <li><a href="https://en.wikipedia.org/wiki/Goofspiel" target="_blank" rel="noopener">≡ Wikipedia — history & strategy <span class="about-host">wikipedia.org</span></a></li>
-        <li><a href="https://www.pagat.com/misc/gops.html" target="_blank" rel="noopener">≡ Pagat — canonical rules <span class="about-host">pagat.com</span></a></li>
-        <li><a href="https://boardgamegeek.com/boardgame/16632/gops" target="_blank" rel="noopener">≡ BoardGameGeek listing <span class="about-host">boardgamegeek.com</span></a></li>
-        <li><a href="https://medium.com/@gaffney.tj/breeding-goofspiel-strategies-408cce283e94" target="_blank" rel="noopener">≡ Breeding Goofspiel strategies <span class="about-host">medium.com</span></a></li>
+        <li><a href="https://en.wikipedia.org/wiki/Goofspiel" target="_blank" rel="noopener"><span>History &amp; strategy</span><span class="about-host">wikipedia.org</span></a></li>
+        <li><a href="https://www.pagat.com/misc/gops.html" target="_blank" rel="noopener"><span>The canonical rules</span><span class="about-host">pagat.com</span></a></li>
+        <li><a href="https://boardgamegeek.com/boardgame/16632/gops" target="_blank" rel="noopener"><span>BoardGameGeek listing</span><span class="about-host">boardgamegeek.com</span></a></li>
+        <li><a href="https://medium.com/@gaffney.tj/breeding-goofspiel-strategies-408cce283e94" target="_blank" rel="noopener"><span>Breeding Goofspiel strategies</span><span class="about-host">medium.com</span></a></li>
       </ul>
-      <div style="margin-top:18px;display:flex;justify-content:flex-end;gap:8px">
+      <div class="modal-foot">
         <button class="btn btn-ghost btn-sm" data-close="modal-about">Close</button>
-        <button class="btn btn-primary btn-sm" id="about-tutorial-btn">Try the in-game tutorial →</button>
+        <button class="btn btn-primary btn-sm" id="about-tutorial-btn">Play the tutorial</button>
       </div>
     </div>
   </div>
@@ -428,14 +462,14 @@
   <div class="scrim" id="modal-feedback" hidden role="dialog" aria-modal="true" aria-labelledby="modal-feedback-title">
     <div class="modal">
       <div class="modal-head"><h2 id="modal-feedback-title">Feedback</h2><button class="modal-close" data-close="modal-feedback" aria-label="Close">×</button></div>
-      <p class="modal-desc">All feedback goes to GitHub. Pick a category — your post lands as a pre-filled issue or discussion. No login required to read; a free GitHub account is needed to submit.</p>
+      <p class="modal-desc">Everything lands on GitHub as a pre-filled issue or discussion. Reading takes no account; posting needs a free one.</p>
       <ul class="about-links">
-        <li><a href="https://github.com/amsanghi/gops/issues/new?template=bug.yml" target="_blank" rel="noopener"><span>🐛 <b>Report a bug</b><br><span class="about-meta">Something broken, glitchy, or unexpected</span></span><span class="about-host">github.com</span></a></li>
-        <li><a href="https://github.com/amsanghi/gops/issues/new?template=feature.yml" target="_blank" rel="noopener"><span>💡 <b>Suggest a feature</b><br><span class="about-meta">An idea, improvement, or new mode</span></span><span class="about-host">github.com</span></a></li>
-        <li><a href="https://github.com/amsanghi/gops/issues/new?template=puzzle.yml" target="_blank" rel="noopener"><span>🧩 <b>Submit a puzzle</b><br><span class="about-meta">A scripted scenario for others to solve</span></span><span class="about-host">github.com</span></a></li>
-        <li><a href="https://github.com/amsanghi/gops/discussions/new?category=general" target="_blank" rel="noopener"><span>💬 <b>General feedback / chat</b><br><span class="about-meta">Open-ended thoughts, screenshots, brag posts</span></span><span class="about-host">github.com</span></a></li>
+        <li><a href="https://github.com/amsanghi/gops/issues/new?template=bug.yml" target="_blank" rel="noopener"><span><b>Report a bug</b><br><span class="about-meta">Something broken, glitchy, or plain wrong</span></span><span class="about-host">github.com</span></a></li>
+        <li><a href="https://github.com/amsanghi/gops/issues/new?template=feature.yml" target="_blank" rel="noopener"><span><b>Suggest a feature</b><br><span class="about-meta">An idea, an improvement, a new mode</span></span><span class="about-host">github.com</span></a></li>
+        <li><a href="https://github.com/amsanghi/gops/issues/new?template=puzzle.yml" target="_blank" rel="noopener"><span><b>Submit a puzzle</b><br><span class="about-meta">A scripted scenario for everyone else to crack</span></span><span class="about-host">github.com</span></a></li>
+        <li><a href="https://github.com/amsanghi/gops/discussions/new?category=general" target="_blank" rel="noopener"><span><b>Just talk</b><br><span class="about-meta">Open thoughts, screenshots, brag posts</span></span><span class="about-host">github.com</span></a></li>
       </ul>
-      <div style="margin-top:18px;display:flex;justify-content:flex-end">
+      <div class="modal-foot">
         <button class="btn btn-ghost btn-sm" data-close="modal-feedback">Close</button>
       </div>
     </div>
@@ -451,10 +485,10 @@
 
   <div class="scrim" id="modal-stats" hidden role="dialog" aria-modal="true" aria-labelledby="modal-stats-title">
     <div class="modal">
-      <div class="modal-head"><h2 id="modal-stats-title">Statistics</h2><button class="modal-close" data-close="modal-stats" aria-label="Close">×</button></div>
+      <div class="modal-head"><h2 id="modal-stats-title">Your record</h2><button class="modal-close" data-close="modal-stats" aria-label="Close">×</button></div>
       <div id="stats-body"></div>
-      <div style="margin-top:16px;display:flex;justify-content:flex-end">
-        <button class="btn btn-ghost btn-sm" id="snapshot-stats-btn">↧ Save snapshot</button>
+      <div class="modal-foot">
+        <button class="btn btn-ghost btn-sm" id="snapshot-stats-btn">Save snapshot</button>
       </div>
     </div>
   </div>
@@ -462,26 +496,26 @@
   <div class="scrim" id="modal-puzzles" hidden role="dialog" aria-modal="true" aria-labelledby="modal-puzzles-title">
     <div class="modal">
       <div class="modal-head"><h2 id="modal-puzzles-title">Puzzles</h2><button class="modal-close" data-close="modal-puzzles" aria-label="Close">×</button></div>
-      <p class="modal-desc">Solve scripted GOPS scenarios. Solved: <span id="puzzles-progress">0/0</span></p>
+      <p class="modal-desc">Scripted positions with one thing to prove. Solved: <span id="puzzles-progress">0/0</span></p>
       <div id="puzzles-list"></div>
     </div>
   </div>
 
   <div class="scrim" id="modal-tournament" hidden role="dialog" aria-modal="true" aria-labelledby="modal-tournament-title">
     <div class="modal">
-      <div class="modal-head"><h2 id="modal-tournament-title">Tournament ladder</h2><button class="modal-close" data-close="modal-tournament" aria-label="Close">×</button></div>
-      <p class="modal-desc">Defeat 8 AIs in sequence to become champion.</p>
+      <div class="modal-head"><h2 id="modal-tournament-title">The ladder</h2><button class="modal-close" data-close="modal-tournament" aria-label="Close">×</button></div>
+      <p class="modal-desc">Eight opponents, in order. Beat one to unlock the next.</p>
       <div id="tournament-list"></div>
     </div>
   </div>
 
   <div class="scrim" id="modal-archive" hidden role="dialog" aria-modal="true" aria-labelledby="modal-archive-title">
     <div class="modal">
-      <div class="modal-head"><h2 id="modal-archive-title">Daily archive</h2><button class="modal-close" data-close="modal-archive" aria-label="Close">×</button></div>
-      <p class="modal-desc">Past daily challenges. Click a done day to view, or enter a date to replay its seed.</p>
-      <div class="settings-grid" style="margin-bottom:14px">
-        <div class="field"><label class="field-label" for="seed-date">Replay a daily seed</label><input class="input" id="seed-date" type="date"></div>
-        <div class="field" style="align-self:flex-end"><button class="btn btn-primary btn-sm" id="seed-go-btn" type="button">Replay this date</button></div>
+      <div class="modal-head"><h2 id="modal-archive-title">Past deals</h2><button class="modal-close" data-close="modal-archive" aria-label="Close">×</button></div>
+      <p class="modal-desc">Every daily you've finished. Tap a marked day to see the result, or name a date to play its shuffle again.</p>
+      <div class="settings-grid archive-seed">
+        <div class="field"><label class="field-label" for="seed-date">Replay a date</label><input class="input" id="seed-date" type="date"></div>
+        <div class="field field-end"><button class="btn btn-primary btn-sm" id="seed-go-btn" type="button">Deal it</button></div>
       </div>
       <div id="archive-body"></div>
     </div>
@@ -489,11 +523,11 @@
 
   <div id="onboarding" class="onboarding" hidden>
     <div class="onboarding-card">
-      <h3>Welcome to GOPS</h3>
-      <p>Bid cards <kbd>A</kbd>–<kbd>K</kbd> to win prizes. No luck — only nerve. Try the tutorial, learn the game, or jump straight into the daily challenge.</p>
+      <h3>Pull up a chair</h3>
+      <p>Both of you hold A–K. Bid one card in secret; the higher bid takes the prize. That's the whole game — the hard part is deciding when to spend your king.</p>
       <div class="onboarding-actions">
         <button class="btn btn-ghost btn-sm" id="onb-dismiss">Skip</button>
-        <button class="btn btn-ghost btn-sm" id="onb-about">Learn the game</button>
+        <button class="btn btn-ghost btn-sm" id="onb-about">Learn more</button>
         <button class="btn btn-primary btn-sm" id="onb-tutorial">Tutorial</button>
       </div>
     </div>
@@ -501,15 +535,15 @@
 
   <div class="scrim" id="modal-battle" hidden role="dialog" aria-modal="true" aria-labelledby="modal-battle-title">
     <div class="modal">
-      <div class="modal-head"><h2 id="modal-battle-title">AI Battle setup</h2><button class="modal-close" data-close="modal-battle" aria-label="Close">×</button></div>
-      <p class="modal-desc">Pick two personalities. They'll play out the deck while you spectate.</p>
+      <div class="modal-head"><h2 id="modal-battle-title">AI battle</h2><button class="modal-close" data-close="modal-battle" aria-label="Close">×</button></div>
+      <p class="modal-desc">Pick two personalities and watch them spend a whole deck against each other.</p>
       <div class="settings-grid">
-        <div class="field"><label class="field-label" for="battle-a">Player 1</label><select class="select" id="battle-a"><option value="balanced">Balanced</option><option value="aggressive">Aggressive</option><option value="defensive">Defensive</option><option value="bluffer">Bluffer</option><option value="mirror">Mirror</option></select></div>
-        <div class="field"><label class="field-label" for="battle-b">Player 2</label><select class="select" id="battle-b"><option value="aggressive">Aggressive</option><option value="balanced">Balanced</option><option value="defensive">Defensive</option><option value="bluffer">Bluffer</option><option value="mirror">Mirror</option></select></div>
+        <div class="field"><label class="field-label" for="battle-a">In this seat</label><select class="select" id="battle-a"><option value="balanced">Balanced</option><option value="aggressive">Aggressive</option><option value="defensive">Defensive</option><option value="bluffer">Bluffer</option><option value="mirror">Mirror</option></select></div>
+        <div class="field"><label class="field-label" for="battle-b">Against</label><select class="select" id="battle-b"><option value="aggressive">Aggressive</option><option value="balanced">Balanced</option><option value="defensive">Defensive</option><option value="bluffer">Bluffer</option><option value="mirror">Mirror</option></select></div>
         <div class="field"><label class="field-label" for="battle-diff">Difficulty</label><select class="select" id="battle-diff"><option value="medium">Medium</option><option value="hard" selected>Hard</option><option value="easy">Easy</option></select></div>
       </div>
-      <div style="display:flex;justify-content:flex-end;margin-top:14px">
-        <button class="btn btn-primary btn-sm" id="battle-start-btn">Start battle</button>
+      <div class="modal-foot">
+        <button class="btn btn-primary btn-sm" id="battle-start-btn">Start the battle</button>
       </div>
     </div>
   </div>
@@ -518,22 +552,29 @@
     <div class="modal">
       <div class="modal-head"><h2 id="modal-settings-title">Settings</h2><button class="modal-close" data-close="modal-settings" aria-label="Close">×</button></div>
 
-      <h3 style="font-size:11px;text-transform:uppercase;letter-spacing:0.18em;color:var(--ink-faint);font-weight:600;margin-bottom:10px">Audio</h3>
+      <h3 class="modal-section">Your table</h3>
+      <div class="theme-row theme-row-wide" id="theme-row-settings" role="group" aria-label="Table felt"></div>
+
+      <h3 class="modal-section">Card backs</h3>
+      <div class="cardback-picker" id="cardback-picker"></div>
+
+      <h3 class="modal-section">Sound</h3>
       <div class="settings-grid">
-        <div class="field"><label class="field-label" for="set-sound">Sound</label><select class="select" id="set-sound"><option value="1">On</option><option value="0">Off</option></select></div>
+        <div class="field"><label class="field-label" for="set-sound">Sound effects</label><select class="select" id="set-sound"><option value="1">On</option><option value="0">Off</option></select></div>
       </div>
 
-      <h3 style="font-size:11px;text-transform:uppercase;letter-spacing:0.18em;color:var(--ink-faint);font-weight:600;margin:24px 0 10px">Gameplay</h3>
+      <h3 class="modal-section">After the game</h3>
       <div class="settings-grid">
-        <div class="field"><label class="field-label" for="set-coach">Coach insights</label><select class="select" id="set-coach"><option value="1">On</option><option value="0">Off</option></select></div>
+        <div class="field"><label class="field-label" for="set-coach">Show where it turned</label><select class="select" id="set-coach"><option value="1">On</option><option value="0">Off</option></select></div>
       </div>
 
-      <h3 style="font-size:11px;text-transform:uppercase;letter-spacing:0.18em;color:var(--ink-faint);font-weight:600;margin:24px 0 10px">Data</h3>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+      <h3 class="modal-section">Your data</h3>
+      <p class="modal-desc">Everything lives in this browser. Nothing leaves it.</p>
+      <div class="settings-actions">
         <input type="file" id="import-file" accept=".json" hidden>
-        <button class="btn btn-ghost btn-sm" id="import-btn">↥ Import</button>
-        <button class="btn btn-ghost btn-sm" id="export-btn-2">↧ Export</button>
-        <button class="btn btn-ghost btn-sm" id="reset-data-btn">⌫ Reset all</button>
+        <button class="btn btn-ghost btn-sm" id="import-btn">Import</button>
+        <button class="btn btn-ghost btn-sm" id="export-btn-2">Export</button>
+        <button class="btn btn-ghost btn-sm btn-danger" id="reset-data-btn">Erase everything</button>
       </div>
     </div>
   </div>

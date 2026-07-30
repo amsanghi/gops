@@ -10,13 +10,13 @@ A static, zero-build progressive web app. No backend. No accounts. All state liv
 
 ## Highlights
 
-- **14 solo modes** — Daily Challenge, Vs AI, Hot Seat, Puzzles, Endless, Tournament, Bullet (3s/bid), AI Battle (spectate), Daily Archive, AI Bracket, Random Rule, Ghost, Practice, Weekly Puzzle.
+- **13 solo modes** — Daily Deal, Vs AI, Hot Seat, Puzzles, Endless, Tournament, Bullet (3s/bid), AI Battle (spectate), Past Deals, Random Rules, Ghost, Practice, Weekly Puzzle.
 - **Multiplayer** — Duel (1v1) **and** Party rooms (2–8 players) with text chat, emoji reactions, voice & video chat (when enabled). Mid-game refresh just works — both sides reconnect to the saved round automatically. Duel supports best-of 1/3/5/7/9 **and an indefinite series** that keeps a running tally.
 - **Power cards variant** — Optional wildcard `★` worth the average prize value.
 - **Coach mode** — Post-game analysis flags the rounds where you misplayed, with reasoning.
 - **Replay tools** — Scrub through any past game; share replays via URL; download as `webm` video.
 - **Stats & heatmaps** — Per-mode records, bid heatmap (what cards you favor against which prizes), score curves, AI mastery.
-- **Customization** — 6 accent themes + custom color picker, 4 card-back patterns, 22 avatars, animation speed, color-blind safe palette.
+- **Customization** — 6 table felts (emerald, claret, midnight, cognac, slate, aubergine), 4 card backs, 22 avatars.
 - **Onboarding** — In-game tutorial; post-tutorial guided first match with inline hints; built-in **About GOPS** modal with curated YouTube + text rules so newcomers can grok the game in 90 seconds.
 - **Feedback hub** — One-tap deep links from the lobby to file bugs, suggest features, submit puzzles, or open a Discussion on GitHub.
 - **Tap-to-confirm bidding** — Tap a card to stage it, tap again (or the drop-zone) to lock in. Keyboard shortcuts work too.
@@ -29,7 +29,7 @@ A static, zero-build progressive web app. No backend. No accounts. All state liv
 - Service worker with network-first HTML + stale-while-revalidate assets.
 - In-browser test suite at [`/tests/`](./tests/).
 - Uses PeerJS at runtime for multiplayer; lazy-loaded only when needed. WebRTC ICE with STUN + Open Relay TURN for NAT traversal.
-- Dark-only theme. (Light mode was removed — see `[data-theme]` tokens in `styles.css` for accent customization.)
+- Dark only. The palette is green baize, brass, ivory and lacquer; type is Bodoni Moda over Jost. Swapping the felt is a `[data-theme]` block in `styles.css`.
 
 ## How to play
 
@@ -46,7 +46,7 @@ That's it. There's no randomness in your hand. It's all about prediction, bluffi
 
 | Mode | What it is |
 |---|---|
-| Daily Challenge | Same seeded shuffle for everyone today. Compare scores. |
+| Daily Deal | Same seeded shuffle for everyone today. Compare scores. |
 | Vs AI | Quick game against the AI with picked difficulty + personality. |
 | Hot Seat | Two people pass one device, secret bids each round. |
 | Duel | 1v1 over PeerJS with text/voice/video chat. Refresh-safe. |
@@ -56,8 +56,7 @@ That's it. There's no randomness in your hand. It's all about prediction, bluffi
 | Tournament | Beat 8 themed AIs in sequence to become champion. |
 | Bullet | 3-second timer per bid. |
 | AI Battle | Watch two AI personalities play. |
-| AI Bracket | Simulate an 8-AI single-elimination tournament. |
-| Random Rule | Surprise me — randomized deck/tie/direction/goal each game. |
+| Random Rules | Randomized deck / tie / direction / goal each game. |
 | Ghost | Play against your highest-scoring solo game. |
 | Practice | Solo with opponent's hand revealed (learning mode). |
 | Weekly Puzzle | Same seeded shuffle for the whole week. |

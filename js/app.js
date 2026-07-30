@@ -12,7 +12,7 @@ import {
   openPuzzleModal, openTournamentModal, openHotSeatPrompt, showResumeBanner,
   openArchiveModal, openBattleModal,
   renderEnd, buildReactionsBar, toggleChat, sendChat, renderChatMsgs,
-  applyStreakFrame,
+  applyStreakFrame, buildCardBackPicker,
 } from './ui.js';
 import { getDailyState } from './storage.js';
 import { renderHistory } from './render.js';
@@ -279,7 +279,9 @@ function loadPrefs() {
   if (p.sound !== undefined) S.sound = !!p.sound;
   if (Array.isArray(p.themesTried)) S.themesTried = new Set(p.themesTried);
   if (p.coachMode !== undefined) S.coachMode = !!p.coachMode;
-  setTheme(S.theme || 'mono');
+  // Legacy accent names (mono/rose/…) predate the felt tables; fold them onto emerald.
+  const LEGACY = ['mono', 'rose', 'sky', 'lime', 'amber', 'violet'];
+  setTheme(!S.theme || LEGACY.includes(S.theme) ? 'emerald' : S.theme);
   if (p.lastHost) {
     const ls = p.lastHost;
     ['deck','tie','dir','goal','time'].forEach(k => {
@@ -471,6 +473,7 @@ function init() {
   };
   $('settings-btn').onclick = () => {
     $('set-sound').value = S.sound ? '1' : '0';
+    buildCardBackPicker();
     show('modal-settings');
   };
 
@@ -512,6 +515,7 @@ function init() {
   // About modal (curated external resources) — also surfaced as a hero CTA
   $('about-btn').onclick = () => show('modal-about');
   $('hero-learn-btn').onclick = () => show('modal-about');
+  $('hero-play-btn').onclick = startDaily;
   $('about-tutorial-btn').onclick = () => { hide('modal-about'); startTutorial(startSolo); };
 
   // Feedback modal — bug/feature/puzzle/discussion deep-links to GitHub
@@ -535,11 +539,11 @@ function init() {
   $('share-replay-btn').onclick = () => copyReplayURL(S);
   $('share-video-btn').onclick = async () => {
     const btn = $('share-video-btn');
-    btn.disabled = true; btn.textContent = '⏺ Recording...';
+    btn.disabled = true; btn.textContent = 'Recording…';
     const ok = await recordReplayVideo(S.history, S.settings.deckSize);
     btn.disabled = false;
-    btn.textContent = ok ? '✓ Saved' : '✗ Not supported';
-    setTimeout(() => btn.textContent = '▶ Replay video', 1500);
+    btn.textContent = ok ? 'Saved' : 'Not supported here';
+    setTimeout(() => btn.textContent = 'Save replay video', 1800);
   };
   $('coach-toggle').onclick = () => {
     const c = $('coach');

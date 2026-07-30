@@ -23,7 +23,7 @@ export function drawHeatmap(canvas, data, opts = {}) {
   const root = getComputedStyle(document.documentElement);
   const ink = root.getPropertyValue('--ink').trim();
   const dim = root.getPropertyValue('--ink-faint').trim();
-  const accent = root.getPropertyValue('--me').trim();
+  const accent = root.getPropertyValue('--brass-lit').trim() || root.getPropertyValue('--me').trim();
 
   // Cells
   for (let r = 0; r < 13; r++) {
@@ -50,7 +50,7 @@ export function drawHeatmap(canvas, data, opts = {}) {
 
   ctx.textAlign = 'left';
   ctx.fillStyle = ink;
-  ctx.font = '11px Inter, system-ui';
+  ctx.font = '11px Jost, system-ui';
   ctx.fillText('prize', 2, padT - 2);
   ctx.fillText('bid →', padL, h - 2);
 }
@@ -114,7 +114,7 @@ export function drawScoreCurve(canvas, history, theirName = 'Them', myName = 'Yo
 
   // Labels
   ctx.fillStyle = accent; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-  ctx.font = '11px Inter, system-ui';
+  ctx.font = '11px Jost, system-ui';
   ctx.fillText(myName, padL, 0);
   ctx.fillStyle = opp; ctx.textAlign = 'right';
   ctx.fillText(theirName, padL + plotW, 0);

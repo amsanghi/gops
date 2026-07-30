@@ -3,20 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <title>GOPS tests</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400..700&family=Jost:wght@300..600&display=swap">
 <style>
-  body { font-family: -apple-system, system-ui, sans-serif; background: #0a0a0b; color: #f4f4f5; padding: 30px; margin: 0; }
-  h1 { font-weight: 400; font-size: 24px; letter-spacing: -0.02em; margin-bottom: 16px; }
-  #out { font-family: ui-monospace, monospace; font-size: 13px; white-space: pre-wrap; line-height: 1.7; }
-  .pass { color: #4ade80; }
-  .fail { color: #f87171; }
-  .skip { color: #9a9aa3; }
-  .group { color: #9a9aa3; text-transform: uppercase; letter-spacing: 0.15em; font-size: 11px; margin-top: 14px; padding-top: 10px; border-top: 1px solid #2a2a2f; }
-  .summary { margin-top: 24px; padding: 14px; background: #131316; border-radius: 8px; font-size: 14px; }
+  body { font-family: 'Jost', system-ui, sans-serif; background: #08201A; color: #F4EEE2; padding: 34px; margin: 0; }
+  h1 { font-family: 'Bodoni Moda', Didot, serif; font-weight: 500; font-size: 30px; margin-bottom: 6px; }
+  #out { font-size: 13px; white-space: pre-wrap; line-height: 1.75; font-variant-numeric: tabular-nums; }
+  .pass { color: #7FB08E; }
+  .fail { color: #D2665A; font-weight: 600; }
+  .skip { color: #8B9791; }
+  .group {
+    color: #C79A3C; text-transform: uppercase; letter-spacing: 0.22em; font-size: 10px;
+    margin-top: 18px; padding-top: 12px; border-top: 1px solid rgba(199,154,60,0.16);
+  }
+  .summary {
+    margin-top: 28px; padding: 16px 18px; font-size: 14px;
+    background: rgba(0,0,0,0.22); border: 1px solid rgba(199,154,60,0.16); border-radius: 12px;
+  }
+  a { color: #E7C878; }
 </style>
 </head>
 <body>
 <h1>GOPS test suite</h1>
-<p style="color:#9a9aa3;font-size:13px;margin-bottom:20px">Click <a href="../" style="color:#f4f4f5">← back to the game</a></p>
+<p style="color:#8B9791;font-size:13px;margin-bottom:22px"><a href="../">← Back to the table</a></p>
 <div id="out"></div>
 <div class="summary" id="summary"></div>
 <script type="module" src="./run.js"></script>

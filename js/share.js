@@ -28,19 +28,19 @@ export async function shareStatsImage() {
   c.width = w; c.height = h;
   const ctx = c.getContext('2d');
   const root = getComputedStyle(document.documentElement);
-  const bg = root.getPropertyValue('--bg').trim() || '#0a0a0b';
-  const ink = root.getPropertyValue('--ink').trim() || '#f4f4f5';
-  const dim = root.getPropertyValue('--ink-dim').trim() || '#9a9aa3';
-  const me = root.getPropertyValue('--me').trim() || '#f4f4f5';
-  const gold = root.getPropertyValue('--gold').trim() || '#f5d062';
+  const bg = root.getPropertyValue('--bg').trim() || '#0E3128';
+  const ink = root.getPropertyValue('--ink').trim() || '#F4EEE2';
+  const dim = root.getPropertyValue('--ink-dim').trim() || '#A9B1A8';
+  const me = root.getPropertyValue('--me').trim() || '#F4EEE2';
+  const gold = root.getPropertyValue('--gold').trim() || '#C79A3C';
 
   ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
 
   // Header
   ctx.fillStyle = ink;
-  ctx.font = '500 56px Fraunces, Georgia, serif';
+  ctx.font = '500 56px "Bodoni Moda", Didot, Georgia, serif';
   ctx.fillText('GOPS — stats', 60, 110);
-  ctx.font = '500 18px Inter, sans-serif';
+  ctx.font = '500 18px Jost, sans-serif';
   ctx.fillStyle = dim;
   ctx.fillText((S.myAvatar || '😎') + ' ' + (S.myName || 'You'), 60, 144);
 
@@ -60,18 +60,18 @@ export async function shareStatsImage() {
     ctx.strokeStyle = 'rgba(255,255,255,0.08)';
     ctx.strokeRect(x, y, cellW, 140);
     ctx.fillStyle = me;
-    ctx.font = '500 56px Fraunces, Georgia, serif';
+    ctx.font = '500 56px "Bodoni Moda", Didot, Georgia, serif';
     ctx.textAlign = 'center';
     ctx.fillText(String(stat.value), x + cellW / 2, y + 78);
     ctx.fillStyle = dim;
-    ctx.font = '500 14px Inter, sans-serif';
+    ctx.font = '500 14px Jost, sans-serif';
     ctx.fillText(stat.label.toUpperCase(), x + cellW / 2, y + 110);
   });
   ctx.textAlign = 'left';
 
   // Section: modes
   ctx.fillStyle = dim;
-  ctx.font = '500 12px Inter, sans-serif';
+  ctx.font = '500 12px Jost, sans-serif';
   ctx.fillText('MODES', 60, 420);
   const modeLines = [
     `Daily — ${dailyState.totalCompleted || 0} done · streak ${dailyState.streak || 0}`,
@@ -80,15 +80,15 @@ export async function shareStatsImage() {
     `Achievements — ${ach.length} unlocked`,
   ];
   ctx.fillStyle = ink;
-  ctx.font = '400 22px Inter, sans-serif';
+  ctx.font = '400 22px Jost, sans-serif';
   modeLines.forEach((line, i) => ctx.fillText(line, 60, 460 + i * 36));
 
   // Section: per-mode records
   ctx.fillStyle = dim;
-  ctx.font = '500 12px Inter, sans-serif';
+  ctx.font = '500 12px Jost, sans-serif';
   ctx.fillText('PER-MODE RECORDS', 60, 650);
   ctx.fillStyle = ink;
-  ctx.font = '400 20px Inter, sans-serif';
+  ctx.font = '400 20px Jost, sans-serif';
   const recs = Object.entries(records).filter(([, r]) => (r.score || 0) > 0).sort((a, b) => b[1].score - a[1].score).slice(0, 6);
   recs.forEach(([mode, r], i) => {
     ctx.fillText(`${mode} — ${r.wins || 0} wins · best ${r.score}`, 60, 690 + i * 32);
@@ -98,10 +98,10 @@ export async function shareStatsImage() {
   const masteryEntries = Object.entries(mastery).sort((a, b) => b[1] - a[1]).slice(0, 5);
   if (masteryEntries.length) {
     ctx.fillStyle = dim;
-    ctx.font = '500 12px Inter, sans-serif';
+    ctx.font = '500 12px Jost, sans-serif';
     ctx.fillText('AI MASTERY', 60, 920);
     ctx.fillStyle = gold;
-    ctx.font = '400 20px Inter, sans-serif';
+    ctx.font = '400 20px Jost, sans-serif';
     masteryEntries.forEach(([name, wins], i) => {
       ctx.fillText(`★ ${name} — ${wins} wins`, 60, 960 + i * 32);
     });
@@ -109,7 +109,7 @@ export async function shareStatsImage() {
 
   // Footer
   ctx.fillStyle = dim;
-  ctx.font = '400 18px Inter, sans-serif';
+  ctx.font = '400 18px Jost, sans-serif';
   ctx.textAlign = 'right';
   ctx.fillText('amsanghi.github.io/gops', w - 60, h - 60);
 
@@ -135,19 +135,19 @@ export async function recordReplayVideo(history, deckSize = 13, opts = {}) {
   canvas.width = w; canvas.height = h;
   const ctx = canvas.getContext('2d');
   const root = getComputedStyle(document.documentElement);
-  const bg = root.getPropertyValue('--bg').trim() || '#0a0a0b';
-  const ink = root.getPropertyValue('--ink').trim() || '#f4f4f5';
-  const dim = root.getPropertyValue('--ink-dim').trim() || '#9a9aa3';
-  const me = root.getPropertyValue('--me').trim() || '#f4f4f5';
-  const opp = root.getPropertyValue('--opp').trim() || '#a1a1aa';
-  const gold = root.getPropertyValue('--gold').trim() || '#f5d062';
+  const bg = root.getPropertyValue('--bg').trim() || '#0E3128';
+  const ink = root.getPropertyValue('--ink').trim() || '#F4EEE2';
+  const dim = root.getPropertyValue('--ink-dim').trim() || '#A9B1A8';
+  const me = root.getPropertyValue('--me').trim() || '#F4EEE2';
+  const opp = root.getPropertyValue('--opp').trim() || '#D2665A';
+  const gold = root.getPropertyValue('--gold').trim() || '#C79A3C';
 
   // Frame renderer
   function drawFrame(idx) {
     ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
     const m = history[idx];
     // Header
-    ctx.fillStyle = dim; ctx.font = '500 16px Inter, sans-serif';
+    ctx.fillStyle = dim; ctx.font = '500 16px Jost, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(`GOPS REPLAY — Round ${m.round} / ${history.length}`, w / 2, 50);
     // Cards
@@ -161,11 +161,11 @@ export async function recordReplayVideo(history, deckSize = 13, opts = {}) {
       ctx.lineTo(x + r, y + cardH); ctx.quadraticCurveTo(x, y + cardH, x, y + cardH - r);
       ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y);
       ctx.fill();
-      ctx.fillStyle = (color === bg) ? ink : '#0a0a0b';
-      ctx.font = '500 60px Fraunces, Georgia, serif';
+      ctx.fillStyle = (color === bg) ? ink : '#0B1E18';
+      ctx.font = '500 60px "Bodoni Moda", Didot, Georgia, serif';
       ctx.fillText(label, x + cardW / 2, y + cardH / 2 + 5);
       if (sub) {
-        ctx.font = '400 12px Inter, sans-serif';
+        ctx.font = '400 12px Jost, sans-serif';
         ctx.fillText(sub, x + cardW / 2, y + cardH / 2 + 35);
       }
     }
@@ -176,13 +176,13 @@ export async function recordReplayVideo(history, deckSize = 13, opts = {}) {
     drawCard(cx - cardW * 1.5 - gap, cy, rank(m.theirs), opp, 'THEM');
     drawCard(cx + cardW / 2 + gap, cy, rank(m.mine), me, 'YOU');
     // Outcome
-    ctx.fillStyle = m.winner === 'me' ? '#4ade80' : m.winner === 'them' ? '#f87171' : gold;
-    ctx.font = '400 48px Fraunces, Georgia, serif';
+    ctx.fillStyle = m.winner === 'me' ? '#E7C878' : m.winner === 'them' ? '#D2665A' : gold;
+    ctx.font = '400 48px "Bodoni Moda", Didot, Georgia, serif';
     const verb = m.winner === 'me' ? `+${m.prizeValue} to you` : m.winner === 'them' ? `+${m.prizeValue} to opponent` : `Tie · ${m.prizeValue} carries`;
     ctx.fillText(verb, w / 2, cy + cardH + 80);
     // Footer
     ctx.fillStyle = dim;
-    ctx.font = '400 14px Inter, sans-serif';
+    ctx.font = '400 14px Jost, sans-serif';
     ctx.fillText('amsanghi.github.io/gops', w / 2, h - 30);
   }
 
@@ -263,12 +263,12 @@ export function shareImage() {
   canvas.width = w; canvas.height = h;
   const ctx = canvas.getContext('2d');
   const root = getComputedStyle(document.documentElement);
-  const bg = root.getPropertyValue('--bg').trim() || '#0a0a0b';
-  const ink = root.getPropertyValue('--ink').trim() || '#f4f4f5';
-  const dim = root.getPropertyValue('--ink-dim').trim() || '#9a9aa3';
-  const me = root.getPropertyValue('--me').trim() || '#f4f4f5';
-  const opp = root.getPropertyValue('--opp').trim() || '#a1a1aa';
-  const gold = root.getPropertyValue('--gold').trim() || '#f5d062';
+  const bg = root.getPropertyValue('--bg').trim() || '#0E3128';
+  const ink = root.getPropertyValue('--ink').trim() || '#F4EEE2';
+  const dim = root.getPropertyValue('--ink-dim').trim() || '#A9B1A8';
+  const me = root.getPropertyValue('--me').trim() || '#F4EEE2';
+  const opp = root.getPropertyValue('--opp').trim() || '#D2665A';
+  const gold = root.getPropertyValue('--gold').trim() || '#C79A3C';
 
   // Background
   ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
@@ -279,35 +279,35 @@ export function shareImage() {
   ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
 
   // Header
-  ctx.font = '500 64px Fraunces, Georgia, serif';
+  ctx.font = '500 64px "Bodoni Moda", Didot, Georgia, serif';
   ctx.textAlign = 'left';
   ctx.fillStyle = ink;
   ctx.fillText('GOPS', 60, 110);
-  ctx.font = '500 18px Inter, sans-serif';
+  ctx.font = '500 18px Jost, sans-serif';
   ctx.fillStyle = dim;
   ctx.fillText('GAME OF PURE STRATEGY', 60, 142);
 
   // Result
   const cmp = compareScores(S.myScore, S.theirScore);
   const result = cmp > 0 ? 'You won' : cmp < 0 ? `${S.theirName} won` : 'Tied';
-  ctx.font = '400 120px Fraunces, Georgia, serif';
+  ctx.font = '400 120px "Bodoni Moda", Didot, Georgia, serif';
   ctx.textAlign = 'left';
-  ctx.fillStyle = cmp > 0 ? '#4ade80' : cmp < 0 ? '#f87171' : gold;
+  ctx.fillStyle = cmp > 0 ? '#E7C878' : cmp < 0 ? '#D2665A' : gold;
   ctx.fillText(result, 60, 320);
 
   // Score
-  ctx.font = '500 88px Fraunces, Georgia, serif';
+  ctx.font = '500 88px "Bodoni Moda", Didot, Georgia, serif';
   ctx.fillStyle = me;
   ctx.fillText(String(S.myScore), 60, 430);
   ctx.fillStyle = dim;
-  ctx.font = '400 56px Fraunces, Georgia, serif';
+  ctx.font = '400 56px "Bodoni Moda", Didot, Georgia, serif';
   ctx.fillText('—', 200, 425);
   ctx.fillStyle = opp;
-  ctx.font = '500 88px Fraunces, Georgia, serif';
+  ctx.font = '500 88px "Bodoni Moda", Didot, Georgia, serif';
   ctx.fillText(String(S.theirScore), 270, 430);
 
   // Names
-  ctx.font = '500 22px Inter, sans-serif';
+  ctx.font = '500 22px Jost, sans-serif';
   ctx.fillStyle = me;
   ctx.fillText(`${S.myAvatar}  ${S.myName}`, 60, 475);
   ctx.fillStyle = opp;
@@ -328,7 +328,7 @@ export function shareImage() {
   }
 
   // Footer
-  ctx.font = '400 20px Inter, sans-serif';
+  ctx.font = '400 20px Jost, sans-serif';
   ctx.fillStyle = dim;
   ctx.textAlign = 'right';
   ctx.fillText('amsanghi.github.io/gops', w - 60, h - 80);
